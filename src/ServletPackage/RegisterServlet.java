@@ -12,12 +12,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import BeanPackage.Utilisateur;
 import SQLPackage.ManagerUtilisateur;
 
 /**
  * @author Théo Roton
- * Servlet pour l'inscription
+ * Servlet qui gère l'inscription
  */
 public class RegisterServlet extends HttpServlet {
 	
@@ -34,9 +36,23 @@ public class RegisterServlet extends HttpServlet {
 	 * Get : on affiche le formulaire d'inscription
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Affichage du formulaire d'inscription
+		//Récupération de la session et de l'utilisateur
+		HttpSession session = request.getSession();
+		Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
+		
 		response.setContentType("text/html");
-		request.getRequestDispatcher("/JSP_pages/register.jsp").forward(request, response);
+		
+		//Si l'utilisateur n'est pas connecté
+		if (utilisateur == null) {
+			//Affichage du formulaire d'inscription
+			response.setContentType("text/html");
+			request.getRequestDispatcher("/JSP_pages/register.jsp").forward(request, response);
+			
+		//Si l'utilisateur est connecté
+		} else {
+			//Affichage de l'index pour l'utilisateur normal connecté
+			response.sendRedirect("/JEE_2020_2021");
+		}
 	}
 
 	/**

@@ -23,7 +23,7 @@
 			<div class="form-signin" class="col-md-6">
 			
 			  <form method="post" action="register">
-			    <h1 class="h3 mb-3 fw-normal">Entrez vos informations</h1>
+			    <h1 class="h3 mb-3 fw-normal" style="text-align:center;">Entrez vos informations</h1>
 			    <br>
 			    
 			    <label for="nom" class="visually-hidden">Nom</label>
@@ -47,8 +47,7 @@
 			    																					out.print(request.getAttribute("dateNaiss")); 
 			    																				} else { 
 			    																					out.print("2000-01-01"); 
-			    																				} %>" required>			    
-			    <br>
+			    																				} %>" required><br>			 
 			    
 			    <label for="login" class="visually-hidden">Login</label>
 			    <input type="text" id="login" name="login" class="form-control" value="<% if (request.getAttribute("login") != null) { 

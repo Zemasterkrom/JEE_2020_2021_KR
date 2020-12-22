@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
+import BeanPackage.Utilisateur;
+
 /**
  * 
  * @author Théo Roton
@@ -82,5 +84,41 @@ public class ManagerUtilisateur extends Manager {
 		}
 		
 		return res;
+	}
+	
+	/**
+	 * Méthode qui permet de récupérer un utilisateur dans la BDD
+	 * @param login
+	 * @return
+	 */
+	public Utilisateur getUtilisateur(String login) {
+		Utilisateur utilisateur = new Utilisateur();
+		
+		try {
+			//Requête
+			String req = "SELECT * FROM Utilisateur WHERE login = ?";
+			//Préparation de la requête
+			PreparedStatement stmt = connection.prepareStatement(req);
+			//Ajout du login à la requête
+			stmt.setString(1, login);
+			//Exécution  de la requête
+			ResultSet results = stmt.executeQuery();
+			
+			//Récupération du résultat
+			results.next();
+			
+			utilisateur.setId(results.getInt("idUtilisateur"));
+			utilisateur.setNom(results.getString("nom"));
+			utilisateur.setPrenom(results.getString("prenom"));
+			utilisateur.setDateNaiss(results.getDate("dateNaiss"));
+			utilisateur.setLogin(results.getString("login"));
+			utilisateur.setMotDePasse(results.getString("motDePasse"));
+			utilisateur.setRang(results.getString("rang"));
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return utilisateur;
 	}
 }

@@ -34,7 +34,7 @@
         <div class="row">
           <div class="col-md-12" style="text-align: center;">
             <h2>Vous n'êtes pas connecté</h2>
-            <p><a class="btn btn-secondary" href="#" role="button">Se connecter</a></p>
+            <p><a class="btn btn-secondary" href="login" role="button">Se connecter</a></p>
             <p><a class="btn btn-secondary" href="register" role="button">S'inscrire</a></p>
           </div>
         </div>

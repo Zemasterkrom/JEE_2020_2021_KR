@@ -141,5 +141,13 @@ public class Utilisateur {
 	public int getId() {
 		return id;
 	}
+
+	/**
+	 * Méthode setter de l'id
+	 * @param id de l'utilisateur
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 }
