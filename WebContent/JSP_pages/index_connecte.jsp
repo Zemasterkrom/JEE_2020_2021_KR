@@ -34,6 +34,7 @@
         <div class="row">
           <div class="col-md-12" style="text-align: center;">
             <h2>Vous êtes connecté</h2>
+            <p><a class="btn btn-secondary" href="signout" role="button" onlick="confirm('Voulez vous vraiment vous déconnectez ?')">Se déconnecter</a></p>
           </div>
         </div>
 

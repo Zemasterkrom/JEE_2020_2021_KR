@@ -45,12 +45,11 @@ public class RegisterServlet extends HttpServlet {
 		//Si l'utilisateur n'est pas connecté
 		if (utilisateur == null) {
 			//Affichage du formulaire d'inscription
-			response.setContentType("text/html");
 			request.getRequestDispatcher("/JSP_pages/register.jsp").forward(request, response);
 			
 		//Si l'utilisateur est connecté
 		} else {
-			//Affichage de l'index pour l'utilisateur normal connecté
+			//Redirection vers la page d'accueil
 			response.sendRedirect("/JEE_2020_2021");
 		}
 	}
