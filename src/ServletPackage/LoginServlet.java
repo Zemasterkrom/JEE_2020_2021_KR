@@ -47,7 +47,7 @@ public class LoginServlet extends HttpServlet {
 		//Si l'utilisateur est connecté
 		} else {
 			//Redirection vers la page d'accueil
-			response.sendRedirect("/JEE_2020_2021");
+			response.sendRedirect("/JEE_2020_2021_KR");
 		}
 	}
 
@@ -99,7 +99,7 @@ public class LoginServlet extends HttpServlet {
 			request.setAttribute("Utilisateur_courant", utilisateur);
 			
 			//Redirection
-			response.sendRedirect("/JEE_2020_2021");
+			response.sendRedirect("/JEE_2020_2021_KR");
 		}
 	}
 

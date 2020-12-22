@@ -42,7 +42,7 @@ public class SignOutServlet extends HttpServlet {
 		}
 		
 		//Redirection vers la page d'accueil
-		response.sendRedirect("/JEE_2020_2021");
+		response.sendRedirect("/JEE_2020_2021_KR");
 	}
 
 	/**

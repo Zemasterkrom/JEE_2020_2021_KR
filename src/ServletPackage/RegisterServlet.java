@@ -50,7 +50,7 @@ public class RegisterServlet extends HttpServlet {
 		//Si l'utilisateur est connecté
 		} else {
 			//Redirection vers la page d'accueil
-			response.sendRedirect("/JEE_2020_2021");
+			response.sendRedirect("/JEE_2020_2021_KR");
 		}
 	}
 
@@ -142,7 +142,7 @@ public class RegisterServlet extends HttpServlet {
 			manager.ajouterUtilisateur(nom, prenom, dateNaiss, login, mdp);
 			
 			//Redirection
-			response.sendRedirect("/JEE_2020_2021");
+			response.sendRedirect("/JEE_2020_2021_KR");
 		}
 	}
 
