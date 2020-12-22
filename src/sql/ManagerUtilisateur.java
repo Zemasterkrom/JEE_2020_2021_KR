@@ -1,15 +1,15 @@
-package SQLPackage;
+package sql;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-import BeanPackage.Utilisateur;
+import bean.Utilisateur;
 
 /**
  * 
- * @author Théo Roton
+ * @author Thï¿½o Roton
  * Classe ManagerUtilisateur
  */
 public class ManagerUtilisateur extends Manager {
@@ -22,7 +22,7 @@ public class ManagerUtilisateur extends Manager {
 	}
 	
 	/**
-	 * Méthode qui permet d'ajouter un utilisateur dans la bdd
+	 * Mï¿½thode qui permet d'ajouter un utilisateur dans la bdd
 	 * @param nom de l'utilisateur
 	 * @param prenom de l'utilisateur
 	 * @param dateNaiss de l'utilisateur
@@ -31,11 +31,11 @@ public class ManagerUtilisateur extends Manager {
 	 */
 	public void ajouterUtilisateur(String nom, String prenom, Date dateNaiss, String login, String motDePasse) {
 		try {
-			//Requête
+			//Requï¿½te
 			String req = "INSERT INTO Utilisateur (nom, prenom, dateNaiss, login, motDePasse, rang) VALUES (?, ?, ?, ?, ?, 'normal')";
-			//Préparation de la requête
+			//Prï¿½paration de la requï¿½te
 			PreparedStatement stmt = connection.prepareStatement(req);
-			//Ajout des informations à la requête
+			//Ajout des informations ï¿½ la requï¿½te
 			stmt.setString(1, nom);
 			stmt.setString(2, prenom);
 			stmt.setDate(3, new java.sql.Date(dateNaiss.getTime()));
@@ -44,7 +44,7 @@ public class ManagerUtilisateur extends Manager {
 			String mdp = BCrypt.hashpw(motDePasse, BCrypt.gensalt());
 			stmt.setString(5, mdp);	
 			
-			//Exécution  de la requête
+			//Exï¿½cution  de la requï¿½te
 			stmt.execute();			
 			
 		} catch (SQLException e) {
@@ -53,28 +53,28 @@ public class ManagerUtilisateur extends Manager {
 	}
 	
 	/**
-	 * Méthode pour vérifier si un utilisateur existe déjà à l'aide
+	 * Mï¿½thode pour vï¿½rifier si un utilisateur existe dï¿½jï¿½ ï¿½ l'aide
 	 * de son login.
 	 * @param login : login de l'utilisateur
-	 * @return true si l'utilisateur existe déjà
+	 * @return true si l'utilisateur existe dï¿½jï¿½
 	 */
 	public boolean verifierUtilisateurPresent(String login) {
 		boolean res = false;
 	
 		try {
-			//Requête
+			//Requï¿½te
 			String req = "SELECT count(*) FROM Utilisateur WHERE login = ?";
-			//Préparation de la requête
+			//Prï¿½paration de la requï¿½te
 			PreparedStatement stmt = connection.prepareStatement(req);
-			//Ajout du login à la requête
+			//Ajout du login ï¿½ la requï¿½te
 			stmt.setString(1, login);
-			//Exécution  de la requête
+			//Exï¿½cution  de la requï¿½te
 			ResultSet results = stmt.executeQuery();
 			
-			//Récupération du résultat
+			//Rï¿½cupï¿½ration du rï¿½sultat
 			results.next();
 			int count = results.getInt(1);
-			//Si le count est différent de zéro, alors l'utilisateur existé déjà
+			//Si le count est diffï¿½rent de zï¿½ro, alors l'utilisateur existï¿½ dï¿½jï¿½
 			if (count != 0) {
 				res = true;
 			}
@@ -87,7 +87,7 @@ public class ManagerUtilisateur extends Manager {
 	}
 	
 	/**
-	 * Méthode qui permet de récupérer un utilisateur dans la BDD
+	 * Mï¿½thode qui permet de rï¿½cupï¿½rer un utilisateur dans la BDD
 	 * @param login
 	 * @return
 	 */
@@ -95,16 +95,16 @@ public class ManagerUtilisateur extends Manager {
 		Utilisateur utilisateur = new Utilisateur();
 		
 		try {
-			//Requête
+			//Requï¿½te
 			String req = "SELECT * FROM Utilisateur WHERE login = ?";
-			//Préparation de la requête
+			//Prï¿½paration de la requï¿½te
 			PreparedStatement stmt = connection.prepareStatement(req);
-			//Ajout du login à la requête
+			//Ajout du login ï¿½ la requï¿½te
 			stmt.setString(1, login);
-			//Exécution  de la requête
+			//Exï¿½cution  de la requï¿½te
 			ResultSet results = stmt.executeQuery();
 			
-			//Récupération du résultat
+			//Rï¿½cupï¿½ration du rï¿½sultat
 			results.next();
 			
 			utilisateur.setId(results.getInt("idUtilisateur"));

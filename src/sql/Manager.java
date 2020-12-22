@@ -1,15 +1,15 @@
-package SQLPackage;
+package sql;
 
 import java.sql.Connection;
 
 /**
  * 
- * @author Théo Roton
+ * @author Thï¿½o Roton
  * Classe Manager
  */
 public abstract class Manager {
 
-	//Connexion à la BDD
+	//Connexion ï¿½ la BDD
 	protected Connection connection;
 	
 	/**

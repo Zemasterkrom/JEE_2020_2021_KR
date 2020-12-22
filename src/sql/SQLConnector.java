@@ -1,4 +1,4 @@
-package SQLPackage;
+package sql;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +39,7 @@ public class SQLConnector {
 				props.load(is);
 				is.close();
 				
-				this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+ props.getProperty("database.name"), 
+				this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+ props.getProperty("database.name")+"?serverTimezone=UTC", 
 															   props.getProperty("database.user"), 
 															   props.getProperty("database.password"));
 				this.connected = true;
@@ -48,10 +48,10 @@ public class SQLConnector {
 				database = null;
 				this.connected = false;
 				e.printStackTrace();
-				
+				System.out.println("erreur1");
 			} catch (SQLException e) {
 				e.printStackTrace();
-				
+				System.out.println("erreur2");
 			}
 		}
 	}

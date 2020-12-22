@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
   <display-name>JEE_2020_2021_KR</display-name>
-  <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.htm</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.htm</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
-  </welcome-file-list>
+  <filter>
+   <filter-name>JspFilter</filter-name>
+   <filter-class>filter.JspFilter</filter-class>
+  </filter>
+  <filter-mapping>
+   <filter-name>JspFilter</filter-name>
+   <url-pattern>/</url-pattern>
+   <url-pattern>*.jsp</url-pattern>
+  </filter-mapping>
   <servlet>
     <servlet-name>RegisterServlet</servlet-name>
-    <servlet-class>ServletPackage.RegisterServlet</servlet-class>
+    <servlet-class>servlet.RegisterServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>RegisterServlet</servlet-name>
@@ -19,7 +20,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>LoginServlet</servlet-name>
-    <servlet-class>ServletPackage.LoginServlet</servlet-class>
+    <servlet-class>servlet.LoginServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
@@ -27,15 +28,15 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>IndexServlet</servlet-name>
-    <servlet-class>ServletPackage.IndexServlet</servlet-class>
+    <servlet-class>servlet.IndexServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>IndexServlet</servlet-name>
-    <url-pattern></url-pattern>
+    <url-pattern>/home</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>SignOutServlet</servlet-name>
-    <servlet-class>ServletPackage.SignOutServlet</servlet-class>
+    <servlet-class>servlet.SignOutServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>SignOutServlet</servlet-name>

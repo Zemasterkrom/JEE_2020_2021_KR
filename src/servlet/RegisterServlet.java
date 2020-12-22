@@ -1,4 +1,4 @@
-package ServletPackage;
+package servlet;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -14,12 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import BeanPackage.Utilisateur;
-import SQLPackage.ManagerUtilisateur;
+import bean.Utilisateur;
+import sql.ManagerUtilisateur;
 
 /**
- * @author Théo Roton
- * Servlet qui gère l'inscription
+ * @author Thï¿½o Roton
+ * Servlet qui gï¿½re l'inscription
  */
 public class RegisterServlet extends HttpServlet {
 	
@@ -36,45 +36,45 @@ public class RegisterServlet extends HttpServlet {
 	 * Get : on affiche le formulaire d'inscription
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Récupération de la session et de l'utilisateur
+		//Rï¿½cupï¿½ration de la session et de l'utilisateur
 		HttpSession session = request.getSession();
 		Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
 		
 		response.setContentType("text/html");
 		
-		//Si l'utilisateur n'est pas connecté
+		//Si l'utilisateur n'est pas connectï¿½
 		if (utilisateur == null) {
 			//Affichage du formulaire d'inscription
 			request.getRequestDispatcher("/JSP_pages/register.jsp").forward(request, response);
 			
-		//Si l'utilisateur est connecté
+		//Si l'utilisateur est connectï¿½
 		} else {
 			//Redirection vers la page d'accueil
-			response.sendRedirect("/JEE_2020_2021_KR");
+			response.sendRedirect("home");
 		}
 	}
 
 	/**
-	 * Post : on traite l'inscription de l'utilisateur avec toutes ses données
+	 * Post : on traite l'inscription de l'utilisateur avec toutes ses donnï¿½es
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Création du manager des utilisateurs
+		//Crï¿½ation du manager des utilisateurs
 		ManagerUtilisateur manager = new ManagerUtilisateur();
-		//Liste des erreurs à afficher
+		//Liste des erreurs ï¿½ afficher
 		List<String> erreurs = new ArrayList<String>();
 		
 		//Nom de l'utilisateur
 		String nom = request.getParameter("nom");
-		//On vérifie qu'il a un bon format
+		//On vï¿½rifie qu'il a un bon format
 		if (nom.matches("^[a-zA-Z]+$")) {
 			request.setAttribute("nom", nom);
 		} else {
 			erreurs.add("FormatNom");
 		}
 		
-		//Prénom de l'utilisateur
+		//Prï¿½nom de l'utilisateur
 		String prenom = request.getParameter("prenom");
-		//On vérifie qu'il a un bon format
+		//On vï¿½rifie qu'il a un bon format
 		if (prenom.matches("^([a-zA-Z])+$")) {
 			request.setAttribute("prenom", prenom);
 		} else {
@@ -94,13 +94,13 @@ public class RegisterServlet extends HttpServlet {
 		
 		//Login de l'utilisateur
 		String login = request.getParameter("login");
-		//On vérifie qu'il a un bon format
+		//On vï¿½rifie qu'il a un bon format
 		if (login.matches("^.+$")) {
 			
-			//On vérifie que le login fait plus de 3 caractères
+			//On vï¿½rifie que le login fait plus de 3 caractï¿½res
 			if (login.length() >= 3) {
 				
-				//On vérifie qu'il n'est pas déjà utilisé
+				//On vï¿½rifie qu'il n'est pas dï¿½jï¿½ utilisï¿½
 				if (!manager.verifierUtilisateurPresent(login)) {
 					request.setAttribute("login", login);
 				} else {
@@ -119,10 +119,10 @@ public class RegisterServlet extends HttpServlet {
 		String mdp = request.getParameter("mdp");		
 		//Confirmation du mot de passe de l'utilisateur
 		String mdpVerif = request.getParameter("mdpVerif");
-		//On vérifie que le mot de passe fait plus de 6 caractères
+		//On vï¿½rifie que le mot de passe fait plus de 6 caractï¿½res
 		if (mdp.length() >= 6) {
 			
-			//On vérifie que le mot de passe est égal à sa confirmation
+			//On vï¿½rifie que le mot de passe est ï¿½gal ï¿½ sa confirmation
 			if (!mdp.equals(mdpVerif)) {
 				erreurs.add("MDPPasEgal");
 			}
@@ -142,7 +142,7 @@ public class RegisterServlet extends HttpServlet {
 			manager.ajouterUtilisateur(nom, prenom, dateNaiss, login, mdp);
 			
 			//Redirection
-			response.sendRedirect("/JEE_2020_2021_KR");
+			response.sendRedirect("home");
 		}
 	}
 

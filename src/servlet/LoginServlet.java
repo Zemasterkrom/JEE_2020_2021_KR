@@ -1,4 +1,4 @@
-package ServletPackage;
+package servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,13 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import BeanPackage.Utilisateur;
-import SQLPackage.BCrypt;
-import SQLPackage.ManagerUtilisateur;
+import bean.Utilisateur;
+import sql.BCrypt;
+import sql.ManagerUtilisateur;
 
 /**
- * @author Théo Roton
- * Servlet qui gère la connexion
+ * @author Thï¿½o Roton
+ * Servlet qui gï¿½re la connexion
  */
 public class LoginServlet extends HttpServlet {
 	
@@ -33,21 +33,21 @@ public class LoginServlet extends HttpServlet {
 	 * Get : on affiche le formulaire de connexion
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
-		//Récupération de la session et de l'utilisateur
+		//Rï¿½cupï¿½ration de la session et de l'utilisateur
 		HttpSession session = request.getSession();
 		Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
 		
 		response.setContentType("text/html");
 		
-		//Si l'utilisateur n'est pas connecté
+		//Si l'utilisateur n'est pas connectï¿½
 		if (utilisateur == null) {
 			//Affichage du formulaire de connexion
 			request.getRequestDispatcher("/JSP_pages/login.jsp").forward(request, response);
 			
-		//Si l'utilisateur est connecté
+		//Si l'utilisateur est connectï¿½
 		} else {
 			//Redirection vers la page d'accueil
-			response.sendRedirect("/JEE_2020_2021_KR");
+			response.sendRedirect("home");
 		}
 	}
 
@@ -55,16 +55,16 @@ public class LoginServlet extends HttpServlet {
 	 * Post : on traite la connexion de l'utilisateur
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Création du manager des utilisateurs
+		//Crï¿½ation du manager des utilisateurs
 		ManagerUtilisateur manager = new ManagerUtilisateur();
-		//Liste des erreurs à afficher
+		//Liste des erreurs ï¿½ afficher
 		List<String> erreurs = new ArrayList<String>();
-		//Utilisateur à connecter
+		//Utilisateur ï¿½ connecter
 		Utilisateur utilisateur = null;
 		
 		//Login de l'utilisateur
 		String login = request.getParameter("login");
-		//On vérifie que le login existe
+		//On vï¿½rifie que le login existe
 		if (manager.verifierUtilisateurPresent(login)) {
 			request.setAttribute("login", login);
 			
@@ -73,7 +73,7 @@ public class LoginServlet extends HttpServlet {
 			//Utilisateur
 			utilisateur = manager.getUtilisateur(login);
 			
-			//On vérifie que le mot de passe entré correspond au mot de passe de l'utilisateur
+			//On vï¿½rifie que le mot de passe entrï¿½ correspond au mot de passe de l'utilisateur
 			if (!BCrypt.checkpw(mdp, utilisateur.getMotDePasse())) {
 				erreurs.add("MDPIncorrect");
 			}
@@ -91,15 +91,15 @@ public class LoginServlet extends HttpServlet {
 			
 		//Sinon on ajoute l'utilisateur dans la BDD
 		} else {
-			//Création de la session
+			//Crï¿½ation de la session
 			HttpSession session = request.getSession();
 			
-			//Ajout de l'utilisateur à la session
+			//Ajout de l'utilisateur ï¿½ la session
 			session.setAttribute("Utilisateur_courant", utilisateur);
 			request.setAttribute("Utilisateur_courant", utilisateur);
 			
 			//Redirection
-			response.sendRedirect("/JEE_2020_2021_KR");
+			response.sendRedirect("home");
 		}
 	}
 

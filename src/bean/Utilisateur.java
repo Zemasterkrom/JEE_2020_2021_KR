@@ -1,10 +1,10 @@
-package BeanPackage;
+package bean;
 
 import java.util.Date;
 
 /**
  * 
- * @author Théo Roton
+ * @author Thï¿½o Roton
  * Classe Utilisateur
  */
 public class Utilisateur {
@@ -18,7 +18,7 @@ public class Utilisateur {
 	 */
 	private String nom;
 	/**
-	 * Prénom de l'utilisateur
+	 * Prï¿½nom de l'utilisateur
 	 */
 	private String prenom;
 	/**
@@ -39,7 +39,7 @@ public class Utilisateur {
 	private String rang;
 	
 	/**
-	 * Méthode getter du nom
+	 * Mï¿½thode getter du nom
 	 * @return nom de l'utilisateur
 	 */
 	public String getNom() {
@@ -47,7 +47,7 @@ public class Utilisateur {
 	}
 	
 	/**
-	 * Méthode setter du nom
+	 * Mï¿½thode setter du nom
 	 * @param nom de l'utilisateur
 	 */
 	public void setNom(String nom) {
@@ -55,23 +55,23 @@ public class Utilisateur {
 	}
 	
 	/**
-	 * Méthode getter du prénom
-	 * @return prénom de l'utilisateur
+	 * Mï¿½thode getter du prï¿½nom
+	 * @return prï¿½nom de l'utilisateur
 	 */
 	public String getPrenom() {
 		return prenom;
 	}
 	
 	/**
-	 * Méthode setter du prénom
-	 * @param prénom de l'utilisateur
+	 * Mï¿½thode setter du prï¿½nom
+	 * @param prï¿½nom de l'utilisateur
 	 */
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
 	}
 	
 	/**
-	 * Méthode getter de la date de naissance
+	 * Mï¿½thode getter de la date de naissance
 	 * @return date de naissance de l'utilisateur
 	 */
 	public Date getDateNaiss() {
@@ -79,7 +79,7 @@ public class Utilisateur {
 	}
 	
 	/**
-	 * Méthode setter de la date de naissance
+	 * Mï¿½thode setter de la date de naissance
 	 * @param date de naissance de l'utilisateur
 	 */
 	public void setDateNaiss(Date dateNaiss) {
@@ -87,7 +87,7 @@ public class Utilisateur {
 	}
 	
 	/**
-	 * Méthode getter du login
+	 * Mï¿½thode getter du login
 	 * @return login de l'utilisateur
 	 */
 	public String getLogin() {
@@ -95,7 +95,7 @@ public class Utilisateur {
 	}
 	
 	/**
-	 * Méthode setter du login
+	 * Mï¿½thode setter du login
 	 * @param login de l'utilisateur
 	 */
 	public void setLogin(String login) {
@@ -103,7 +103,7 @@ public class Utilisateur {
 	}
 	
 	/**
-	 * Méthode getter du mot de passe
+	 * Mï¿½thode getter du mot de passe
 	 * @return mot de passe de l'utilisateur
 	 */
 	public String getMotDePasse() {
@@ -111,7 +111,7 @@ public class Utilisateur {
 	}
 	
 	/**
-	 * Méthode setter du mot de passe
+	 * Mï¿½thode setter du mot de passe
 	 * @param mot de passe de l'utilisateur
 	 */
 	public void setMotDePasse(String motDePasse) {
@@ -119,7 +119,7 @@ public class Utilisateur {
 	}
 	
 	/**
-	 * Méthode getter du rang
+	 * Mï¿½thode getter du rang
 	 * @return rang de l'utilisateur
 	 */
 	public String getRang() {
@@ -127,7 +127,7 @@ public class Utilisateur {
 	}
 	
 	/**
-	 * Méthode setter du rang
+	 * Mï¿½thode setter du rang
 	 * @param rang de l'utilisateur
 	 */
 	public void setRang(String rang) {
@@ -135,7 +135,7 @@ public class Utilisateur {
 	}
 	
 	/**
-	 * Méthode getter de l'id
+	 * Mï¿½thode getter de l'id
 	 * @return id de l'utilisateur
 	 */
 	public int getId() {
@@ -143,7 +143,7 @@ public class Utilisateur {
 	}
 
 	/**
-	 * Méthode setter de l'id
+	 * Mï¿½thode setter de l'id
 	 * @param id de l'utilisateur
 	 */
 	public void setId(int id) {
