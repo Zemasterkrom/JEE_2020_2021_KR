@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:jsp="http://java.sun.com/xml/ns/javaee/jsp" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
   <jsp-config>
     <jsp-property-group>
-        <url-pattern>*.jsp</url-pattern>
-        <page-encoding>UTF-8</page-encoding>
+      <url-pattern>*.jsp</url-pattern>
+      <page-encoding>UTF-8</page-encoding>
     </jsp-property-group>
   </jsp-config>
   <display-name>JEE_2020_2021_KR</display-name>
   <filter>
-   <filter-name>JspFilter</filter-name>
-   <filter-class>filter.JspFilter</filter-class>
+    <filter-name>JspFilter</filter-name>
+    <filter-class>filter.JspFilter</filter-class>
   </filter>
   <filter-mapping>
-   <filter-name>JspFilter</filter-name>
-   <url-pattern>/</url-pattern>
-   <url-pattern>*.jsp</url-pattern>
+    <filter-name>JspFilter</filter-name>
+    <url-pattern>/</url-pattern>
+    <url-pattern>*.jsp</url-pattern>
   </filter-mapping>
   <servlet>
     <servlet-name>RegisterServlet</servlet-name>
@@ -47,5 +47,14 @@
   <servlet-mapping>
     <servlet-name>SignOutServlet</servlet-name>
     <url-pattern>/signout</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>SeeAccountServlet</servlet-name>
+    <servlet-class>servlet.SeeAccountServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SeeAccountServlet</servlet-name>
+    <url-pattern>/account</url-pattern>
   </servlet-mapping>
 </web-app>

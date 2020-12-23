@@ -19,6 +19,8 @@
 
   <body>
 
+	<jsp:include page="navbar.jsp" />
+
     <main role="main">
 
       <!-- Main jumbotron for a primary marketing message or call to action -->
