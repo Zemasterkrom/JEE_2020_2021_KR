@@ -4,12 +4,12 @@ import java.sql.Connection;
 
 /**
  * 
- * @author Th�o Roton
+ * @author Théo Roton
  * Classe Manager
  */
 public abstract class Manager {
 
-	//Connexion � la BDD
+	//Connexion à la BDD
 	protected Connection connection;
 	
 	/**

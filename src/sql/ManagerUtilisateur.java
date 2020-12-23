@@ -98,9 +98,9 @@ public class ManagerUtilisateur extends Manager {
 		try {
 			//Requête
 			String req = "SELECT * FROM Utilisateur WHERE login = ?";
-			//Pr�paration de la requête
+			//Préparation de la requête
 			PreparedStatement stmt = connection.prepareStatement(req);
-			//Ajout du login � la requête
+			//Ajout du login à la requête
 			stmt.setString(1, login);
 			//Exécution de la requête
 			ResultSet results = stmt.executeQuery();
