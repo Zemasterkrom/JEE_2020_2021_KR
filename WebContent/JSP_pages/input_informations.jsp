@@ -55,6 +55,9 @@
 		    } else { out.print("<p></p>"); } %>			 
 		    
 		    <label for="login" class="visually-hidden">Login</label>
+		    <span class="infobulle" aria-label="Le login doit faire entre 3 et 64 caractères et contenir uniquement des lettres et des chiffres">
+		    	<img src="front/img/info.png" style="margin-left:5px;width:16px;height:16px;" />
+		    </span>
 		    <input type="text" id="login" name="login" class="form-control" value="<% out.print(login); %>" required>		    
 			    <% if (erreurs != null && erreurs.contains("FormatLogin")) { 
 	    		out.print("<p style=\"color:red;font-size:11px;\">Le login doit être composé de lettres et de chiffres et doit être constitué d'un seul mot</p>");
