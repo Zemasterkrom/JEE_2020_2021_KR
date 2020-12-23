@@ -18,8 +18,8 @@ import bean.Utilisateur;
 import sql.ManagerUtilisateur;
 
 /**
- * @author Th�o Roton
- * Servlet qui g�re l'inscription
+ * @author Théo Roton
+ * Servlet qui gère l'inscription
  */
 public class RegisterServlet extends HttpServlet {
 	
@@ -36,18 +36,18 @@ public class RegisterServlet extends HttpServlet {
 	 * Get : on affiche le formulaire d'inscription
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//R�cup�ration de la session et de l'utilisateur
+		//Récupération de la session et de l'utilisateur
 		HttpSession session = request.getSession();
 		Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
 		
 		response.setContentType("text/html");
 		
-		//Si l'utilisateur n'est pas connect�
+		//Si l'utilisateur n'est pas connecté
 		if (utilisateur == null) {
 			//Affichage du formulaire d'inscription
 			request.getRequestDispatcher("/JSP_pages/register.jsp").forward(request, response);
 			
-		//Si l'utilisateur est connect�
+		//Si l'utilisateur est connecté
 		} else {
 			//Redirection vers la page d'accueil
 			response.sendRedirect("home");
@@ -55,28 +55,46 @@ public class RegisterServlet extends HttpServlet {
 	}
 
 	/**
-	 * Post : on traite l'inscription de l'utilisateur avec toutes ses donn�es
+	 * Post : on traite l'inscription de l'utilisateur avec toutes ses données
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Cr�ation du manager des utilisateurs
+		//Création du manager des utilisateurs
 		ManagerUtilisateur manager = new ManagerUtilisateur();
-		//Liste des erreurs � afficher
+		//Liste des erreurs à afficher
 		List<String> erreurs = new ArrayList<String>();
+		//UTF-8
+		request.setCharacterEncoding("UTF-8");
 		
 		//Nom de l'utilisateur
 		String nom = request.getParameter("nom");
-		//On v�rifie qu'il a un bon format
-		if (nom.matches("^[a-zA-Z]+$")) {
-			request.setAttribute("nom", nom);
+		//On vérifie qu'il a un bon format
+		if (nom.matches("[a-zA-ZÀ-ÖÙ-öù-ÿ-]+")) {
+			
+			//On teste si le nom fait au plus 64 lettres
+			if (nom.length() <= 64) {
+				request.setAttribute("nom", nom);
+				
+			} else {
+				erreurs.add("TailleNom");
+			}
+			
 		} else {
 			erreurs.add("FormatNom");
 		}
 		
-		//Pr�nom de l'utilisateur
+		//Prénom de l'utilisateur
 		String prenom = request.getParameter("prenom");
-		//On v�rifie qu'il a un bon format
-		if (prenom.matches("^([a-zA-Z])+$")) {
-			request.setAttribute("prenom", prenom);
+		//On vérifie qu'il a un bon format
+		if (prenom.matches("[a-zA-ZÀ-ÖÙ-öù-ÿ-]+")) {
+			
+			//On teste si le prénom fait au plus 64 lettres
+			if (prenom.length() <= 64) {
+				request.setAttribute("prenom", prenom);
+				
+			} else {
+				erreurs.add("TaillePrenom");
+			}		
+			
 		} else {
 			erreurs.add("FormatPrenom");
 		}
@@ -94,15 +112,16 @@ public class RegisterServlet extends HttpServlet {
 		
 		//Login de l'utilisateur
 		String login = request.getParameter("login");
-		//On v�rifie qu'il a un bon format
-		if (login.matches("^.+$")) {
+		//On vérifie qu'il a un bon format
+		if (login.matches("^[a-zA-Z0-9-]+$")) {
 			
-			//On v�rifie que le login fait plus de 3 caract�res
-			if (login.length() >= 3) {
+			//On vérifie que le login fait plus de 3 caractères et moins de 64 caractères
+			if (login.length() >= 3 && login.length() <= 64) {
 				
-				//On v�rifie qu'il n'est pas d�j� utilis�
+				//On vérifie qu'il n'est pas déjà utilisé
 				if (!manager.verifierUtilisateurPresent(login)) {
 					request.setAttribute("login", login);
+					
 				} else {
 					erreurs.add("LoginExistant");
 				}
@@ -119,10 +138,10 @@ public class RegisterServlet extends HttpServlet {
 		String mdp = request.getParameter("mdp");		
 		//Confirmation du mot de passe de l'utilisateur
 		String mdpVerif = request.getParameter("mdpVerif");
-		//On v�rifie que le mot de passe fait plus de 6 caract�res
-		if (mdp.length() >= 6) {
+		//On vérifie que le mot de passe fait plus de 6 caractères et moins de 64 caractères
+		if (mdp.length() >= 6 && mdp.length() <= 64) {
 			
-			//On v�rifie que le mot de passe est �gal � sa confirmation
+			//On vérifie que le mot de passe est égal à sa confirmation
 			if (!mdp.equals(mdpVerif)) {
 				erreurs.add("MDPPasEgal");
 			}

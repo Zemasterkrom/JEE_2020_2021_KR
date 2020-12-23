@@ -5,6 +5,7 @@
 <html>
 	<head>
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 	    
 	    <title>Inscription</title>
 
@@ -31,7 +32,9 @@
 			    																		out.print(request.getAttribute("nom")); 
 			    																	} %>"required>
 			    <% if (erreurs != null && erreurs.contains("FormatNom")) { 
-			    	out.println("<p style=\"color:red;font-size:11px;\">Le nom doit être composé de lettres et formé d'un seul mot</p>");
+			    	out.println("<p style=\"color:red;font-size:11px;\">Le nom doit être composé seulement de lettres et caractères accentuées</p>");
+			    } else if (erreurs != null && erreurs.contains("TailleNom")) {
+			    	out.println("<p style=\"color:red;font-size:11px;\">Le nom doit faire au plus 64 lettres</p>");
 			    } else { out.print("<p></p>"); } %>
 			    
 			    <label for="prenom" class="visually-hidden">Prénom</label>
@@ -39,7 +42,9 @@
 			    																				out.print(request.getAttribute("prenom")); 
 			    																		  } %>" required>
    			    <% if (erreurs != null && erreurs.contains("FormatPrenom")) { 
-		    		out.println("<p style=\"color:red;font-size:11px;\">Le prénom doit être composé de lettres et formé d'un seul mot</p>");
+		    		out.println("<p style=\"color:red;font-size:11px;\">Le prénom doit être composé seulement de lettres et caractères accentuées</p>");
+			    } else if (erreurs != null && erreurs.contains("TaillePrenom")) {
+			    	out.println("<p style=\"color:red;font-size:11px;\">Le prénom doit faire au plus 64 lettres</p>");
 			    } else { out.print("<p></p>"); } %>
 			    
 				<label for="dateNaiss" class="visually-hidden">Date de naissance</label>
@@ -54,9 +59,9 @@
 			    																				out.println(request.getAttribute("login")); 
 			    																		  } %>" required>		    
  			    <% if (erreurs != null && erreurs.contains("FormatLogin")) { 
-		    		out.print("<p style=\"color:red;font-size:11px;\">Le login doit être composé d'un seul mot</p>");
+		    		out.print("<p style=\"color:red;font-size:11px;\">Le login doit être composé de lettres et de chiffres et doit être constitué d'un seul mot</p>");
  			    } else if (erreurs != null && erreurs.contains("TailleLogin")) {
- 			    	out.print("<p style=\"color:red;font-size:11px;\">Le login doit faire plus de 3 caractères</p>");
+ 			    	out.print("<p style=\"color:red;font-size:11px;\">Le login doit faire plus de 3 caractères et moins de 64 caractères</p>");
  			    } else if (erreurs != null && erreurs.contains("LoginExistant")) {
  			    	out.print("<p style=\"color:red;font-size:11px;\">Le login est déjà pris</p>");
 			    } else { out.print("<p></p>"); } %>
@@ -64,7 +69,7 @@
 			    <label for="mdp" class="visually-hidden">Mot de passe</label>
 			    <input type="password" id="mdp" name="mdp" class="form-control" required>			    
 			    <% if (erreurs != null && erreurs.contains("TailleMDP")) { 
- 			    	out.print("<p style=\"color:red;font-size:11px;\">Le mot de passe doit faire plus de 6 caractères</p>");
+ 			    	out.print("<p style=\"color:red;font-size:11px;\">Le mot de passe doit faire plus de 6 caractères et moins de 64 caractères</p>");
 			    } else { out.print("<p></p>"); } %>
 			    
 			    <label for="mdpVerif" class="visually-hidden">Confirmer le mot de passe</label>

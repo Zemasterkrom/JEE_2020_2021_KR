@@ -10,8 +10,8 @@ import javax.servlet.http.HttpSession;
 import bean.Utilisateur;
 
 /**
- * @author Th�o Roton
- * Servlet qui g�re la d�connexion
+ * @author Théo Roton
+ * Servlet qui gère la déconnexion
  */
 public class SignOutServlet extends HttpServlet {
 	
@@ -25,16 +25,16 @@ public class SignOutServlet extends HttpServlet {
     }
 
 	/**
-	 * Get : on affiche la confirmation de d�connexion
+	 * Get : on affiche la confirmation de déconnexion
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//R�cup�ration de la session et de l'utilisateur
+		//Récupération de la session et de l'utilisateur
 		HttpSession session = request.getSession();
 		Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
 		
-		//Si l'utilisateur est connect�
+		//Si l'utilisateur est connecté
 		if (utilisateur != null) {
-			//D�connexion de l'utilisateur
+			//Déconnexion de l'utilisateur
 			session.setAttribute("Utilisateur_courant", null);
 			request.setAttribute("Utilisateur_courant", null);
 			session.invalidate();

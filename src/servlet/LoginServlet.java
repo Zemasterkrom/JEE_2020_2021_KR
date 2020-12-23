@@ -15,8 +15,8 @@ import sql.BCrypt;
 import sql.ManagerUtilisateur;
 
 /**
- * @author Th�o Roton
- * Servlet qui g�re la connexion
+ * @author Théo Roton
+ * Servlet qui gère la connexion
  */
 public class LoginServlet extends HttpServlet {
 	
@@ -33,18 +33,18 @@ public class LoginServlet extends HttpServlet {
 	 * Get : on affiche le formulaire de connexion
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
-		//R�cup�ration de la session et de l'utilisateur
+		//Récupération de la session et de l'utilisateur
 		HttpSession session = request.getSession();
 		Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
 		
 		response.setContentType("text/html");
 		
-		//Si l'utilisateur n'est pas connect�
+		//Si l'utilisateur n'est pas connecté
 		if (utilisateur == null) {
 			//Affichage du formulaire de connexion
 			request.getRequestDispatcher("/JSP_pages/login.jsp").forward(request, response);
 			
-		//Si l'utilisateur est connect�
+		//Si l'utilisateur est connecté
 		} else {
 			//Redirection vers la page d'accueil
 			response.sendRedirect("home");
@@ -59,12 +59,14 @@ public class LoginServlet extends HttpServlet {
 		ManagerUtilisateur manager = new ManagerUtilisateur();
 		//Liste des erreurs � afficher
 		List<String> erreurs = new ArrayList<String>();
-		//Utilisateur � connecter
+		//Utilisateur à connecter
 		Utilisateur utilisateur = null;
+		//UTF-8
+		request.setCharacterEncoding("UTF-8");
 		
 		//Login de l'utilisateur
 		String login = request.getParameter("login");
-		//On v�rifie que le login existe
+		//On vérifie que le login existe
 		if (manager.verifierUtilisateurPresent(login)) {
 			request.setAttribute("login", login);
 			
@@ -73,7 +75,7 @@ public class LoginServlet extends HttpServlet {
 			//Utilisateur
 			utilisateur = manager.getUtilisateur(login);
 			
-			//On v�rifie que le mot de passe entr� correspond au mot de passe de l'utilisateur
+			//On vérifie que le mot de passe entré correspond au mot de passe de l'utilisateur
 			if (!BCrypt.checkpw(mdp, utilisateur.getMotDePasse())) {
 				erreurs.add("MDPIncorrect");
 			}
@@ -91,10 +93,10 @@ public class LoginServlet extends HttpServlet {
 			
 		//Sinon on ajoute l'utilisateur dans la BDD
 		} else {
-			//Cr�ation de la session
+			//Création de la session
 			HttpSession session = request.getSession();
 			
-			//Ajout de l'utilisateur � la session
+			//Ajout de l'utilisateur à la session
 			session.setAttribute("Utilisateur_courant", utilisateur);
 			request.setAttribute("Utilisateur_courant", utilisateur);
 			
