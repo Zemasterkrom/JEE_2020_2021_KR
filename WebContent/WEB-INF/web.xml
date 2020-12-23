@@ -64,7 +64,6 @@
     <servlet-name>ModifyAccountServlet</servlet-name>
     <url-pattern>/modifyAccount</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>ModifyPasswordServlet</servlet-name>
     <servlet-class>servlet.ModifyPasswordServlet</servlet-class>
@@ -72,5 +71,14 @@
   <servlet-mapping>
     <servlet-name>ModifyPasswordServlet</servlet-name>
     <url-pattern>/modifyPassword</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>AdminServlet</servlet-name>
+    <servlet-class>servlet.AdminServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AdminServlet</servlet-name>
+    <url-pattern>/admin</url-pattern>
   </servlet-mapping>
 </web-app>

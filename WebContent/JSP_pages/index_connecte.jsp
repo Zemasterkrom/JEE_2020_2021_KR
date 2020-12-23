@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="bean.Utilisateur" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,6 +20,8 @@
 
   <body>
 
+	<% Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant"); %>
+	 
 	<jsp:include page="navbar.jsp" />
 
     <main role="main">
@@ -35,7 +38,7 @@
         <!-- Example row of columns -->
         <div class="row">
           <div class="col-md-12" style="text-align: center;">
-            <h2>Vous êtes connecté</h2>
+            <h2>Vous êtes connecté</h2>        
           </div>
         </div>
 

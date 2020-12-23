@@ -31,6 +31,14 @@
 			        <a class="nav-link" href="account">Voir le profil</a>		        
 			      </li>
 			      
+			      <% if (utilisateur.getRang().equals("admin")) { %>
+			      
+				      <li class="nav-item">
+				        <a class="nav-link" href="admin">Interface administrateur</a>		        
+				      </li>
+			      
+			      <% } %>
+			      
 			 	  <li class="nav-item">
 			        <a class="nav-link" href="signout" style="color:red;">Se déconnecter</a>		        
 			      </li>

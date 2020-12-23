@@ -11,21 +11,21 @@ import bean.Utilisateur;
 
 /**
  * @author Théo Roton
- * Servlet qui gère l'index
+ * Servlet qui gère l'affichage de l'interface admin
  */
-public class IndexServlet extends HttpServlet {
+public class AdminServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public IndexServlet() {
+    public AdminServlet() {
         super();
     }
 
 	/**
-	 * Get : on affiche l'index en fonction de si l'utilisateur est connecté ou non
+	 * Get : affichage de l'interface admin
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Récupération de la session et de l'utilisateur
@@ -36,13 +36,22 @@ public class IndexServlet extends HttpServlet {
 		
 		//Si l'utilisateur n'est pas connecté
 		if (utilisateur == null) {
-			//Affichage de l'index pour l'utilisateur non connecté
-			request.getRequestDispatcher("/JSP_pages/index_non_connecte.jsp").forward(request, response);
+			//Redirection vers la page d'accueil
+			response.sendRedirect("home");
 		
 		//Si l'utilisateur est connecté
 		} else {
-			//Affichage de l'index pour l'utilisateur normal connecté
-			request.getRequestDispatcher("/JSP_pages/index_connecte.jsp").forward(request, response);
+			
+			//Si l'utilisateur est un administrateur
+			if (utilisateur.getRang().equals("admin")) {
+				//Affichage de l'interface administrateur
+				request.getRequestDispatcher("/JSP_pages/admin.jsp").forward(request, response);
+				
+		    //Si l'utilisateur n'est pas un administrateur
+			} else {
+				//Redirection vers la page d'accueil
+				response.sendRedirect("home");
+			}
 		}
 	}
 
