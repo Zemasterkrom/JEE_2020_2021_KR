@@ -48,7 +48,6 @@
     <servlet-name>SignOutServlet</servlet-name>
     <url-pattern>/signout</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>SeeAccountServlet</servlet-name>
     <servlet-class>servlet.SeeAccountServlet</servlet-class>
@@ -56,5 +55,14 @@
   <servlet-mapping>
     <servlet-name>SeeAccountServlet</servlet-name>
     <url-pattern>/account</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>ModifyAccountServlet</servlet-name>
+    <servlet-class>servlet.ModifyAccountServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ModifyAccountServlet</servlet-name>
+    <url-pattern>/modifyAccount</url-pattern>
   </servlet-mapping>
 </web-app>

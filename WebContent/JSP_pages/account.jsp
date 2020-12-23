@@ -30,6 +30,7 @@
 	                            <div class="card-block text-center text-white">
 	                                <div class="m-b-25"> <img src="https://img.icons8.com/bubbles/100/000000/user.png" class="img-radius" alt="User-Profile-Image"> </div>
 	                                <h6 class="f-w-600"><% out.println(utilisateur.getPrenom() + " " + utilisateur.getNom()); %></h6>
+	                                <p><% out.println(utilisateur.getRang()); %></p>
 	                            </div>
 	                        </div>
 	                        

@@ -20,21 +20,20 @@ import sql.ManagerUtilisateur;
 
 /**
  * @author Théo Roton
- * Servlet qui gère l'inscription
+ * Servlet qui gère la modification des informations du compte
  */
-public class RegisterServlet extends HttpServlet {
-	
+public class ModifyAccountServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RegisterServlet() {
+    public ModifyAccountServlet() {
         super();
     }
 
 	/**
-	 * Get : on affiche le formulaire d'inscription
+	 * Get : on affiche la page de modification
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Récupération de la session et de l'utilisateur
@@ -45,18 +44,18 @@ public class RegisterServlet extends HttpServlet {
 		
 		//Si l'utilisateur n'est pas connecté
 		if (utilisateur == null) {
-			//Affichage du formulaire d'inscription
-			request.getRequestDispatcher("/JSP_pages/register.jsp").forward(request, response);
+			//Redirection vers la page d'accueil
+			response.sendRedirect("home");
 			
 		//Si l'utilisateur est connecté
 		} else {
-			//Redirection vers la page d'accueil
-			response.sendRedirect("home");
+			//Affichage du formulaire de modification
+			request.getRequestDispatcher("/JSP_pages/modifyAccount.jsp").forward(request, response);
 		}
 	}
 
 	/**
-	 * Post : on traite l'inscription de l'utilisateur avec toutes ses données
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Création du manager des utilisateurs
@@ -67,6 +66,10 @@ public class RegisterServlet extends HttpServlet {
 		List<String> erreurs = new ArrayList<String>();
 		//UTF-8
 		request.setCharacterEncoding("UTF-8");
+		//Récupération de la session
+		HttpSession session = request.getSession();
+		//Récupération de l'utilisateur
+		Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
 		
 		//Nom de l'utilisateur
 		String nom = request.getParameter("nom");
@@ -123,42 +126,30 @@ public class RegisterServlet extends HttpServlet {
 		
 		//Login de l'utilisateur
 		String login = request.getParameter("login");
-		//Vérification du format du login
-		if (verif.verifFormatLogin(login)) {
+		//On vérifie si le login entré est différent de celui de l'utilisateur courant
+		if (!login.equals(utilisateur.getLogin())) {
 			
-			//Vérification de la taille du login
-			if (verif.verifTailleLogin(login)) {
+			//Vérification du format du login
+			if (verif.verifFormatLogin(login)) {
 				
-				//Vérification de l'existence du login
-				if (!manager.verifierUtilisateurPresent(login)) {
-					request.setAttribute("login", login);
+				//Vérification de la taille du login
+				if (verif.verifTailleLogin(login)) {
+					
+					//Vérification de l'existence du login
+					if (!manager.verifierUtilisateurPresent(login)) {
+						request.setAttribute("login", login);
+						
+					} else {
+						erreurs.add("LoginExistant");
+					}
 					
 				} else {
-					erreurs.add("LoginExistant");
+					erreurs.add("TailleLogin");
 				}
 				
 			} else {
-				erreurs.add("TailleLogin");
+				erreurs.add("FormatLogin");
 			}
-			
-		} else {
-			erreurs.add("FormatLogin");
-		}
-		
-		//Mot de passe de l'utilisateur
-		String mdp = request.getParameter("mdp");		
-		//Confirmation du mot de passe de l'utilisateur
-		String mdpVerif = request.getParameter("mdpVerif");
-		//On vérifie que le mot de passe fait plus de 6 caractères et moins de 64 caractères
-		if (mdp.length() >= 6 && mdp.length() <= 64) {
-			
-			//On vérifie que le mot de passe est égal à sa confirmation
-			if (!mdp.equals(mdpVerif)) {
-				erreurs.add("MDPPasEgal");
-			}
-			
-		} else {
-			erreurs.add("TailleMDP");
 		}
 		
 		//Si on a des erreurs, on renvoie sur le formulaire
@@ -166,13 +157,19 @@ public class RegisterServlet extends HttpServlet {
 			request.setAttribute("Erreurs", erreurs);
 			doGet(request, response);
 			
-		//Sinon on ajoute l'utilisateur dans la BDD
+		//Sinon on modifie les informations de l'utilisateur dans la BDD
 		} else {
-			//Ajout de l'utilisateur dans la BDD
-			manager.ajouterUtilisateur(nom, prenom, dateNaiss, login, mdp);
+			//Modification de l'utilisateur
+			manager.modifierUtilisateur(utilisateur.getId(), nom, prenom, dateNaiss, login);
+			
+			//Récupération de l'utilisateur modifier
+			utilisateur = manager.getUtilisateur(login);
+			//Ajout de l'utilisateur à la session
+			session.setAttribute("Utilisateur_courant", utilisateur);
+			request.setAttribute("Utilisateur_courant", utilisateur);
 			
 			//Redirection
-			response.sendRedirect("home");
+			response.sendRedirect("account");
 		}
 	}
 

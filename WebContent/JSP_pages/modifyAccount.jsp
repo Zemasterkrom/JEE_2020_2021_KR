@@ -7,7 +7,7 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 	     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 	    
-	    <title>Inscription</title>
+	    <title>Modifier les informations</title>
 
     	<link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">    
 	    <!-- Custom styles for this template -->
@@ -22,15 +22,13 @@
      	
 			<div class="form-signin" class="col-md-6">
 			
-			  <form method="post" action="register">
-			    <h1 class="h3 mb-3 fw-normal" style="text-align:center;">Entrez vos informations</h1>
+			  <form method="post" action="modifyAccount">
+			  	<h1 class="h3 mb-3 fw-normal" style="text-align:center;">Modifiez vos informations</h1>
 			    <br>
 			    
-				<jsp:include page="input_informations.jsp" />
+			    <jsp:include page="input_informations.jsp" />
 			    
-				<jsp:include page="input_password.jsp" />
-			    
-			    <button type="submit" class="w-100 btn btn-lg btn-primary">S'inscrire</button>
+			    <button type="submit" class="w-100 btn btn-lg btn-primary">Modifier les informations</button>
 			    <button type="reset" class="w-100 btn btn-lg btn-danger">Vider le formulaire</button>
 			  </form>
 			  
