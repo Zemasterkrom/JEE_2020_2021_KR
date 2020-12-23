@@ -124,6 +124,14 @@ public class ManagerUtilisateur extends Manager {
 		return utilisateur;
 	}
 
+	/**
+	 * Méthode qui permet de modifier les informations d'un utilisateur dans la BDD.
+	 * @param id de l'utilisateur
+	 * @param nom de l'utilisateur
+	 * @param prenom de l'utilisateur
+	 * @param dateNaiss de l'utilisateur
+	 * @param login de l'utilisateur
+	 */
 	public void modifierUtilisateur(int id, String nom, String prenom, Date dateNaiss, String login) {
 		try {
 			//Requête
@@ -142,7 +150,31 @@ public class ManagerUtilisateur extends Manager {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}	
+	}
+
+	/**
+	 * Méthode qui permet de modifier le mot de passe d'un utilisateur dans la BDD.
+	 * @param id de l'utilisateur
+	 * @param motDePasse de l'utilisateur
+	 */
+	public void modifierMDPUtilisateur(int id, String motDePasse) {
+		try {
+			//Requête
+			String req = "UPDATE Utilisateur SET motDePasse=? WHERE idUtilisateur=?";
+			//Préparation de la requête
+			PreparedStatement stmt = connection.prepareStatement(req);
+			//Ajout des informations à la requête
+			String mdp = BCrypt.hashpw(motDePasse, BCrypt.gensalt());
+			stmt.setString(1, mdp);
+			stmt.setInt(2, id);	
+			
+			//Exécution  de la requête
+			stmt.execute();			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}	
 		
 	}
 }

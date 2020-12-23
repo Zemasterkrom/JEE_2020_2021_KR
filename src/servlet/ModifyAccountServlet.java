@@ -33,7 +33,7 @@ public class ModifyAccountServlet extends HttpServlet {
     }
 
 	/**
-	 * Get : on affiche la page de modification
+	 * Get : on affiche la page de modification des informations
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Récupération de la session et de l'utilisateur
