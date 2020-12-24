@@ -54,16 +54,70 @@
 					                    <div class="dropdown">
 									  		<button onclick="dropList<% out.print(drop); %>()" class="dropbtn">Actions</button>
 									  		
-										  	<div id="myDropdown<% out.print(drop); %>" class="dropdown-content">
-										  		<form action="modifyUserRank" method="post">
-										  			<input type="hidden" name="idUtilisateur" value="<% out.print(u.getId()); %>" />
-										  			<a href="#" onclick="this.parentNode.submit()">Passer administrateur</a>
-										  		</form>
+										  	<div id="myDropdown<% out.print(drop); %>" class="dropdown-content">										  	
+										  		<a data-toggle="modal" data-target="#modalRang<% out.print(drop); %>">Passer administrateur</a>
 										  		
-												<form action="deleteUser" method="post">
-													<input type="hidden" name="idUtilisateur" value="<% out.print(u.getId()); %>" />
-										  			<a href="#" onclick="this.parentNode.submit()">Supprimer l'utilisateur</a>
-										  		</form>
+										  		<a data-toggle="modal" data-target="#modalSupprimer<% out.print(drop); %>">Supprimer l'utilisateur</a>
+										  	</div>
+										</div>
+										
+										<!-- Modal modifier rang -->
+										<div class="modal fade" id="modalRang<% out.print(drop); %>" tabindex="-1" role="dialog" aria-hidden="true">
+										  	<div class="modal-dialog" role="document">
+										    	<div class="modal-content">
+										    	
+										      		<div class="modal-header">
+										        		<h5 class="modal-title">Modifier le rang</h5>
+										        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										          			<span aria-hidden="true">&times;</span>
+										        		</button>										        	
+										      		</div>
+										      		
+										     		<div class="modal-body">
+										        		Voulez vous vraiment faire de <% out.print(u.getPrenom() + " " + u.getNom()); %> un administrateur ?
+										      		</div>
+										      		
+										      		<div class="modal-footer">
+										      		
+							      						<form action="modifyUserRank" method="post">
+							      							<input type="hidden" name="idUtilisateur" value="<% out.print(u.getId()); %>" />
+										  					<button type="submit" class="btn btn-primary">Valider</button>
+										  				</form>
+										        		<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>	
+										        										        
+										      		</div>
+										      		
+										    	</div>
+										  	</div>
+										</div>
+										
+										<!-- Modal supprimer utilisateur -->
+										<div class="modal fade" id="modalSupprimer<% out.print(drop); %>" tabindex="-1" role="dialog" aria-hidden="true">
+										  	<div class="modal-dialog" role="document">
+										    	<div class="modal-content">
+										    	
+										      		<div class="modal-header">
+										        		<h5 class="modal-title">Supprimer un utilisateur</h5>
+										        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										          			<span aria-hidden="true">&times;</span>
+										        		</button>										        	
+										      		</div>
+										      		
+										     		<div class="modal-body">
+										        		Voulez vous vraiment supprimer le compte de <% out.print(u.getPrenom() + " " + u.getNom()); %> de l'application  ?
+										      		</div>
+										      		
+										      		<div class="modal-footer">
+										      		
+							      						<form action="deleteUser" method="post">
+							      							<input type="hidden" name="idUtilisateur" value="<% out.print(u.getId()); %>" />
+										  					<button type="submit" class="btn btn-primary">Valider</button>
+										  				</form>
+										        		<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>	
+										        										        
+										      		</div>
+										      		
+										    	</div>
 										  	</div>
 										</div>
 										
@@ -72,7 +126,7 @@
 		                        </div>
 		                        
 		                    <% drop++; } %>
-	                        
+							
 	                    </div>
 	                    
 	                </div>
@@ -91,26 +145,35 @@
 		<%  drop = 1;
 			for (Utilisateur u : utilisateurs) { %>
 			
-			//Fonction dropList pour chaque bouton drop
+			//Fonction dropList pour chaque utilisateur
 			function dropList<% out.print(drop); %>() {
-			  document.getElementById("myDropdown<% out.print(drop); %>").classList.toggle("show");
+				fermerDropList();
+			 	document.getElementById("myDropdown<% out.print(drop); %>").classList.toggle("show");
 			}
 		
 		<% drop++; } %>
 			
 		// Fonction qui permet de fermer les dropList
-		window.onclick = function(event) {
-		  if (!event.target.matches('.dropbtn')) {
+		function fermerDropList() {
 		    var dropdowns = document.getElementsByClassName("dropdown-content");
-		    var i;
-		    for (i = 0; i < dropdowns.length; i++) {
-		      var openDropdown = dropdowns[i];
-		      if (openDropdown.classList.contains('show')) {
-		        openDropdown.classList.remove('show');
-		      }
+		    
+		    for (var i = 0; i < dropdowns.length; i++) {
+		        var openDropDown = dropdowns[i];
+		        
+		      	if (openDropDown.classList.contains('show')) {
+		    	 	openDropDown.classList.remove('show');
+		      	}
+		      
 		    }
-		  }
 		}
+		
+		//Si on clique sur la page, on ferme les dropList
+		window.onclick = function(event) { 
+			if (!event.target.matches('.dropbtn')) {
+				fermerDropList();
+			}
+		}
+		
 	</script>
 </body>
 </html>
