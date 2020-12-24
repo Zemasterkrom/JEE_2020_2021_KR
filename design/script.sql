@@ -94,8 +94,8 @@ CREATE TABLE Utilisateur (
   nom VARCHAR(64) NOT NULL CHECK (LENGTH(TRIM(nom)) > 0),
   prenom VARCHAR(64) NOT NULL CHECK (LENGTH(TRIM(prenom)) > 0),
   dateNaiss DATE NOT NULL,
-  login VARCHAR(64) NOT NULL CHECK (LENGTH(TRIM(login)) > 0 AND LENGTH(login) >= 5),
-  motDePasse VARCHAR(255) NOT NULL CHECK (LENGTH(TRIM(motDePasse)) > 0 AND LENGTH(motDePasse) >= 5),
+  login VARCHAR(64) NOT NULL CHECK (LENGTH(TRIM(login)) > 0 AND LENGTH(login) >= 3),
+  motDePasse VARCHAR(255) NOT NULL CHECK (LENGTH(TRIM(motDePasse)) > 0 AND LENGTH(motDePasse) >= 6),
   rang SET('normal','admin') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
