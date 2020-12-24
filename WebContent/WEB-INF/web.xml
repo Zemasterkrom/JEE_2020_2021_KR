@@ -72,7 +72,6 @@
     <servlet-name>ModifyPasswordServlet</servlet-name>
     <url-pattern>/modifyPassword</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>AdminServlet</servlet-name>
     <servlet-class>servlet.AdminServlet</servlet-class>
@@ -80,5 +79,14 @@
   <servlet-mapping>
     <servlet-name>AdminServlet</servlet-name>
     <url-pattern>/admin</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>UsersServlet</servlet-name>
+    <servlet-class>servlet.UsersServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UsersServlet</servlet-name>
+    <url-pattern>/users</url-pattern>
   </servlet-mapping>
 </web-app>

@@ -3,6 +3,7 @@
     
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Interface administrateur</title>
 	
@@ -11,9 +12,10 @@
 	<link href="front/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	
 	<script>
-	
+
+	//Dirige vers la page de gestion des utilisateurs
 	function gererUtilisateurs(){
-		  document.location.href = 'manageUsers';
+		  document.location.href = 'users';
 	}
 	
 	</script>

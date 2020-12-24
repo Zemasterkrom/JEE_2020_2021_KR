@@ -3,7 +3,9 @@ package sql;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import bean.Utilisateur;
 
@@ -174,7 +176,51 @@ public class ManagerUtilisateur extends Manager {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}	
+		}			
+	}
+	
+	/**
+	 * Méthode qui permet de récupérer tous les utilisateurs de l'application
+	 * moins l'utilisateur qui exécute la requête
+	 * @param login de l'utilisateur qui exécute la requête
+	 * @return liste des utilisateurs de l'application
+	 */
+	public List<Utilisateur> getAllUtilisateurs(String login) {
+		//Initialisation de la liste
+		List<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
 		
+		try {
+			//Requête
+			String req = "SELECT * FROM Utilisateur WHERE login!=?";
+			//Préparation de la requête
+			PreparedStatement stmt = connection.prepareStatement(req);
+			//Ajout du login à la requête
+			stmt.setString(1, login);
+			//Exécution de la requête
+			ResultSet results = stmt.executeQuery();
+			
+			Utilisateur u;
+			//Pour chaque utilisateur
+			while (results.next()) {
+				u = new Utilisateur();
+				
+				//Ajout des informations de l'utilisateur
+				u.setId(results.getInt("idUtilisateur"));
+				u.setNom(results.getString("nom"));
+				u.setPrenom(results.getString("prenom"));
+				u.setDateNaiss(results.getDate("dateNaiss"));
+				u.setLogin(results.getString("login"));
+				u.setMotDePasse(results.getString("motDePasse"));
+				u.setRang(results.getString("rang"));
+				
+				//Ajout de l'utilisateur à la liste
+				utilisateurs.add(u);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return utilisateurs;
 	}
 }
