@@ -22,6 +22,9 @@
 </head>
 
 <body>
+
+	<jsp:include page="navbar.jsp" />
+
 	<div class="container-fluid mb-5">
 	
 	    <div class="text-center mt-5">

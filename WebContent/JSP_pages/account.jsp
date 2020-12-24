@@ -20,9 +20,10 @@
 	<% Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant"); %>
 	
 	<div class="page-content page-container" id="page-content">
-	    <div class="padding">
+	    <div class="padding" align="center">
 	        <div class="row container d-flex justify-content-center">
-	            <div class="col-xl-6 col-md-12">
+	            <div class="col-xl-10 col-md-4">
+	            
 	                <div class="card user-card-full">
 	                    <div class="row m-l-0 m-r-0">
 	                    
@@ -30,7 +31,7 @@
 	                            <div class="card-block text-center text-white">
 	                                <div class="m-b-25"> <img src="https://img.icons8.com/bubbles/100/000000/user.png" class="img-radius" alt="User-Profile-Image"> </div>
 	                                <h6 class="f-w-600"><% out.println(utilisateur.getPrenom() + " " + utilisateur.getNom()); %></h6>
-	                                <p><% out.println(utilisateur.getRang()); %></p>
+	                                <p>Rang : <% out.println(utilisateur.getRang()); %></p>
 	                            </div>
 	                        </div>
 	                        
@@ -64,11 +65,10 @@
 	                                                        
 	                            </div>
 	                        </div>
-	                        
-
-	                        
+	                                     
 	                    </div>
 	                </div>
+	                
 	            </div>
 	        </div>
 	    </div>
