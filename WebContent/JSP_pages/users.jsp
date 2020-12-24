@@ -22,6 +22,8 @@
 
 	<% ArrayList<Utilisateur> utilisateurs = (ArrayList<Utilisateur>) request.getAttribute("Utilisateurs"); int drop = 1; %>
 	
+	<jsp:include page="navbar.jsp" />
+	
 	<div class="page-content page-container" id="page-content">
 	
 	    <div class="padding">
