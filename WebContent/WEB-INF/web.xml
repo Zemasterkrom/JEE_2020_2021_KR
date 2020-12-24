@@ -88,7 +88,6 @@
     <servlet-name>UsersServlet</servlet-name>
     <url-pattern>/users</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>ModifyUserRankServlet</servlet-name>
     <servlet-class>servlet.ModifyUserRankServlet</servlet-class>
@@ -96,5 +95,14 @@
   <servlet-mapping>
     <servlet-name>ModifyUserRankServlet</servlet-name>
     <url-pattern>/modifyUserRank</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>DeleteUserServlet</servlet-name>
+    <servlet-class>servlet.DeleteUserServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DeleteUserServlet</servlet-name>
+    <url-pattern>/deleteUser</url-pattern>
   </servlet-mapping>
 </web-app>

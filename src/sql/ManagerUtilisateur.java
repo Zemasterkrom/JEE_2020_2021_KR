@@ -243,4 +243,24 @@ public class ManagerUtilisateur extends Manager {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * Méthode qui permet de supprimer un utilisateur
+	 * @param id de l'utilisateur à supprimer
+	 */
+	public void supprimerUtilisateur(int id) {
+		try {
+			//Requête
+			String req = "DELETE FROM Utilisateur WHERE idUtilisateur=?";
+			//Préparation de la requête
+			PreparedStatement stmt = connection.prepareStatement(req);
+			//Ajout du login à la requête
+			stmt.setInt(1, id);
+			//Exécution  de la requête
+			stmt.execute();	
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
