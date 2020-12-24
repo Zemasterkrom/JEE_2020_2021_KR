@@ -80,7 +80,6 @@
     <servlet-name>AdminServlet</servlet-name>
     <url-pattern>/admin</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>UsersServlet</servlet-name>
     <servlet-class>servlet.UsersServlet</servlet-class>
@@ -88,5 +87,14 @@
   <servlet-mapping>
     <servlet-name>UsersServlet</servlet-name>
     <url-pattern>/users</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>ModifyUserRankServlet</servlet-name>
+    <servlet-class>servlet.ModifyUserRankServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ModifyUserRankServlet</servlet-name>
+    <url-pattern>/modifyUserRank</url-pattern>
   </servlet-mapping>
 </web-app>

@@ -56,10 +56,12 @@
 									  		
 										  	<div id="myDropdown<% out.print(drop); %>" class="dropdown-content">
 										  		<form action="modifyUserRank" method="post">
+										  			<input type="hidden" name="idUtilisateur" value="<% out.print(u.getId()); %>" />
 										  			<a href="#" onclick="this.parentNode.submit()">Passer administrateur</a>
 										  		</form>
 										  		
 												<form action="deleteUser" method="post">
+													<input type="hidden" name="idUtilisateur" value="<% out.print(u.getId()); %>" />
 										  			<a href="#" onclick="this.parentNode.submit()">Supprimer l'utilisateur</a>
 										  		</form>
 										  	</div>

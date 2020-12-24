@@ -223,4 +223,24 @@ public class ManagerUtilisateur extends Manager {
 		
 		return utilisateurs;
 	}
+	
+	/**
+	 * Méthode qui permet de modifier le rang d'un utilisateur
+	 * @param id de l'utilisateur à modifier
+	 */
+	public void modifierRang(int id) {
+		try {
+			//Requête
+			String req = "UPDATE Utilisateur SET rang='admin' WHERE idUtilisateur=?";
+			//Préparation de la requête
+			PreparedStatement stmt = connection.prepareStatement(req);
+			//Ajout du login à la requête
+			stmt.setInt(1, id);
+			//Exécution  de la requête
+			stmt.execute();	
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
