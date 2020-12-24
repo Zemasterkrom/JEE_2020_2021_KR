@@ -141,8 +141,8 @@
 			                    
 		                    <% } else { %>
 		                    
-								<div class="list-item">
-				                	<h2>Aucun utilisateur trouvé</h2>										
+								<div class="list-item" style="display:inline; text-align:center;">
+				                	<h2 >Aucun utilisateur trouvé</h2>								
 				                </div>
 								
 							<% } %>
