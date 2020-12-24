@@ -57,7 +57,7 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Création du manager des utilisateurs
 		ManagerUtilisateur manager = new ManagerUtilisateur();
-		//Liste des erreurs � afficher
+		//Liste des erreurs à afficher
 		List<String> erreurs = new ArrayList<String>();
 		//Utilisateur à connecter
 		Utilisateur utilisateur = null;
