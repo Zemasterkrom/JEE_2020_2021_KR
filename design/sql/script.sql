@@ -49,8 +49,8 @@ CREATE TABLE Lieu (
   idLieu INT NOT NULL,
   nom VARCHAR(64) NOT NULL CHECK (LENGTH(TRIM(nom)) > 0),
   adresse VARCHAR(255) NOT NULL CHECK (LENGTH(TRIM(adresse)) > 0),
-  longitude DECIMAL(10,0) DEFAULT NULL,
-  latitude DECIMAL(10,0) DEFAULT NULL
+  longitude DECIMAL(17, 15) DEFAULT NULL CHECK(ISNULL(longitude) OR (longitude >= -180 AND longitude <= 180)),
+  latitude DECIMAL(17, 15) DEFAULT NULL CHECK (ISNULL(latitude) OR (latitude >= -90 AND latitude <= 90))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -95,8 +95,8 @@ CREATE TABLE Utilisateur (
   prenom VARCHAR(64) NOT NULL CHECK (LENGTH(TRIM(prenom)) > 0),
   dateNaiss DATE NOT NULL,
   login VARCHAR(64) NOT NULL CHECK (LENGTH(TRIM(login)) > 0 AND LENGTH(login) >= 3),
-  motDePasse VARCHAR(255) NOT NULL CHECK (LENGTH(TRIM(motDePasse)) > 0 AND LENGTH(motDePasse) >= 6),
-  rang SET('normal','admin') NOT NULL
+  motDePasse BINARY(60) NOT NULL CHECK (CONVERT(motDePasse, CHAR(60)) != ''),
+  rang SET('normal','admin') NOT NULL CHECK (LENGTH(TRIM(rang)) > 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -229,22 +229,51 @@ ALTER TABLE NotificationContamination
 --
 
 --
--- Procédure permettant d'envoyer une notification de suppression d'ami à un des deux utilisateurs qui étaient auparavant amis
+-- Procédure permettant d'accepter un ami
 --
 DELIMITER $$;
-CREATE PROCEDURE envoi_notifications_suppression_ami(IN id_utilisateur_courant INT, IN id_ami_supprime INT) READS SQL DATA
+CREATE PROCEDURE accepter_ami(IN id_accepteur INT, IN id_ami_accepte INT) READS SQL DATA
 BEGIN
   DECLARE id_utilisateur INT;
   DECLARE id_ami INT;
   DECLARE nom_utilisateur VARCHAR(64);
   DECLARE prenom_utilisateur VARCHAR(64);
+
+  SELECT idUtilisateur, idAmi INTO id_utilisateur, id_ami FROM Ami WHERE (idUtilisateur = id_accepteur AND idAmi = id_ami_accepte) OR (idUtilisateur = id_ami_accepte AND idAmi = id_accepteur);
+
+  IF (id_utilisateur IS NOT NULL AND id_ami IS NOT NULL) THEN
+    UPDATE Ami SET accepte = b'1' WHERE idUtilisateur = id_utilisateur AND idAmi = id_ami;
+  ELSEIF (id_utilisateur IS NULL) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Aucune requête n'existe pour cette demande d'ami.";
+  END IF;
+END;
+$$;
+DELIMITER $;
+
+--
+-- Procédure permettant de supprimer un ami (ou refuser sa demande) et d'envoyer une notification de suppression (ou refus) d'ami à un des deux utilisateurs qui étaient auparavant amis
+--
+DELIMITER $$;
+CREATE PROCEDURE supprimer_refuser_ami(IN id_utilisateur_courant INT, IN id_ami_supprime INT) READS SQL DATA
+BEGIN
+  DECLARE id_utilisateur INT;
+  DECLARE id_ami INT;
+  DECLARE etat_ami BIT(1);
+  DECLARE nom_utilisateur VARCHAR(64);
+  DECLARE prenom_utilisateur VARCHAR(64);
   DECLARE notification VARCHAR(512);
 
-  SELECT idUtilisateur, idAmi INTO id_utilisateur, id_ami FROM Ami WHERE (idUtilisateur = id_utilisateur_courant AND idAmi = id_ami_supprime) OR (idUtilisateur = id_ami_supprime AND idAmi = id_utilisateur_courant);
+  SELECT idUtilisateur, idAmi, accepte INTO id_utilisateur, id_ami, etat_ami FROM Ami WHERE (idUtilisateur = id_utilisateur_courant AND idAmi = id_ami_supprime) OR (idUtilisateur = id_ami_supprime AND idAmi = id_utilisateur_courant);
   SELECT nom, prenom INTO nom_utilisateur, prenom_utilisateur FROM Utilisateur WHERE idUtilisateur = id_utilisateur_courant;
-  SELECT CONCAT(nom_utilisateur, " ", prenom_utilisateur, " vous a supprimé de vos amis.") INTO notification FROM DUAL;
 
-  INSERT INTO NotificationAmi(message, idUtilisateur, idAmi, idConcerne) VALUES(notification, id_utilisateur, id_ami, id_ami_supprime);
+  IF (id_utilisateur IS NOT NULL AND etat_ami = b'1') THEN
+    SELECT CONCAT(nom_utilisateur, " ", prenom_utilisateur, " vous a supprimé de vos amis.") INTO notification FROM DUAL;
+    INSERT INTO NotificationAmi(message, idUtilisateur, idAmi, idConcerne) VALUES(notification, id_utilisateur, id_ami, id_ami_supprime);
+  ELSEIF (id_utilisateur IS NULL) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Aucune requête n'existe pour cette demande d'ami.";
+  END IF;
+
+  DELETE FROM Ami WHERE (idUtilisateur = id_utilisateur_courant AND idAmi = id_ami_supprime) OR (idUtilisateur = id_ami_supprime AND idAmi = id_utilisateur_courant);
 END;
 $$;
 DELIMITER ;
@@ -252,7 +281,7 @@ DELIMITER ;
 --
 -- Procédure commune à l'ajout et la mise à jour des activités : vérifier que les données sont cohérentes
 --
-DELIMITER $$;
+/*DELIMITER $$;
 CREATE PROCEDURE verifier_activite(IN id_utilisateur INT, IN id_lieu INT, IN date_activite DATE, IN heure_debut TIME, IN heure_fin TIME) READS SQL DATA
 BEGIN
   DECLARE lieu_existe INT;
@@ -280,7 +309,7 @@ BEGIN
   END IF;
 END;
 $$;
-DELIMITER ;
+DELIMITER ;*/
 
 --
 -- Création des triggers
@@ -321,10 +350,10 @@ $$;
 DELIMITER ;
 
 --
--- Trigger pour vérifier qu'un utilisateur peut être supprimé s'il existe
+-- Trigger pour supprimer totalement un utilisateur après sa suppression (suppression des amis le possédant ou des amis associés à cet utilisateur)
 --
-DELIMITER $$;
-CREATE TRIGGER verifier_suppression_utilisateur BEFORE DELETE ON Utilisateur FOR EACH ROW
+/*DELIMITER $$;
+CREATE TRIGGER suppression_totale_utilisateur BEFORE DELETE ON Utilisateur FOR EACH ROW
 BEGIN
   DECLARE utilisateur_existe INT;
 
@@ -333,20 +362,14 @@ BEGIN
   IF (utilisateur_existe = 0) THEN
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "L'utilisateur spécifié n'existe pas.";
   END IF;
-END;
-$$;
-DELIMITER ;
 
---
--- Trigger pour supprimer totalement un utilisateur après sa suppression (suppression des amis le possédant ou des amis associés à cet utilisateur)
---
-DELIMITER $$;
-CREATE TRIGGER suppression_totale_utilisateur AFTER DELETE ON Utilisateur FOR EACH ROW
-BEGIN
-  DELETE FROM Ami WHERE idUtilisateur = OLD.idUtilisateur OR idAmi = OLD.idUtilisateur;
+  DELETE FROM Activite WHERE idUtilisateur = OLD.idUtilisateur;
+  DELETE FROM NotificationActivite WHERE idUtilisateur = OLD.idUtilisateur;
+  DELETE FROM NotificationAmi WHERE idConcerne = OLD.idUtilisateur;
+  DELETE FROM Etat WHERE idUtilisatuer = OLD.idUtilisateur;
 END;
 $$;
-DELIMITER ;
+DELIMITER ;*/
 
 --
 -- Trigger pour vérifier si une demande d’ami peut être effectuée (utilisateur existant, requête pas encore effectuée, pas encore ami)
@@ -368,11 +391,17 @@ BEGIN
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "L'utilisateur spécifié n'existe pas.";
   END IF;
 
+  SELECT COUNT(idUtilisateur) INTO utilisateur_existe FROM Utilisateur WHERE idUtilisateur = NEW.idAmi;
+
+  IF (utilisateur_existe = 0) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "L'ami spécifié n'existe pas.";
+  END IF;
+
   IF (NEW.accepte = b'1') THEN
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Il n'est pas possible d'ajouter directement un ami. Vous devez attendre sa confirmation.";
   END IF;
 
-  SELECT COUNT(idUtilisateur), accepte INTO requete_existe, est_accepte FROM Ami WHERE (idUtilisateur = NEW.idUtilisateur AND idAmi = NEW.idAmi);
+  SELECT COUNT(idUtilisateur), accepte INTO requete_existe, est_accepte FROM Ami WHERE (idUtilisateur = NEW.idUtilisateur AND idAmi = NEW.idAmi) OR (idUtilisateur = NEW.idAmi AND idAmi = NEW.idUtilisateur);
 
   IF (requete_existe = 1) THEN
     IF (est_accepte = 1) THEN
@@ -392,18 +421,23 @@ DELIMITER $$;
 CREATE TRIGGER verifier_maj_demande_ami BEFORE UPDATE ON Ami FOR EACH ROW
 BEGIN
   DECLARE requete_existe INT;
-  DECLARE etat_ami INT;
 
   IF (NEW.idUtilisateur != OLD.idUtilisateur OR NEW.idAmi != OLD.idAmi) THEN
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Vous ne pouvez pas modifier les utilisateurs associés à une demande d'ami.";
   END IF;
 
-  SELECT COUNT(idUtilisateur), accepte INTO requete_existe, etat_ami FROM Ami WHERE (idUtilisateur = OLD.idUtilisateur AND idAmi = OLD.idAmi);
+  IF (NEW.accepte != b'1') THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Une mise à jour de la demande d'ami signifie qu'elle est acceptée.";
+  END IF;
+
+  IF (NEW.accepte = OLD.accepte) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Vous possédez déjà cet utilisateur en tant qu'ami.";
+  END IF;
+
+  SELECT COUNT(idUtilisateur) INTO requete_existe FROM Ami WHERE (idUtilisateur = OLD.idUtilisateur AND idAmi = OLD.idAmi);
 
   IF (requete_existe = 0) THEN
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Vous ne possédez pas cet utilisateur en tant qu'ami.";
-  ELSEIF (NEW.accepte = b'0' AND OLD.accepte = b'1') THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Il n'est pas possible de faire basculer l'état d'une demande à 'En attente' une fois que celle-ci est acceptée.";
   END IF;
 END;
 $$;
@@ -436,29 +470,29 @@ DELIMITER ;
 --
 -- Trigger pour vérifier qu'une activité peut être ajoutée (qu'elle est cohérente vis-à-vis du lieu et des heures)
 --
-DELIMITER $$;
+/*DELIMITER $$;
 CREATE TRIGGER verifier_ajout_activite BEFORE INSERT ON Activite FOR EACH ROW
 BEGIN
   CALL verifier_activite(NEW.idUtilisateur, NEW.idLieu, NEW.dateActivite, NEW.heureDebut, NEW.heureFin);
 END;
 $$;
-DELIMITER ;
+DELIMITER ;*/
 
 --
 -- Trigger pour vérifier qu'une activité peut être mise à jour (qu'elle est cohérente vis-à-vis du lieu et des heures)
 --
-DELIMITER $$;
+/*DELIMITER $$;
 CREATE TRIGGER verifier_maj_activite BEFORE UPDATE ON Activite FOR EACH ROW
 BEGIN
   CALL verifier_activite(NEW.idUtilisateur, NEW.idLieu, NEW.dateActivite, NEW.heureDebut, NEW.heureFin);
 END;
 $$;
-DELIMITER ;
+DELIMITER ;*/
 
 --
 -- Trigger pour vérifier qu'une activité peut bien être supprimée si elle existe
 --
-DELIMITER $$;
+/*DELIMITER $$;
 CREATE TRIGGER verifier_suppression_activite BEFORE DELETE ON Activite FOR EACH ROW
 BEGIN
   DECLARE activite_existe INT;
@@ -470,7 +504,7 @@ BEGIN
   END IF;
 END;
 $$;
-DELIMITER ;
+DELIMITER ;*/
 
 --
 -- Trigger pour vérifier qu'un lieu peut être ajouté (le nom du lieu ne doit pas déjà exister)
@@ -509,7 +543,7 @@ DELIMITER ;
 --
 -- Trigger pour vérifier qu'un lieu peut bien être supprimé s'il existe et qu'il n'est associé à aucune activité
 --
-DELIMITER $$;
+/*DELIMITER $$;
 CREATE TRIGGER verifier_suppression_lieu BEFORE DELETE ON Lieu FOR EACH ROW
 BEGIN
   DECLARE lieu_existe INT;
@@ -528,12 +562,12 @@ BEGIN
   END IF;
 END;
 $$;
-DELIMITER ;
+DELIMITER ;*/
 
 --
 -- Trigger pour vérifier que l'ajout d'un état est cohérent pour un utilisateur (état différent du précédent, date supérieure à celle de l'état précédent)
 --
-DELIMITER $$;
+/*DELIMITER $$;
 CREATE TRIGGER verifier_etat BEFORE INSERT ON Etat FOR EACH ROW
 BEGIN
   DECLARE derniere_DATE_etat TIMESTAMP;
@@ -550,12 +584,12 @@ BEGIN
   END IF;
 END;
 $$;
-DELIMITER ;
+DELIMITER ;*/
 
 --
 -- Trigger pour envoyer une notification aux utilisateurs à risque lorsqu'un utilisateur se déclare positif
 --
-DELIMITER $$;
+/*DELIMITER $$;
 CREATE TRIGGER envoi_notification_positif_nouvel_etat AFTER INSERT ON Etat FOR EACH ROW
 BEGIN
   DECLARE id_infecte_potentiel INT;
@@ -660,12 +694,12 @@ BEGIN
   END IF;
 END;
 $$;
-DELIMITER ;
+DELIMITER ;*/
 
 --
 -- Trigger permettant de déclencher l'envoi des notifications de contaminations lors de la création d'une activité par un utilisateur
 --
-DELIMITER $$;
+/*DELIMITER $$;
 CREATE TRIGGER envoi_notifications_creation_activite_contamination AFTER INSERT ON Activite FOR EACH ROW
 BEGIN
   DECLARE id_utilisateur_positif INT;
@@ -677,7 +711,7 @@ BEGIN
 
   DECLARE cur_utilisateurs_proches_infectes CURSOR FOR
     SELECT * FROM (
-      SELECT idUtilisateur, nom, prenom, idEtat FROM Activite A INNER JOIN Etat E
+      SELECT idUtilisateur, nom, prenom, idEtat FROM Activite A INNER JOIN Etat E NATURAL JOIN Utilisateur
       ON A.idUtilisateur = E.idUtilisateur
       WHERE idLieu = NEW.idLieu
       AND positif = b'1'
@@ -709,12 +743,12 @@ BEGIN
   CLOSE cur_utilisateurs_proches_infectes;
 END;
 $$;
-DELIMITER ;
+DELIMITER ;*/
 
 --
 -- Trigger permettant d'envoyer une notification de contamination potentielle à un demandeur d'ami si sa requête est acceptée
 --
-DELIMITER $$;
+/*DELIMITER $$;
 CREATE TRIGGER envoi_notifications_nouvel_ami_contamination AFTER UPDATE ON Ami FOR EACH ROW
 BEGIN
   DECLARE id_utilisateur_positif INT;
@@ -725,7 +759,7 @@ BEGIN
   DECLARE done INT DEFAULT 0;
 
   SELECT idUtilisateur, nom, prenom, idEtat into id_utilisateur_positif, nom_utilisateur_positif, prenom_utilisateur_positif, id_max_etat FROM (
-    SELECT idUtilisateur, nom, prenom, idEtat FROM Activite A NATURAL JOIN Etat E
+    SELECT idUtilisateur, nom, prenom, idEtat FROM Activite A NATURAL JOIN Etat E NATURAL JOIN Utilisateur
     WHERE positif = b'1'
     AND idEtat = (SELECT MAX(idEtat) FROM Etat WHERE idUtilisateur = NEW.idAmi)
     AND idUtilisateur = NEW.idAmi
@@ -734,7 +768,7 @@ BEGIN
     SELECT idNotification FROM NotificationContamination
     WHERE idEtat = ami.idEtat
     AND idContamine = ami.idUtilisateur
-    AND idUtilisateur = NEW.idUtilisateur
+    AND idUtilisateur = NEW.idAmi
   );
 
   IF (id_utilisateur_positif IS NOT NULL) THEN
@@ -743,7 +777,7 @@ BEGIN
   END IF;
 END;
 $$;
-DELIMITER ;
+DELIMITER ;*/
 
 
 --
@@ -756,10 +790,31 @@ BEGIN
   DECLARE prenom_utilisateur VARCHAR(64);
   DECLARE notification VARCHAR(512);
 
-  SELECT nom, prenom INTO nom_utilisateur, prenom_utilisateur FROM Utilisateur WHERE idUtilisateur = NEW.idUtilisateur;
+  SELECT nom, prenom INTO nom_utilisateur, prenom_utilisateur FROM Utilisateur WHERE idUtilisateur = NEW.idAmi;
   SELECT CONCAT("Votre demande d'ami de ", nom_utilisateur, " ", prenom_utilisateur, " a été acceptée.") INTO notification FROM DUAL;
 
   INSERT INTO NotificationAmi(message, idUtilisateur, idAmi, idConcerne) VALUES(notification, NEW.idUtilisateur, NEW.idAmi, NEW.idUtilisateur);
+END;
+$$;
+DELIMITER ;
+
+--
+-- Trigger permettant l'envoi d'une notification d'acceptation lorsqu'un utilisateur refuse une demande d'ami
+--
+DELIMITER $$;
+CREATE TRIGGER envoi_notification_ami_refuse AFTER DELETE ON Ami FOR EACH ROW
+BEGIN
+  DECLARE nom_utilisateur VARCHAR(64);
+  DECLARE prenom_utilisateur VARCHAR(64);
+  DECLARE etat_utilisateur BIT(1);
+  DECLARE notification VARCHAR(512);
+
+  IF (OLD.accepte = b'0') THEN
+    SELECT nom, prenom INTO nom_utilisateur, prenom_utilisateur FROM Utilisateur WHERE idUtilisateur = OLD.idAmi;
+    SELECT CONCAT("Votre demande d'ami de ", nom_utilisateur, " ", prenom_utilisateur, " a été rejetée.") INTO notification FROM DUAL;
+
+    INSERT INTO NotificationAmi(message, idUtilisateur, idAmi, idConcerne) VALUES(notification, OLD.idUtilisateur, OLD.idAmi, OLD.idUtilisateur);
+  END IF;
 END;
 $$;
 DELIMITER ;
