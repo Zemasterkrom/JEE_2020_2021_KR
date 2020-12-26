@@ -234,3 +234,17 @@ a:hover {
 	opacity: 0.5;
     transition: opacity .2s ease-in-out;
 }
+
+img {
+	width:26.5px;
+	height:21px;
+	transform-origin: top left;
+  	-webkit-transform-origin: top left;
+  	-ms-transform-origin: top left;
+}
+
+img.rotate180 {
+  transform: rotate(180deg) translate(-100%, -100%);
+  -webkit-transform: rotate(180deg) translate(-100%, -100%);
+  -ms-transform: rotate(180deg) translateX(-100%, -100%);
+}

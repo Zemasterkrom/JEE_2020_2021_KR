@@ -15,14 +15,14 @@
 	<link href="front/bootstrap/css/list.css" rel="stylesheet">
 	<link href="front/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<script src="front/jquery/jquery-3.5.1.js"></script>
-    <script src="front/bootstrap/js/bootstrap.min.js"></script>	    
+    <script src="front/bootstrap/js/bootstrap.min.js"></script>
 </head>
 
 <body>
 
 	<% ArrayList<Utilisateur> utilisateurs = (ArrayList<Utilisateur>) request.getAttribute("Utilisateurs"); int util = 1; 
 	   SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); format.setTimeZone(TimeZone.getTimeZone("UTC")); %>
-	
+	   
 	<jsp:include page="navbar.jsp" />
 		
 	<div class="page-content page-container" id="page-content">
@@ -54,10 +54,14 @@
 							                            <div class="flex"> 
 							                            	<% out.print(u.getPrenom() + " " + u.getNom()); %> 	
 							                            	
-						   									<div class="item-except text-muted text-sm h-1x">Activités : <% out.print(u.getActivites().size()); %></div>	
-														   										  											    
-							                            </div>				
+						   									<div class="item-except text-muted text-sm h-1x">Activités : <% out.print(u.getActivites().size()); %></div>			
+														</div>
+														
+														<div class="flex">
+						   									<img id="rotate<% out.print(util); %>" class="imgs" src="front/img/arrow.png" style="float: right;"/>	
+														</div>													
 										            </div>
+										            
 									            </div> 
 							            
 									            <div id="activites<% out.print(util); %>" class="activites" style="display: none;">
@@ -138,13 +142,16 @@
 			//Fonction ouvrirActivites pour chaque utilisateur
 			function ouvrirActivites<% out.print(util); %>() {
 				var activ = document.getElementById("activites<% out.print(util); %>");
+				var img = document.getElementById("rotate<% out.print(util); %>");
 				fermerActivites(activ);
 				
 				if (activ.style.display == "none") {
 			 		activ.style.display = "";
+			 		img.classList.add("rotate180");
 			 		
 				} else {
 					activ.style.display = "none";
+					img.classList.remove("rotate180");
 				}
 			}
 			
@@ -153,13 +160,19 @@
 		// Fonction qui permet de fermer tous les autres dropdowns d'activités
 		function fermerActivites(activ) {
 		    var activs = document.getElementsByClassName("activites");
+		    var imgs = document.getElementsByClassName("imgs");
 		    
 		    for (var i = 0; i < activs.length; i++) {
 		        var act = activs[i];
+		        var img = imgs[i];
 		        
 		        if (!(activ == act )) {
 			      	if (act.style.display == "") {
 			      		act.style.display = "none";
+			      	}
+			      	
+			      	if (img.classList.contains("rotate180")) {
+			      		img.classList.remove("rotate180");
 			      	}
 		        }
 		      
