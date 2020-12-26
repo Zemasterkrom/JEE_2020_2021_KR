@@ -17,7 +17,7 @@
 	
 	<% ArrayList<String> erreurs = (ArrayList<String>) request.getAttribute("Erreurs"); %>
 	
-	<div class="col-md-12">
+	<div class="col-md-12" style="padding-left:0;">
 	
 		<jsp:include page="navbar.jsp"/>
 		
