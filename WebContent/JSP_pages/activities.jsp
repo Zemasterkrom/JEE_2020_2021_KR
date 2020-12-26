@@ -51,13 +51,13 @@
 						                            	<div><span class="w-40 avatar gd-primary"><% out.print(util); %></span></div>
 						                            
 						                          
-							                            <div class="flex"> 
+							                            <div class="flex" style="width:80%;max-width:80%"> 
 							                            	<% out.print(u.getPrenom() + " " + u.getNom()); %> 	
 							                            	
 						   									<div class="item-except text-muted text-sm h-1x">Activités : <% out.print(u.getActivites().size()); %></div>			
 														</div>
 														
-														<div class="flex">
+														<div class="flex" style="width:20%;max-width:20%">
 						   									<img id="rotate<% out.print(util); %>" class="imgs" src="front/img/arrow.png" style="float: right;"/>	
 														</div>													
 										            </div>
@@ -69,19 +69,19 @@
 										            	 <% for (Activite a : u.getActivites()) { %>
 										            	 
 															<div class="list-item">     
-																<div class="flex"> 								   										  											    
-									                            </div>       
-									                                        
-									                            <div class="flex"> 
-									                            	<div class="item-except text-muted text-sm h-1x">Lieu : </div>									   										  											    
-									                            </div>
+																<div class="flex" style="width:5%;max-width:5%"> 								   										  											    
+									                            </div>  
 									                            
-									                            <div class="flex"> 
+							                            		<div class="flex" style="width:35%;max-width:35%"> 
 									                            	<div class="item-except text-muted text-sm h-1x">Date de début : <% out.print(format.format(a.getDateDebut())); %></div>	
 									                            	<div class="item-except text-muted text-sm h-1x">Date de fin : <% out.print(format.format(a.getDateFin())); %></div>									   										  											    
+									                            </div>     
+									                                        
+									                            <div class="flex" style="width:45%;max-width:45%"> 
+									                            	<div class="item-except text-muted text-sm h-1x">Lieu : <% out.print(a.getNomLieu()); %></div>						   										  											    
 									                            </div>
 									                            
-									                            <div class="flex">
+									                            <div class="flex" style="width:20%;max-width:20%">
 									                            	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalActivite<% out.print(a.getId()); %>" style="border-radius:15px; float:right;">Supprimer</button>							   										  											    
 									                            </div> 
 												           	</div>

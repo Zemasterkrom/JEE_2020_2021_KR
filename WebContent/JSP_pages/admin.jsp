@@ -14,13 +14,18 @@
 	<script>
 
 	//Dirige vers la page de gestion des utilisateurs
-	function gererUtilisateurs(){
+	function gererUtilisateurs() {
 		  document.location.href = 'users';
 	}
 	
 	//Dirige vers la page de gestion des activités
-	function gererActivites(){
+	function gererActivites() {
 		  document.location.href = 'activities';
+	}
+	
+	//Dirige vers la page de gestion des lieux
+	function gererLieux() {
+		document.location.href = 'places';
 	}
 	
 	</script>
@@ -42,7 +47,7 @@
 	                <div id="test" class="our-services settings" onclick="gererUtilisateurs()">
 	                	<br><br>
 	                    <h4>Gérer les utilisateurs</h4>
-	                    <p>Liste des utilisateurs du site</p>
+	                    <p>Liste des utilisateurs de l'application</p>
 	                    <p>Opérations : supprimer un utilisateur & modifier le rang d'un utilisateur</p>
 	                </div>
 	            </div>
@@ -52,17 +57,18 @@
 	                <div class="our-services speedup" onclick="gererActivites()">
 	                	<br><br>
 	                    <h4>Gérer les activités</h4>
-	                    <p>Liste des activités de chaque utilisateur du site</p>
+	                    <p>Liste des activités de chaque utilisateur de l'application</p>
 	                    <p>Opération : supprimer une activité</p>
 	                </div>
 	            </div>
 	        </div>
 	        <div class="row">
 	            <div class="box">
-	                <div class="our-services privacy">
+	                <div class="our-services privacy" onclick="gererLieux()">
 	                	<br><br>
 	                    <h4>Gérer les lieux</h4>
-	                    <p></p>
+	                    <p>Liste des lieux de l'application</p>
+	                    <p>Opérations : supprimer un lieu & modifier un lieu</p>
 	                </div>
 	            </div>
 	        </div>

@@ -39,6 +39,7 @@
 	                    	<% if (utilisateurs.size() > 0) { %>
 	                    	
 		                    	<% for (Utilisateur u : utilisateurs) { %>
+		                    	
 		                    		<div class="utilisateur">
 		                    		
 				                        <div class="list-item">
@@ -46,24 +47,20 @@
 				                            	<div><span class="w-40 avatar gd-primary"><% out.print(u.getPrenom().toUpperCase().charAt(0)); %></span></div>
 				                            
 				                          
-					                            <div class="flex"> 
-					                            	<% out.print(u.getPrenom() + " " + u.getNom()); %>  	
-					                            				                               		   									 														     
-				   									<div class="row">
-				   										&nbsp;&nbsp;    
-				   										<div class="item-except text-muted text-sm h-1x">Né(e) le <% SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-				   									 														     	 out.print(format.format(u.getDateNaiss())); %></div>	
-													    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     
-				                            			<div class="item-except text-muted text-sm h-1x">Login : <% out.print(u.getLogin()); %></div>
-				                            			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
-				                            			<div class="item-date text-muted text-sm d-none d-md-block">Rang : <% out.print(u.getRang()); %></div>			                            											   
-												   	</div>	
-												   										  											    
+					                            <div class="flex" style="width:40%;max-width:40%"> 
+					                            	<% out.print(u.getPrenom() + " " + u.getNom()); %>  
+					                            		 
+				   									<div class="item-except text-muted text-sm h-1x">Né(e) le <% SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");				   									 														     	 out.print(format.format(u.getDateNaiss())); %></div>		                            											   
+												</div>	
+					                            
+					                            <div class="flex" style="width:40%;max-width:40%"> 					                            	
+			                            			<div class="item-except text-muted text-sm h-1x">Login : <% out.print(u.getLogin()); %></div>
+			                            			<div class="item-date text-muted text-sm d-none d-md-block">Rang : <% out.print(u.getRang()); %></div>												   										  											    
 					                            </div>
 				                        	                            
 				                            <% if (u.getRang().equals("normal")) { %>
 				                            
-				                            	<div class="flex">
+				                            	<div class="flex" style="width:20%;max-width:20%">
 								                    <div class="dropdown" style="float:right">
 												  		<button onclick="dropList<% out.print(drop); %>()" class="dropbtn" style="border-radius:15px">Actions</button>
 												  		
@@ -118,7 +115,7 @@
 												      		</div>
 												      		
 												     		<div class="modal-body">
-												        		Voulez vous vraiment supprimer le compte de <% out.print(u.getPrenom() + " " + u.getNom()); %> de l'application  ?
+												        		Voulez vous vraiment supprimer le compte de &#xAB; <% out.print(u.getPrenom() + " " + u.getNom()); %> &#xBB; de l'application  ?
 												      		</div>
 												      		
 												      		<div class="modal-footer">
@@ -168,7 +165,7 @@
 		<%  drop = 1;
 			for (Utilisateur u : utilisateurs) { %>
 			
-			//Fonction dropList pour chaque utilisateur
+			//Fonction dropList pour chaque lieu
 			function dropList<% out.print(drop); %>() {	
 				var dropdown = document.getElementById("myDropdown<% out.print(drop); %>");
 				fermerDropList(dropdown);
@@ -207,5 +204,6 @@
 		}
 		
 	</script>
+	
 </body>
 </html>

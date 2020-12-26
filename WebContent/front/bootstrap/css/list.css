@@ -206,7 +206,7 @@ a:hover {
 .activites {
 	margin-left: 5%;
 	width: 90%;
-	border: 1px solid rgba(19, 24, 44, .25);
+	border: 1px solid rgba(19, 24, 44, .15);
 }
 
 .card-activites {
@@ -218,11 +218,11 @@ a:hover {
     word-wrap: break-word;
     background-color: #fff;
     background-clip: border-box;
-    border: 1px solid rgba(19, 24, 44, .25);
+    border: 1px solid rgba(19, 24, 44, .15);
 }
 
 .activites > .list-item {
-	border: 1px solid rgba(19, 24, 44, .125);
+	border: 1px solid rgba(19, 24, 44, .15);
 }
 
 .utilisateur:hover {

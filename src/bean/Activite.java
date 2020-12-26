@@ -21,10 +21,10 @@ public class Activite {
 	 * Date de fin de l'activité
 	 */
 	private Timestamp dateFin;
-	/**
-	 * Id de l'utilisateur à qui appartient l'activité
+	/*
+	 * Lieu de l'activité
 	 */
-	private int idUtilisateur;
+	private String nomLieu;
 	
 	public int getId() {
 		return id;
@@ -44,13 +44,12 @@ public class Activite {
 	public void setDateFin(Timestamp dateFin) {
 		this.dateFin = dateFin;
 	}
-	public int getIdUtilisateur() {
-		return idUtilisateur;
+	public String getNomLieu() {
+		return nomLieu;
 	}
-	public void setIdUtilisateur(int idUtilisateur) {
-		this.idUtilisateur = idUtilisateur;
+	public void setNomLieu(String nomLieu) {
+		this.nomLieu = nomLieu;
 	}
-	
 
 	
 }

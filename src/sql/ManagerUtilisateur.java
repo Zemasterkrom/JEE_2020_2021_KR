@@ -91,8 +91,8 @@ public class ManagerUtilisateur extends Manager {
 	
 	/**
 	 * Méthode qui permet de récupérer un utilisateur dans la BDD
-	 * @param login
-	 * @return
+	 * @param login de l'utilisateur
+	 * @return utilisateur correspondant
 	 */
 	public Utilisateur getUtilisateur(String login) {
 		//Création de l'utilisateur
