@@ -26,16 +26,17 @@
 
     <main role="main">
 
-      <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
         <div class="container">
-          <h1 class="display-3">Accueil</h1>
-          <p>Description</p>
+        	<h1 class="display-3">Accueil</h1>
+        	<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bienvenue <% out.print(utilisateur.getPrenom()); %>.</p>
+        	
+        	<jsp:include page="index.jsp" />
         </div>
       </div>
 
       <div class="container">
-        <!-- Example row of columns -->
+        
         <div class="row">
           <div class="col-md-12" style="text-align: center;">
             <h2>Vous êtes connecté</h2>        
@@ -44,7 +45,7 @@
 
         <hr>
 
-      </div> <!-- /container -->
+      </div>
 
     </main>
     
