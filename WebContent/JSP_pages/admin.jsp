@@ -42,7 +42,8 @@
 	                <div id="test" class="our-services settings" onclick="gererUtilisateurs()">
 	                	<br><br>
 	                    <h4>Gérer les utilisateurs</h4>
-	                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+	                    <p>Liste des utilisateurs du site</p>
+	                    <p>Opérations : supprimer un utilisateur & modifier le rang d'un utilisateur</p>
 	                </div>
 	            </div>
 	        </div>
@@ -51,7 +52,8 @@
 	                <div class="our-services speedup" onclick="gererActivites()">
 	                	<br><br>
 	                    <h4>Gérer les activités</h4>
-	                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+	                    <p>Liste des activités de chaque utilisateur du site</p>
+	                    <p>Opération : supprimer une activité</p>
 	                </div>
 	            </div>
 	        </div>
@@ -60,7 +62,7 @@
 	                <div class="our-services privacy">
 	                	<br><br>
 	                    <h4>Gérer les lieux</h4>
-	                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit </p>
+	                    <p></p>
 	                </div>
 	            </div>
 	        </div>
