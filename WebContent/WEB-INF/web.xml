@@ -120,7 +120,6 @@
     <servlet-name>DeleteActivityServlet</servlet-name>
     <url-pattern>/deleteActivity</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>PlacesServlet</servlet-name>
     <servlet-class>servlet.PlacesServlet</servlet-class>
@@ -128,5 +127,14 @@
   <servlet-mapping>
     <servlet-name>PlacesServlet</servlet-name>
     <url-pattern>/places</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>DeletePlaceServlet</servlet-name>
+    <servlet-class>servlet.DeletePlaceServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DeletePlaceServlet</servlet-name>
+    <url-pattern>/deletePlace</url-pattern>
   </servlet-mapping>
 </web-app>

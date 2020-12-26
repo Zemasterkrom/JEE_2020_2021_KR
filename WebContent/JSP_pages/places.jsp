@@ -60,8 +60,12 @@
 								                    <div class="dropdown" style="float:right">
 												  		<button onclick="dropList<% out.print(drop); %>()" class="dropbtn" style="border-radius:15px">Actions</button>
 												  		
-													  	<div id="myDropdown<% out.print(drop); %>" class="dropdown-content">										  	
-													  		<a href="modifyPlace">Modifier le lieu</a>
+													  	<div id="myDropdown<% out.print(drop); %>" class="dropdown-content">
+													  		<form action="modifyPlace" method="get">
+													  			<input type="hidden" name="idLieu" value="<% out.print(l.getId()); %>" />
+													  			<a href="#" onclick="this.parentNode.submit()">Modifier le lieu</a>
+													  		</form>										  	
+													  		
 													  		
 													  		<% if (l.getActivites().size() == 0) { %>
 													  		
@@ -105,7 +109,7 @@
 													  	</div>
 													</div>
 													
-											<% } %>
+												<% } %>
 											
 				                        </div>
 			                        
@@ -135,47 +139,48 @@
 
 
 	<script>
-	<%  drop = 1;
-	for (Lieu l : lieux) { %>
 	
-	//Fonction dropList pour chaque utilisateur
-	function dropList<% out.print(drop); %>() {	
-		var dropdown = document.getElementById("myDropdown<% out.print(drop); %>");
-		fermerDropList(dropdown);
+		<%  drop = 1;
+		for (Lieu l : lieux) { %>
 		
-		if (!dropdown.classList.contains("show")) {
-	 		dropdown.classList.add("show");
-	 		
-		} else {
-			dropdown.classList.remove("show");
+		//Fonction dropList pour chaque utilisateur
+		function dropList<% out.print(drop); %>() {	
+			var dropdown = document.getElementById("myDropdown<% out.print(drop); %>");
+			fermerDropList(dropdown);
+			
+			if (!dropdown.classList.contains("show")) {
+		 		dropdown.classList.add("show");
+		 		
+			} else {
+				dropdown.classList.remove("show");
+			}
 		}
-	}
-
-	<% drop++; } %>
-		
-	// Fonction qui permet de fermer les dropList
-	function fermerDropList(dropdownCourant) {
-	    var dropdowns = document.getElementsByClassName("dropdown-content");
-	    
-	    for (var i = 0; i < dropdowns.length; i++) {
-	        var openDropDown = dropdowns[i];
-	        
-	        if (!(openDropDown == dropdownCourant )) {
-		      	if (openDropDown.classList.contains('show')) {
-		    	 	openDropDown.classList.remove('show');
-		      	}
-	        }
-	      
-	    }
-	}
 	
-	//Si on clique sur la page, on ferme les dropList
-	window.onclick = function(event) { 
-		if (!event.target.matches('.dropbtn')) {
-			fermerDropList();
+		<% drop++; } %>
+			
+		// Fonction qui permet de fermer les dropList
+		function fermerDropList(dropdownCourant) {
+		    var dropdowns = document.getElementsByClassName("dropdown-content");
+		    
+		    for (var i = 0; i < dropdowns.length; i++) {
+		        var openDropDown = dropdowns[i];
+		        
+		        if (!(openDropDown == dropdownCourant )) {
+			      	if (openDropDown.classList.contains('show')) {
+			    	 	openDropDown.classList.remove('show');
+			      	}
+		        }
+		      
+		    }
 		}
-	}
-				
+		
+		//Si on clique sur la page, on ferme les dropList
+		window.onclick = function(event) { 
+			if (!event.target.matches('.dropbtn')) {
+				fermerDropList();
+			}
+		}
+					
 	</script>
 	
 </body>

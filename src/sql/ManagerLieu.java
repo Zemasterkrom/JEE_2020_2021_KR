@@ -104,4 +104,57 @@ public class ManagerLieu extends Manager {
 		
 		return lieu;
 	}
+	
+	/**
+	 * Méthode qui permet de supprimer un lieu
+	 * @param id du lieu à supprimer
+	 */
+	public void supprimerLieu(int id) {
+		try {
+			//Requête
+			String req = "DELETE FROM Lieu WHERE idLieu=?";
+			//Préparation de la requête
+			PreparedStatement stmt = connection.prepareStatement(req);
+			//Ajout de l'id à la requête
+			stmt.setInt(1, id);
+			//Exécution  de la requête
+			stmt.execute();	
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Méthode pour vérifier si un lieu peut être supprimé
+	 * @param id : id du lieu
+	 * @return true si le lieu peut être supprimé
+	 */
+	public boolean verifierLieuPeutEtreSupprimer(int id) {
+		boolean res = false;
+	
+		try {
+			//Requête
+			String req = "SELECT count(*) FROM Lieu l INNER JOIN Activite a ON l.idLieu = a.idLieu WHERE l.idLieu=?";
+			//Préparation de la requête
+			PreparedStatement stmt = connection.prepareStatement(req);
+			//Ajout de l'id à la requête
+			stmt.setInt(1, id);
+			//Exécution  de la requête
+			ResultSet results = stmt.executeQuery();
+			
+			//Récupération du résultat
+			results.next();
+			int count = results.getInt(1);
+			//Si le count est égal à zéro, le lieu peut être supprimé
+			if (count == 0) {
+				res = true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return res;
+	}
 }
