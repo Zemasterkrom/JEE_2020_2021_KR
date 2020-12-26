@@ -18,6 +18,11 @@
 		  document.location.href = 'users';
 	}
 	
+	//Dirige vers la page de gestion des activités
+	function gererActivites(){
+		  document.location.href = 'activities';
+	}
+	
 	</script>
 </head>
 
@@ -43,7 +48,7 @@
 	        </div>
 	        <div class="row">
 	            <div class="box">
-	                <div class="our-services speedup">
+	                <div class="our-services speedup" onclick="gererActivites()">
 	                	<br><br>
 	                    <h4>Gérer les activités</h4>
 	                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>

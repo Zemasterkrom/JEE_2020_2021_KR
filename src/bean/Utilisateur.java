@@ -1,6 +1,7 @@
 package bean;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 
@@ -37,6 +38,10 @@ public class Utilisateur {
 	 * Rang de l'utilisateur
 	 */
 	private String rang;
+	/**
+	 * Liste des activités de l'utilisateur
+	 */
+	private List<Activite> activites;
 	
 	/**
 	 * Méthode getter du nom
@@ -149,5 +154,23 @@ public class Utilisateur {
 	public void setId(int id) {
 		this.id = id;
 	}
+
+	/**
+	 * Méthode getter de la liste des activités de l'utilisateur
+	 * @return activités de l'utilisateur
+	 */
+	public List<Activite> getActivites() {
+		return activites;
+	}
+
+	/**
+	 * Méthode setter de la liste des activités de l'utilisateur
+	 * @param activites de l'utilisateur
+	 */
+	public void setActivites(List<Activite> activites) {
+		this.activites = activites;
+	}
+	
+	
 	
 }

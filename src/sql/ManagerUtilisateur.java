@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import bean.Activite;
 import bean.Utilisateur;
 
 /**
@@ -96,6 +97,10 @@ public class ManagerUtilisateur extends Manager {
 	public Utilisateur getUtilisateur(String login) {
 		//Création de l'utilisateur
 		Utilisateur utilisateur = new Utilisateur();
+		//Création de la liste des activités de l'utilisateur
+		List<Activite> activites;
+		//Création du manager des activités
+		ManagerActivite manager = new ManagerActivite();
 		
 		try {
 			//Requête
@@ -118,6 +123,10 @@ public class ManagerUtilisateur extends Manager {
 			utilisateur.setLogin(results.getString("login"));
 			utilisateur.setMotDePasse(results.getString("motDePasse"));
 			utilisateur.setRang(results.getString("rang"));
+			
+			//Ajout des activités de l'utilisateur
+			activites = manager.getActivitesUtilisateur(utilisateur.getId());
+			utilisateur.setActivites(activites);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -188,6 +197,8 @@ public class ManagerUtilisateur extends Manager {
 	public List<Utilisateur> getAllUtilisateurs(String login) {
 		//Initialisation de la liste
 		List<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
+		//Création du manager des activités
+		ManagerActivite manager = new ManagerActivite();
 		
 		try {
 			//Requête
@@ -200,6 +211,7 @@ public class ManagerUtilisateur extends Manager {
 			ResultSet results = stmt.executeQuery();
 			
 			Utilisateur u;
+			List<Activite> acts;
 			//Pour chaque utilisateur
 			while (results.next()) {
 				u = new Utilisateur();
@@ -212,6 +224,10 @@ public class ManagerUtilisateur extends Manager {
 				u.setLogin(results.getString("login"));
 				u.setMotDePasse(results.getString("motDePasse"));
 				u.setRang(results.getString("rang"));
+				
+				//Ajout des activités de l'utilisateur
+				acts = manager.getActivitesUtilisateur(u.getId());
+				u.setActivites(acts);
 				
 				//Ajout de l'utilisateur à la liste
 				utilisateurs.add(u);
@@ -254,7 +270,7 @@ public class ManagerUtilisateur extends Manager {
 			String req = "DELETE FROM Utilisateur WHERE idUtilisateur=?";
 			//Préparation de la requête
 			PreparedStatement stmt = connection.prepareStatement(req);
-			//Ajout du login à la requête
+			//Ajout de l'id à la requête
 			stmt.setInt(1, id);
 			//Exécution  de la requête
 			stmt.execute();	
