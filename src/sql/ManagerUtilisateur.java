@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import bean.Activite;
+import bean.Ami;
 import bean.Utilisateur;
 
 /**
@@ -106,8 +107,14 @@ public class ManagerUtilisateur extends Manager {
 		Utilisateur utilisateur = new Utilisateur();
 		//Création de la liste des activités de l'utilisateur
 		List<Activite> activites;
+		//Création de la liste des amis de l'utilisateur
+		List<Ami> amis;
+		//Création de la liste des demande d'ami de l'utilisateur
+		List<Ami> demandes;
 		//Création du manager des activités
-		ManagerActivite manager = new ManagerActivite();
+		ManagerActivite managerActivite = new ManagerActivite();
+		//Création du manager des amis
+		ManagerAmi managerAmi = new ManagerAmi();
 		
 		try {
 			//Requête
@@ -133,8 +140,16 @@ public class ManagerUtilisateur extends Manager {
 			utilisateur.setImage(results.getString("image"));
 			
 			//Ajout des activités de l'utilisateur
-			activites = manager.getActivitesUtilisateur(utilisateur.getId());
+			activites = managerActivite.getActivitesUtilisateur(utilisateur.getId());
 			utilisateur.setActivites(activites);
+			
+			//Ajout des amis de l'utilisateur
+			amis = managerAmi.getAmis(utilisateur.getId());
+			utilisateur.setAmis(amis);
+			
+			//Ajout des demandes d'amis de l'utilisateur
+			demandes = managerAmi.getDemandesAmi(utilisateur.getId());
+			utilisateur.setDemandes(demandes);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -237,7 +252,6 @@ public class ManagerUtilisateur extends Manager {
 				u.setPrenom(results.getString("prenom"));
 				u.setDateNaiss(results.getDate("dateNaiss"));
 				u.setLogin(results.getString("login"));
-				u.setMotDePasse(results.getString("motDePasse"));
 				u.setRang(results.getString("rang"));
 				u.setImage(results.getString("image"));
 				
@@ -294,5 +308,42 @@ public class ManagerUtilisateur extends Manager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Méthode qui permet de récupérer un utilisateur ami à partir
+	 * de son id
+	 * @param id de l'utilisateur ami
+	 * @return utilisateur ami
+	 */
+	public Utilisateur getUtilisateurAmi(int id) {
+		//Création de l'utilisateur
+		Utilisateur utilisateur = new Utilisateur();
+		try {
+			//Requête
+			String req = "SELECT * FROM Utilisateur WHERE idUtilisateur = ?";
+			//Préparation de la requête
+			PreparedStatement stmt = connection.prepareStatement(req);
+			//Ajout de l'id à la requête
+			stmt.setInt(1, id);
+			//Exécution de la requête
+			ResultSet results = stmt.executeQuery();
+			
+			//Récupération du résultat
+			results.next();
+			
+			//Ajout des informations de l'utilisateur
+			utilisateur.setId(results.getInt("idUtilisateur"));
+			utilisateur.setNom(results.getString("nom"));
+			utilisateur.setPrenom(results.getString("prenom"));
+			utilisateur.setDateNaiss(results.getDate("dateNaiss"));
+			utilisateur.setLogin(results.getString("login"));
+			utilisateur.setImage(results.getString("image"));
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return utilisateur;
 	}
 }

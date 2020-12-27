@@ -46,6 +46,14 @@ public class Utilisateur {
 	 * Liste des activités de l'utilisateur
 	 */
 	private List<Activite> activites;
+	/**
+	 * Liste des amis de l'utilisateur
+	 */
+	private List<Ami> amis;
+	/**
+	 * List des demandes d'amis de l'utilisateur
+	 */
+	private List<Ami> demandes;
 	
 	/**
 	 * Méthode getter du nom
@@ -190,7 +198,37 @@ public class Utilisateur {
 	public void setActivites(List<Activite> activites) {
 		this.activites = activites;
 	}
-	
-	
-	
+
+	/**
+	 * Méthode getter de la liste des amis de l'utilisateur
+	 * @return amis de l'utilisateur
+	 */
+	public List<Ami> getAmis() {
+		return amis;
+	}
+
+	/**
+	 * Méthode setter de la liste des amis de l'utilisateur
+	 * @param amis de l'utilisateur
+	 */
+	public void setAmis(List<Ami> amis) {
+		this.amis = amis;
+	}
+
+	/**
+	 * Méthode getter de la liste des demandes d'ami de l'utilisateur
+	 * @return demandes d'ami de l'utilisateur
+	 */
+	public List<Ami> getDemandes() {
+		return demandes;
+	}
+
+	/**
+	 * Méthode setter de la liste des demandes d'ami de l'utilisateur
+	 * @param demandes d'ami de l'utilisateur
+	 */
+	public void setDemandes(List<Ami> demandes) {
+		this.demandes = demandes;
+	}
+		
 }

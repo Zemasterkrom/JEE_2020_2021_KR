@@ -56,7 +56,8 @@
 					                            <div class="flex" style="width:50%;max-width:50%"> 
 					                            	<% out.print(u.getPrenom() + " " + u.getNom()); %>  
 					                            		 
-				   									<div class="item-except text-muted text-sm h-1x">Né(e) le <% SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");				   									 														     	 out.print(format.format(u.getDateNaiss())); %></div>		                            											   
+				   									<div class="item-except text-muted text-sm h-1x">Né(e) le <% SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				   																								 out.print(format.format(u.getDateNaiss())); %></div>		                            											   
 												</div>	
 					                            
 					                            <div class="flex" style="width:30%;max-width:30%"> 					                            	
