@@ -104,6 +104,11 @@ public class ManagerAmi extends Manager {
 		return demandes;
 	}
 
+	/**
+	 * Méthode qui permet d'accepter une demande d'ami
+	 * @param idAccepteur : id de l'utilisateur qui accepte la demande
+	 * @param idAmi : id de l'utilisateur dont la demande émane
+	 */
 	public void accepterDemandeAmi(int idAccepteur, int idAmi) {		
 		try {
 			//Préparation de la requête
@@ -119,10 +124,45 @@ public class ManagerAmi extends Manager {
 		}
 		
 	}
-	
-	public void refuserDemandeAmi(int id) {
-		// TODO Auto-generated method stub
-		
+
+	/**
+	 * Méthode qui permet de refuser une demande d'ami
+	 * @param idRefuseur : id de l'utilisateur qui refuse la demande
+	 * @param idAmi : id de l'utilisateur dont la demande émane
+	 */
+	public void refuserDemandeAmi(int idRefuseur, int idAmi) {
+		try {
+			//Préparation de la requête
+			CallableStatement cstmt = connection.prepareCall("{call supprimer_refuser_ami(?, ?)}");
+			//Ajout des id à la requête
+			cstmt.setInt(1, idRefuseur);
+			cstmt.setInt(2, idAmi);
+			//Exécution de la requête
+			cstmt.execute();
+						
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+	}
+
+	/**
+	 * Méthode qui permet de supprimer un ami
+	 * @param idUtilisateur : id de l'utilisateur qui supprime un ami
+	 * @param idAmi : id de l'ami supprimer
+	 */
+	public void supprimerAmi(int idUtilisateur, int idAmi) {
+		try {
+			//Préparation de la requête
+			CallableStatement cstmt = connection.prepareCall("{call supprimer_refuser_ami(?, ?)}");
+			//Ajout des id à la requête
+			cstmt.setInt(1, idUtilisateur);
+			cstmt.setInt(2, idAmi);
+			//Exécution de la requête
+			cstmt.execute();
+						
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}			
 	}
 
 

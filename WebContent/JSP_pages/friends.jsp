@@ -64,6 +64,41 @@
 				                            <div class="flex" style="width:40%;max-width:40%"> 					                            	
 		                            			<div class="item-except text-muted text-sm h-1x">Login : <% out.print(u.getLogin()); %></div>											   										  											    
 				                            </div>
+				                            
+				                            <div class="flex" style="width:20%;max-width:20%;">                           		
+				                           		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalSupprimerAmi<% out.print(u.getId()); %>" style="border-radius:15px; float:right;">Supprimer</button> 					                           										   										  											    
+				                           	</div>
+				                           	
+				                           	<!-- Modal supprimer ami -->
+											<div class="modal fade" id="modalSupprimerAmi<% out.print(u.getId()); %>" tabindex="-1" role="dialog" aria-hidden="true">
+											  	<div class="modal-dialog" role="document">
+											    	<div class="modal-content">
+											    	
+											      		<div class="modal-header">
+											        		<h5 class="modal-title">Supprimer un ami</h5>
+											        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											          			<span aria-hidden="true">&times;</span>
+											        		</button>										        	
+											      		</div>
+											      		
+											     		<div class="modal-body">
+											        		Voulez vous vraiment supprimer &#xAB; <% out.print(u.getPrenom() + " " + u.getNom()); %> &#xBB; de votre liste d'amis ?
+											      		</div>
+											      		
+											      		<div class="modal-footer">
+											      		
+								      						<form action="deleteFriend" method="post">
+								      							<input type="hidden" name="idUtilisateur" value="<% out.print(utilisateur.getId()); %>" />
+								      							<input type="hidden" name="idAmi" value="<% out.print(u.getId()); %>" />
+											  					<button type="submit" class="btn btn-primary">Valider</button>
+											  				</form>
+											        		<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>	
+											        										        
+											      		</div>
+											      		
+											    	</div>
+											  	</div>
+											</div>
 										
 			                        </div>
 		                        
@@ -144,7 +179,7 @@
 											      		<div class="modal-footer">
 											      		
 								      						<form action="rejectFriendRequest" method="post">
-								      							<input type="hidden" name="idAccepteur" value="<% out.print(utilisateur.getId()); %>" />
+								      							<input type="hidden" name="idRefuseur" value="<% out.print(utilisateur.getId()); %>" />
 								      							<input type="hidden" name="idAmi" value="<% out.print(u.getId()); %>" />
 											  					<button type="submit" class="btn btn-primary">Valider</button>
 											  				</form>
