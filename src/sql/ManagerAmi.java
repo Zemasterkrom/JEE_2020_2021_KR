@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.CallableStatement;
 
 import bean.Ami;
 
@@ -22,6 +23,11 @@ public class ManagerAmi extends Manager {
 		super();
 	}
 	
+	/**
+	 * Méthode qui permet de récupérer tous les amis d'un utilisateur
+	 * @param id de l'utilisateur
+	 * @return liste d'amis de l'utilisateur
+	 */
 	public List<Ami> getAmis(int id) {
 		//Initialisation de la liste
 		List<Ami> amis = new ArrayList<Ami>();
@@ -58,6 +64,11 @@ public class ManagerAmi extends Manager {
 		return amis;
 	}
 	
+	/**
+	 * Méthode qui permet de récupérer toutes les demandes d'ami de l'utilisateur
+	 * @param id de l'utilisateur
+	 * @return liste des demandes d'ami de l'utilisateur
+	 */
 	public List<Ami> getDemandesAmi(int id) {
 		//Initialisation de la liste
 		List<Ami> demandes = new ArrayList<Ami>();
@@ -92,4 +103,27 @@ public class ManagerAmi extends Manager {
 		
 		return demandes;
 	}
+
+	public void accepterDemandeAmi(int idAccepteur, int idAmi) {		
+		try {
+			//Préparation de la requête
+			CallableStatement cstmt = connection.prepareCall("{call accepter_ami(?, ?)}");
+			//Ajout des id à la requête
+			cstmt.setInt(1, idAccepteur);
+			cstmt.setInt(2, idAmi);
+			//Exécution de la requête
+			cstmt.execute();
+						
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void refuserDemandeAmi(int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 }

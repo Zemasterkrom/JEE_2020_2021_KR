@@ -136,7 +136,6 @@
     <servlet-name>DeletePlaceServlet</servlet-name>
     <url-pattern>/deletePlace</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>FriendsServlet</servlet-name>
     <servlet-class>servlet.FriendsServlet</servlet-class>
@@ -144,5 +143,14 @@
   <servlet-mapping>
     <servlet-name>FriendsServlet</servlet-name>
     <url-pattern>/friends</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>AcceptFriendRequestServlet</servlet-name>
+    <servlet-class>servlet.AcceptFriendRequestServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AcceptFriendRequestServlet</servlet-name>
+    <url-pattern>/acceptFriendRequest</url-pattern>
   </servlet-mapping>
 </web-app>
