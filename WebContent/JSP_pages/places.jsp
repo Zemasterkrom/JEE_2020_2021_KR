@@ -32,10 +32,10 @@
 	            
 	                <div class="container-fluid d-flex justify-content-center">
 	                
-	                    <div class="list list-row card" style="width: 50%;">
-	                    
-	                    	<% if (lieux.size() > 0) { %>
-	                    	
+	                	<% if (lieux.size() > 0) { %>
+	                	
+	                    	<div class="list list-row card" style="width: 50%;">
+	                    	                    		                    	
 		                    	<% for (Lieu l : lieux) { %>
 		                    	
 		                    		<div class="utilisateur">
@@ -116,16 +116,16 @@
 			                        
 			                    <% drop++; } %>
 			                    
-		                    <% } else { %>
-		                    
-								<div class="list-item" style="display:inline; text-align:center;">
-				                	<h2 >Aucun lieu trouvé</h2>								
-				                </div>
-								
-							<% } %>
-							
-	                    </div>
+		                    </div>
+			                    
+	                    <% } else { %>
 	                    
+							<div class="list-item" style="display:inline; text-align:center;">
+			                	<h2 >Aucun lieu trouvé</h2>								
+			                </div>
+							
+						<% } %>
+							                   
 	                </div>
 	                
 	            </div>

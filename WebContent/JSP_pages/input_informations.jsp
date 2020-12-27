@@ -28,9 +28,8 @@
 				   if (request.getAttribute("dateNaiss") != null) { dateNaiss = (String) request.getAttribute("dateNaiss"); } else { dateNaiss = "2000-01-01"; }
 				   if (request.getAttribute("login") != null) { login = (String) request.getAttribute("login"); } else { login =""; } 
 			   }
-			   
-			   
-			   %>
+
+			%>
 			
 		    <label for="nom" class="visually-hidden">Nom</label>
 		    <input type="text" id="nom" name="nom" class="form-control" value="<% out.print(nom); %>"required>

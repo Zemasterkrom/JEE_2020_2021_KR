@@ -34,10 +34,10 @@
 	            
 	                <div class="container-fluid d-flex justify-content-center">
 	                
-	                    <div class="list list-row card" style="width: 50%;">
-	                    
-	                    	<% if (utilisateurs.size() > 0) { %>
-	                    	
+	                	<% if (utilisateurs.size() > 0) { %>
+	                	
+	                    	<div class="list list-row card" style="width: 50%;">
+	                    	                  	
 		                    	<% for (Utilisateur u : utilisateurs) { %>
 		                    	
 		                    		<div class="utilisateur">
@@ -47,13 +47,13 @@
 				                            	<div><span class="w-40 avatar gd-primary"><% out.print(u.getPrenom().toUpperCase().charAt(0)); %></span></div>
 				                            
 				                          
-					                            <div class="flex" style="width:40%;max-width:40%"> 
+					                            <div class="flex" style="width:50%;max-width:50%"> 
 					                            	<% out.print(u.getPrenom() + " " + u.getNom()); %>  
 					                            		 
 				   									<div class="item-except text-muted text-sm h-1x">Né(e) le <% SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");				   									 														     	 out.print(format.format(u.getDateNaiss())); %></div>		                            											   
 												</div>	
 					                            
-					                            <div class="flex" style="width:40%;max-width:40%"> 					                            	
+					                            <div class="flex" style="width:30%;max-width:30%"> 					                            	
 			                            			<div class="item-except text-muted text-sm h-1x">Login : <% out.print(u.getLogin()); %></div>
 			                            			<div class="item-date text-muted text-sm d-none d-md-block">Rang : <% out.print(u.getRang()); %></div>												   										  											    
 					                            </div>
@@ -132,6 +132,10 @@
 												  	</div>
 												</div>
 												
+											<% } else { %>
+											
+												<div class="flex" style="width:20%;max-width:20%"></div>
+												
 											<% } %>
 											
 				                        </div>
@@ -140,15 +144,16 @@
 			                        
 			                    <% drop++; } %>
 			                    
-		                    <% } else { %>
-		                    
-								<div class="list-item" style="display:inline; text-align:center;">
-				                	<h2 >Aucun utilisateur trouvé</h2>								
-				                </div>
-								
-							<% } %>
-	                    </div>
+		                     </div>
+			                    
+                    	<% } else { %>
 	                    
+							<div class="list-item" style="display:inline; text-align:center;">
+			                	<h2 >Aucun utilisateur trouvé</h2>								
+			                </div>
+							
+						<% } %>
+								                                      
 	                </div>
 	                
 	            </div>

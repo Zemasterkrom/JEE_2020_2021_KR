@@ -69,34 +69,31 @@ public class ManagerLieu extends Manager {
 	}
 	
 	/**
-	 * Méthode qui permet de récupérer un lieu dans la BDD
+	 * Méthode qui permet de récupérer un lieu dans la BDD (sans ses activités)
 	 * @param id du lieu
 	 * @return lieu correspondant
 	 */
-	public Lieu getLieu(int id) {
-		//Création du
+	public Lieu getLieuSansActivites(int id) {
+		//Création du lieu
 		Lieu lieu = new Lieu();
-		//Création de la liste des activités du lieu
-		List<Activite> activites;
-		//Création du manager des activités
-		ManagerActivite manager = new ManagerActivite();
 		
 		try {
 			//Requête
 			String req = "SELECT * FROM Lieu WHERE idLieu=?";
 			//Préparation de la requête
 			PreparedStatement stmt = connection.prepareStatement(req);
+			//Ajout de l'id à la requête
+			stmt.setInt(1, id);
 			//Exécution de la requête
 			ResultSet results = stmt.executeQuery();
 				
+			//Récupération du résultat
+			results.next();
+			
 			//Ajout des informations du lieu
 			lieu.setId(results.getInt("idLieu"));
 			lieu.setNom(results.getString("nom"));
-			lieu.setAdresse(results.getString("adresse"));				
-				
-			//Ajout des activités du lieu
-			activites = manager.getActivitesLieu(lieu.getId());
-			lieu.setActivites(activites);
+			lieu.setAdresse(results.getString("adresse"));	
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

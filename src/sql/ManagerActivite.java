@@ -34,7 +34,7 @@ public class ManagerActivite extends Manager {
 		
 		try {
 			//Requête
-			String req = "SELECT idActivite, dateDebut, dateFin, l.nom FROM Activite a INNER JOIN Lieu l ON a.idLieu = l.idLieu WHERE idUtilisateur=?";
+			String req = "SELECT * FROM Activite WHERE idUtilisateur=?";
 			//Préparation de la requête
 			PreparedStatement stmt = connection.prepareStatement(req);
 			//Ajout de l'id à la requête
@@ -61,7 +61,7 @@ public class ManagerActivite extends Manager {
 		
 		try {
 			//Requête
-			String req = "SELECT idActivite, dateDebut, dateFin, l.nom FROM Activite a INNER JOIN Lieu l ON a.idLieu = l.idLieu WHERE a.idLieu=?";
+			String req = "SELECT * FROM Activite WHERE idLieu=?";
 			//Préparation de la requête
 			PreparedStatement stmt = connection.prepareStatement(req);
 			//Ajout de l'id à la requête
@@ -99,7 +99,8 @@ public class ManagerActivite extends Manager {
 						a.setId(results.getInt("idActivite"));
 						a.setDateDebut(results.getTimestamp("dateDebut"));
 						a.setDateFin(results.getTimestamp("dateFin"));
-						a.setNomLieu(results.getString("nom"));
+						a.setIdUtilisateur(results.getInt("idUtilisateur"));
+						a.setIdLieu(results.getInt("idLieu"));
 						
 						//Ajout de l'activité à la liste
 						activites.add(a);

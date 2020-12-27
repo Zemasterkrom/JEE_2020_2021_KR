@@ -21,10 +21,14 @@ public class Activite {
 	 * Date de fin de l'activité
 	 */
 	private Timestamp dateFin;
-	/*
-	 * Lieu de l'activité
+	/**
+	 * Id de l'utilisateur possédant l'activité
 	 */
-	private String nomLieu;
+	private int idUtilisateur;
+	/**
+	 * Id du lieu où se déroule l'activité
+	 */
+	private int idLieu;
 	
 	/**
 	 * Méthode getter de l'id
@@ -73,21 +77,37 @@ public class Activite {
 	public void setDateFin(Timestamp dateFin) {
 		this.dateFin = dateFin;
 	}
-	
+
 	/**
-	 * Méthode getter du nom du lieu
-	 * @return nomLieu de l'activité
+	 * Méthode getter de l'id de l'utilisateur
+	 * @return idUtilisateur de l'activité
 	 */
-	public String getNomLieu() {
-		return nomLieu;
+	public int getIdUtilisateur() {
+		return idUtilisateur;
 	}
-	
+
 	/**
-	 * Méthode setter du nom du lieu
-	 * @param nomLieu de l'activité
+	 * Méthode setter de l'id de l'utilisateur
+	 * @param idUtilisateur de l'activité
 	 */
-	public void setNomLieu(String nomLieu) {
-		this.nomLieu = nomLieu;
+	public void setIdUtilisateur(int idUtilisateur) {
+		this.idUtilisateur = idUtilisateur;
+	}
+
+	/**
+	 * Méthode getter de l'id du lieu
+	 * @return idLieu de l'activité
+	 */
+	public int getIdLieu() {
+		return idLieu;
+	}
+
+	/**
+	 * Méthode setter de l'id du lieu
+	 * @param idLieu de l'activité
+	 */
+	public void setIdLieu(int idLieu) {
+		this.idLieu = idLieu;
 	}
 
 	
