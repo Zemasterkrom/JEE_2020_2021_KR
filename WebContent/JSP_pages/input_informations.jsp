@@ -13,7 +13,7 @@
 <body>
 			<% ArrayList<String> erreurs = (ArrayList<String>) request.getAttribute("Erreurs"); 
 			   Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant"); 
-			   String nom, prenom, dateNaiss, login;
+			   String nom, prenom, dateNaiss, login, image;
 			   
 			   if (utilisateur != null) {
 				   nom = utilisateur.getNom();
@@ -21,15 +21,26 @@
 				   SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 				   dateNaiss = format.format(utilisateur.getDateNaiss());
 				   login = utilisateur.getLogin();
-				   
-			   } else {
-				   if (request.getAttribute("nom") != null) { nom = (String) request.getAttribute("nom"); } else { nom = ""; }
-				   if (request.getAttribute("prenom") != null) { prenom = (String) request.getAttribute("prenom"); } else { prenom = ""; }
-				   if (request.getAttribute("dateNaiss") != null) { dateNaiss = (String) request.getAttribute("dateNaiss"); } else { dateNaiss = "2000-01-01"; }
-				   if (request.getAttribute("login") != null) { login = (String) request.getAttribute("login"); } else { login =""; } 
-			   }
-
-			%>
+				   if (utilisateur.getImage() == null){
+					   image = "front/img/addImage.png";
+				   } else {
+					   image = "uploads/" + utilisateur.getImage();
+				   }
+				   			   
+			   } else {		   
+					   if (request.getAttribute("nom") != null) { nom = (String) request.getAttribute("nom"); } else { nom = ""; }
+					   if (request.getAttribute("prenom") != null) { prenom = (String) request.getAttribute("prenom"); } else { prenom = ""; }
+					   if (request.getAttribute("dateNaiss") != null) { dateNaiss = (String) request.getAttribute("dateNaiss"); } else { dateNaiss = "2000-01-01"; }
+					   if (request.getAttribute("login") != null) { login = (String) request.getAttribute("login"); } else { login =""; }
+					   image = "front/img/addImage.png";
+			   } %>
+					
+			<label for="image" class="visually-hidden">Image de profil</label>
+			<label id="imageProfil" for="image"><img id="output" src="<% out.print(image); %>" /></label>
+			<input type="file"  name="image"  accept="image/*" id="image"  onchange="afficheImage(event)" style="display: none;">
+			<% if (erreurs != null && erreurs.contains("ExtensionImage")) {
+				out.print("<p style=\"color:red;font-size:11px;\">Ce fichier n'est pas une image</p>"); 
+			} else { out.print("<p></p>"); } %>
 			
 		    <label for="nom" class="visually-hidden">Nom</label>
 		    <input type="text" id="nom" name="nom" class="form-control" value="<% out.print(nom); %>"required>
@@ -65,6 +76,16 @@
 			    } else if (erreurs != null && erreurs.contains("LoginExistant")) {
 			    	out.print("<p style=\"color:red;font-size:11px;\">Le login est déjà pris</p>");
 		    } else { out.print("<p></p>"); } %>
-			    
+			
+			
+			<script>
+			
+				var afficheImage = function(event) {
+					var image = document.getElementById('output');
+					image.src = URL.createObjectURL(event.target.files[0]);
+				};
+				
+			</script>    
+			
 </body>
 </html>

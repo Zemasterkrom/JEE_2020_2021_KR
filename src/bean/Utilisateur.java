@@ -39,6 +39,10 @@ public class Utilisateur {
 	 */
 	private String rang;
 	/**
+	 * image de profil de l'utilisateur
+	 */
+	private String image;
+	/**
 	 * Liste des activités de l'utilisateur
 	 */
 	private List<Activite> activites;
@@ -153,6 +157,22 @@ public class Utilisateur {
 	 */
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	/**
+	 * Méthode getter de l'image de profil
+	 * @return image de profil de l'utilisateur
+	 */
+	public String getImage() {
+		return image;
+	}
+
+	/**
+	 * Méthode setter de l'image de profil
+	 * @param image de profil de l'utilisateur
+	 */
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	/**

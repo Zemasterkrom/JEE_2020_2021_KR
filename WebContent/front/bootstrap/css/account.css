@@ -48,7 +48,9 @@ body {
 }
 
 .img-radius {
-    border-radius: 5px
+    max-width: 198px;
+	max-height: 198px;
+	border-radius: 50%;
 }
 
 h6 {

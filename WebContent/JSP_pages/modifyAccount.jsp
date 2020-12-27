@@ -28,7 +28,7 @@
 	     	
 				<div class="form-signin" class="col-md-6">
 				
-				  <form method="post" action="modifyAccount">
+				  <form method="post" action="modifyAccount" enctype="multipart/form-data">
 				  	<h1 class="h3 mb-3 fw-normal" style="text-align:center;">Modifiez vos informations</h1>
 				    <br>
 				    

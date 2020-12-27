@@ -1,5 +1,6 @@
 package servlet;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -9,12 +10,15 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import bean.Utilisateur;
+import controller.Upload;
 import controller.VerificationsInformations;
 import sql.ManagerUtilisateur;
 
@@ -22,9 +26,12 @@ import sql.ManagerUtilisateur;
  * @author Théo Roton
  * Servlet qui gère l'inscription
  */
+@MultipartConfig(fileSizeThreshold=1024*1024*2,
+				 maxFileSize=1024*1024*10,      
+				 maxRequestSize=1024*1024*50)
 public class RegisterServlet extends HttpServlet {
 	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;		
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -67,6 +74,23 @@ public class RegisterServlet extends HttpServlet {
 		List<String> erreurs = new ArrayList<String>();
 		//UTF-8
 		request.setCharacterEncoding("UTF-8");
+		
+		//Image de profil de l'utilisateur
+		Part part = request.getPart("image");
+		String nomImage = part.getSubmittedFileName();
+		boolean traiterImage = false;
+		//Si une image a été ajoutée
+		if (!nomImage.equals("")) {
+			
+			//Vérification de l'extension de l'image
+			if (verif.verifExtensionImage(nomImage)) {
+				traiterImage = true;
+				
+			} else {
+				erreurs.add("ExtensionImage");
+			}
+			
+		}
 		
 		//Nom de l'utilisateur
 		String nom = request.getParameter("nom");
@@ -168,9 +192,17 @@ public class RegisterServlet extends HttpServlet {
 			
 		//Sinon on ajoute l'utilisateur dans la BDD
 		} else {
-			//Ajout de l'utilisateur dans la BDD
-			manager.ajouterUtilisateur(nom, prenom, dateNaiss, login, mdp);
 			
+			//Ajout de l'utilisateur dans la BDD
+			if (traiterImage) {
+				Upload upload = new Upload();
+				upload.uploadImage(request, part);
+				manager.ajouterUtilisateur(nom, prenom, dateNaiss, login, mdp, nomImage);
+				
+			} else {
+				manager.ajouterUtilisateur(nom, prenom, dateNaiss, login, mdp, null);
+			}
+						
 			//Redirection
 			response.sendRedirect("home");
 		}

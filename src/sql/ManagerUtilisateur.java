@@ -3,6 +3,7 @@ package sql;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,10 +33,10 @@ public class ManagerUtilisateur extends Manager {
 	 * @param login de l'utilisateur
 	 * @param motDePasse de l'utilisateur
 	 */
-	public void ajouterUtilisateur(String nom, String prenom, Date dateNaiss, String login, String motDePasse) {
+	public void ajouterUtilisateur(String nom, String prenom, Date dateNaiss, String login, String motDePasse, String image) {
 		try {
 			//Requête
-			String req = "INSERT INTO Utilisateur (nom, prenom, dateNaiss, login, motDePasse, rang) VALUES (?, ?, ?, ?, ?, 'normal')";
+			String req = "INSERT INTO Utilisateur (nom, prenom, dateNaiss, login, motDePasse, rang, image) VALUES (?, ?, ?, ?, ?, 'normal', ?)";
 			//Préparation de la requête
 			PreparedStatement stmt = connection.prepareStatement(req);
 			//Ajout des informations à la requête
@@ -45,7 +46,13 @@ public class ManagerUtilisateur extends Manager {
 			stmt.setString(4, login);
 			//Hashage du mot de passe
 			String mdp = BCrypt.hashpw(motDePasse, BCrypt.gensalt());
-			stmt.setString(5, mdp);	
+			stmt.setString(5, mdp);
+			if (image == null) {
+				stmt.setNull(6, Types.VARCHAR);
+				
+			} else {
+				stmt.setString(6, image);
+			}
 			
 			//Exécution  de la requête
 			stmt.execute();			
@@ -123,6 +130,7 @@ public class ManagerUtilisateur extends Manager {
 			utilisateur.setLogin(results.getString("login"));
 			utilisateur.setMotDePasse(results.getString("motDePasse"));
 			utilisateur.setRang(results.getString("rang"));
+			utilisateur.setImage(results.getString("image"));
 			
 			//Ajout des activités de l'utilisateur
 			activites = manager.getActivitesUtilisateur(utilisateur.getId());
@@ -143,10 +151,10 @@ public class ManagerUtilisateur extends Manager {
 	 * @param dateNaiss de l'utilisateur
 	 * @param login de l'utilisateur
 	 */
-	public void modifierUtilisateur(int id, String nom, String prenom, Date dateNaiss, String login) {
+	public void modifierUtilisateur(int id, String nom, String prenom, Date dateNaiss, String login, String image) {
 		try {
 			//Requête
-			String req = "UPDATE Utilisateur SET nom=?, prenom=?, dateNaiss=?, login=? WHERE idUtilisateur=?";
+			String req = "UPDATE Utilisateur SET nom=?, prenom=?, dateNaiss=?, login=?, image=? WHERE idUtilisateur=?";
 			//Préparation de la requête
 			PreparedStatement stmt = connection.prepareStatement(req);
 			//Ajout des informations à la requête
@@ -154,7 +162,14 @@ public class ManagerUtilisateur extends Manager {
 			stmt.setString(2, prenom);
 			stmt.setDate(3, new java.sql.Date(dateNaiss.getTime()));
 			stmt.setString(4, login);
-			stmt.setInt(5, id);	
+			if (image == null) {
+				stmt.setNull(5, Types.VARCHAR);
+				
+			} else {
+				stmt.setString(5, image);
+			}
+			stmt.setInt(6, id);
+
 			
 			//Exécution  de la requête
 			stmt.execute();			
@@ -224,6 +239,7 @@ public class ManagerUtilisateur extends Manager {
 				u.setLogin(results.getString("login"));
 				u.setMotDePasse(results.getString("motDePasse"));
 				u.setRang(results.getString("rang"));
+				u.setImage(results.getString("image"));
 				
 				//Ajout des activités de l'utilisateur
 				acts = manager.getActivitesUtilisateur(u.getId());

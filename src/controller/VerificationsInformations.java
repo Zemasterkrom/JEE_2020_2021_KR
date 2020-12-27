@@ -71,4 +71,16 @@ public class VerificationsInformations {
 	public boolean verifTailleLogin(String login) {
 		return (login.length() >= 3 && login.length() <= 64);
 	}
+
+	/**
+	 * Méthode qui permet de vérifier si l'extension d'un fichier correspond à une extension d'image
+	 * @param nomImage de l'image à tester
+	 * @return true si l'extension de l'image est correcte
+	 */
+	public boolean verifExtensionImage(String nomImage) {
+		String[] split = nomImage.split("\\.");
+		String extension = split[split.length-1];
+		extension = extension.toUpperCase();
+		return (extension.equals("PNG") || extension.equals("JPG") || extension.equals("JPEG"));
+	}
 }

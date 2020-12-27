@@ -72,3 +72,18 @@ body {
   font-size: 20px;
   color: #413219;
 }
+
+#imageProfil {
+	display: table-cell;
+ 	text-align: center;
+  	vertical-align: middle;
+	cursor: pointer; 
+	width: 300px;
+	height: 200px;
+}
+
+#imageProfil > img {
+	max-width: 198px;
+	max-height: 198px;
+	vertical-align: middle;
+}

@@ -54,7 +54,13 @@
 		                    				<div class="card-activites">
 		                    				
 						                        <div class="list-item" onclick="ouvrirActivites<% out.print(util); %>()">
-					                            	<div><span class="w-40 avatar gd-primary"><% out.print(u.getPrenom().toUpperCase().charAt(0)); %></span></div>
+					                            	<div>				                            	
+					                            	<img src="<% if (u.getImage() == null) {
+														 		 	out.print("front/img/user.png");
+															 	 } else {
+																	out.print("uploads/" + u.getImage()); 
+															 	 }	%>" class="img-radius" alt="User-Profile-Image" />
+													</div>
 					                            
 					                          
 						                            <div class="flex" style="width:80%;max-width:80%"> 

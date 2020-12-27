@@ -9,12 +9,15 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import bean.Utilisateur;
+import controller.Upload;
 import controller.VerificationsInformations;
 import sql.ManagerUtilisateur;
 
@@ -22,6 +25,9 @@ import sql.ManagerUtilisateur;
  * @author Théo Roton
  * Servlet qui gère la modification des informations du compte
  */
+@MultipartConfig(fileSizeThreshold=1024*1024*2,
+				 maxFileSize=1024*1024*10,      
+				 maxRequestSize=1024*1024*50)
 public class ModifyAccountServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -70,6 +76,23 @@ public class ModifyAccountServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		//Récupération de l'utilisateur
 		Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
+		
+		//Image de profil de l'utilisateur
+		Part part = request.getPart("image");
+		String nomImage = part.getSubmittedFileName();
+		boolean traiterImage = false;
+		//Si une image a été ajoutée
+		if (!nomImage.equals("")) {
+			
+			//Vérification de l'extension de l'image
+			if (verif.verifExtensionImage(nomImage)) {
+				traiterImage = true;
+				
+			} else {
+				erreurs.add("ExtensionImage");
+			}
+			
+		}
 		
 		//Nom de l'utilisateur
 		String nom = request.getParameter("nom");
@@ -159,8 +182,16 @@ public class ModifyAccountServlet extends HttpServlet {
 			
 		//Sinon on modifie les informations de l'utilisateur dans la BDD
 		} else {
+			
 			//Modification de l'utilisateur
-			manager.modifierUtilisateur(utilisateur.getId(), nom, prenom, dateNaiss, login);
+			if (traiterImage) {
+				Upload upload = new Upload();
+				upload.uploadImage(request, part);
+				manager.modifierUtilisateur(utilisateur.getId(), nom, prenom, dateNaiss, login, nomImage);
+				
+			} else {
+				manager.modifierUtilisateur(utilisateur.getId(), nom, prenom, dateNaiss, login, utilisateur.getImage());
+			}
 			
 			//Récupération de l'utilisateur modifier
 			utilisateur = manager.getUtilisateur(login);

@@ -24,7 +24,7 @@
 	     	
 				<div class="form-signin" class="col-md-6">
 				
-				  <form method="post" action="register">
+				  <form method="post" action="register" enctype="multipart/form-data">
 				    <h1 class="h3 mb-3 fw-normal" style="text-align:center;">Entrez vos informations</h1>
 				    <br>
 				    
