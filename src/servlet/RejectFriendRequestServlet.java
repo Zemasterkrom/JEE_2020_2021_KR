@@ -39,15 +39,19 @@ public class RejectFriendRequestServlet extends HttpServlet {
 		//Création du manager des amis
 		ManagerAmi manager = new ManagerAmi();
 		//Récupération de l'id du refuseur
-		int idUtilisateur = Integer.parseInt(request.getParameter("idRefuseur"));
+		int idRefuseur = Integer.parseInt(request.getParameter("idRefuseur"));
 		//Récupération de l'id de l'ami
 		int idAmi = Integer.parseInt(request.getParameter("idAmi"));
 	
 		//Suppression de l'ami
-		manager.supprimerAmi(idUtilisateur, idAmi);
+		manager.refuserDemandeAmi(idRefuseur, idAmi);
 		
-		//Redirection vers la page des amis
-		response.sendRedirect("friends");
+		//Récupération de la redicrection
+		String[] split = request.getHeader("referer").split("/");
+		String redirect = split[split.length-1];
+		
+		//Redirection
+		response.sendRedirect(redirect);
 	}
 
 }

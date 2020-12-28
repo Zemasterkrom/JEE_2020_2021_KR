@@ -8,20 +8,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import sql.ManagerAmi;
-import sql.ManagerLieu;
 
 /**
  * @author Théo Roton
- * Servlet qui gère l'acceptation d'une demande d'ami
+ * Servlet qui gère l'annulation d'une demande d'ami
  */
-public class AcceptFriendRequestServlet extends HttpServlet {
+public class CancelFriendRequestServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AcceptFriendRequestServlet() {
+    public CancelFriendRequestServlet() {
         super();
     }
 
@@ -34,18 +33,18 @@ public class AcceptFriendRequestServlet extends HttpServlet {
 	}
 
 	/**
-	 * Post : acceptation de la demande d'ami
+	 * Post : on annule la demande d'ami envoyée à un utilisateur
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Création du manager des amis
 		ManagerAmi manager = new ManagerAmi();
-		//Récupération de l'id de l'accepteur
-		int idAccepteur = Integer.parseInt(request.getParameter("idAccepteur"));
+		//Récupération de l'id du refuseur
+		int idAnnuleur = Integer.parseInt(request.getParameter("idAnnuleur"));
 		//Récupération de l'id de l'ami
 		int idAmi = Integer.parseInt(request.getParameter("idAmi"));
 	
-		//Suppresion de la demande d'ami
-		manager.accepterDemandeAmi(idAccepteur, idAmi);
+		//Suppression de l'ami
+		manager.annulerDemandeAmi(idAnnuleur, idAmi);
 		
 		//Récupération de la redicrection
 		String[] split = request.getHeader("referer").split("/");

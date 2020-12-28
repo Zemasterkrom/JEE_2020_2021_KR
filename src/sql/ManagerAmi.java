@@ -187,6 +187,29 @@ public class ManagerAmi extends Manager {
 	}
 	
 	/**
+	 * Méthode qui permet d'annuler une demande d'ami
+	 * @param idAnnuleur : id de l'utilisateur qui annule la demande
+	 * @param idAmi : id de l'utilisateur dont la demande été à destination
+	 */
+	public void annulerDemandeAmi(int idAnnuleur, int idAmi) {
+		try {
+			//Requête
+			String req = "DELETE FROM Ami WHERE idUtilisateur=? AND idAmi=?";
+			//Préparation de la requête
+			PreparedStatement stmt = connection.prepareStatement(req);
+			//Ajout des id à la requête
+			stmt.setInt(1, idAnnuleur);
+			stmt.setInt(2, idAmi);
+			
+			//Exécution  de la requête
+			stmt.execute();	
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+	}
+	
+	/**
 	 * Méthode qui permet de créer une demande d'ami
 	 * @param idUtilisateur id de l'utilisateur qui envoi la demande
 	 * @param idAmi id de l'utilisateur ajouté en ami

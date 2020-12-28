@@ -160,6 +160,16 @@
     <servlet-name>RejectFriendRequestServlet</servlet-name>
     <url-pattern>/rejectFriendRequest</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>CancelFriendRequestServlet</servlet-name>
+    <servlet-class>servlet.CancelFriendRequestServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CancelFriendRequestServlet</servlet-name>
+    <url-pattern>/cancelFriendRequest</url-pattern>
+  </servlet-mapping>
+  
   <servlet>
     <servlet-name>DeleteFriendServlet</servlet-name>
     <servlet-class>servlet.DeleteFriendServlet</servlet-class>
@@ -176,7 +186,6 @@
     <servlet-name>MoreFriendsServlet</servlet-name>
     <url-pattern>/moreFriends</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>AddFriendServlet</servlet-name>
     <servlet-class>servlet.AddFriendServlet</servlet-class>
