@@ -264,8 +264,15 @@ img.rotate180 {
 	text-align: center;
 }
 
-.ami > div > h3 {
-	text-align: center;
+.list-item > h3 {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.list-item > button {
+	display: block;	
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .ami > * {

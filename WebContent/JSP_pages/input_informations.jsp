@@ -80,7 +80,7 @@
 			
 			<script>
 			
-				var afficheImage = function(event) {
+				function afficheImage(event) {
 					var image = document.getElementById('output');
 					image.src = URL.createObjectURL(event.target.files[0]);
 				};

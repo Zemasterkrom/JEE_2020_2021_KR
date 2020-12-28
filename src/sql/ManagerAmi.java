@@ -65,17 +65,57 @@ public class ManagerAmi extends Manager {
 	}
 	
 	/**
-	 * Méthode qui permet de récupérer toutes les demandes d'ami de l'utilisateur
+	 * Méthode qui permet de récupérer toutes les demandes d'ami reçues de l'utilisateur
 	 * @param id de l'utilisateur
 	 * @return liste des demandes d'ami de l'utilisateur
 	 */
-	public List<Ami> getDemandesAmi(int id) {
+	public List<Ami> getDemandesAmiRecues(int id) {
 		//Initialisation de la liste
 		List<Ami> demandes = new ArrayList<Ami>();
 		
 		try {
 			//Requête
 			String req = "SELECT * FROM Ami WHERE idAmi=? AND accepte=0";
+			//Préparation de la requête
+			PreparedStatement stmt = connection.prepareStatement(req);
+			//Ajout de l'id à la requête
+			stmt.setInt(1, id);
+			//Exécution de la requête
+			ResultSet results = stmt.executeQuery();
+			
+			Ami a;
+			//Pour chaque demande d'ami
+			while (results.next()) {
+				a = new Ami();
+				
+				//Ajout des informations de la demande d'ami
+				a.setIdUtilisateur(results.getInt("idUtilisateur"));
+				a.setIdAmi(results.getInt("idAmi"));
+				a.setAccepte(results.getBoolean("accepte"));
+				
+				//Ajout de la demande d'ami à la liste
+				demandes.add(a);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return demandes;
+	}
+	
+	/**
+	 * Méthode qui permet de récupérer toutes les demandes d'ami envoyées par l'utilisateur
+	 * @param id de l'utilisateur
+	 * @return liste des demandes d'ami de l'utilisateur
+	 */
+	public List<Ami> getDemandesAmiEnvoyees(int id) {
+		//Initialisation de la liste
+		List<Ami> demandes = new ArrayList<Ami>();
+		
+		try {
+			//Requête
+			String req = "SELECT * FROM Ami WHERE idUtilisateur=? AND accepte=0";
 			//Préparation de la requête
 			PreparedStatement stmt = connection.prepareStatement(req);
 			//Ajout de l'id à la requête
@@ -164,6 +204,40 @@ public class ManagerAmi extends Manager {
 			e.printStackTrace();
 		}			
 	}
-
+	
+	public Ami getAmi(int idUtilisateur, int idAmi) {
+		//Initialisation de l'ami
+		Ami ami = null;
+		
+		try {
+			//Requête
+			String req = "SELECT * FROM Ami WHERE (idUtilisateur=? AND idAmi=?) OR (idUtilisateur=? AND idAmi=?)";
+			//Préparation de la requête
+			PreparedStatement stmt = connection.prepareStatement(req);
+			//Ajout des id à la requête
+			stmt.setInt(1, idUtilisateur);
+			stmt.setInt(2, idAmi);
+			stmt.setInt(3, idAmi);
+			stmt.setInt(4, idUtilisateur);
+			//Exécution de la requête
+			ResultSet results = stmt.executeQuery();
+			
+			//Récupération du résultat
+			if (results.next()) {
+				//Initialisation de l'ami
+				ami = new Ami();
+				
+				//Ajout des informations de l'ami
+				ami.setIdUtilisateur(results.getInt("idUtilisateur"));
+				ami.setIdAmi(results.getInt("idAmi"));
+				ami.setAccepte(results.getBoolean("accepte"));				
+			} 
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return ami;
+	}
 
 }

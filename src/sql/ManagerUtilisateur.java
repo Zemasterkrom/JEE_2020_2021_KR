@@ -109,8 +109,10 @@ public class ManagerUtilisateur extends Manager {
 		List<Activite> activites;
 		//Création de la liste des amis de l'utilisateur
 		List<Ami> amis;
-		//Création de la liste des demande d'ami de l'utilisateur
-		List<Ami> demandes;
+		//Création de la liste des demande d'ami reçues de l'utilisateur
+		List<Ami> demandesRecues;
+		//Création de la liste des demande d'ami envoyées par l'utilisateur
+		List<Ami> demandesEnvoyees;
 		//Création du manager des activités
 		ManagerActivite managerActivite = new ManagerActivite();
 		//Création du manager des amis
@@ -147,9 +149,13 @@ public class ManagerUtilisateur extends Manager {
 			amis = managerAmi.getAmis(utilisateur.getId());
 			utilisateur.setAmis(amis);
 			
-			//Ajout des demandes d'amis de l'utilisateur
-			demandes = managerAmi.getDemandesAmi(utilisateur.getId());
-			utilisateur.setDemandes(demandes);
+			//Ajout des demandes d'amis recues de l'utilisateur
+			demandesRecues = managerAmi.getDemandesAmiRecues(utilisateur.getId());
+			utilisateur.setDemandesRecues(demandesRecues);
+			
+			//Ajout des demandes d'amis envoyées par l'utilisateur
+			demandesEnvoyees = managerAmi.getDemandesAmiEnvoyees(utilisateur.getId());
+			utilisateur.setDemandesEnvoyees(demandesEnvoyees);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -232,7 +238,7 @@ public class ManagerUtilisateur extends Manager {
 		
 		try {
 			//Requête
-			String req = "SELECT * FROM Utilisateur WHERE login!=?";
+			String req = "SELECT * FROM Utilisateur WHERE login!=? ORDER BY prenom, nom";
 			//Préparation de la requête
 			PreparedStatement stmt = connection.prepareStatement(req);
 			//Ajout du login à la requête
@@ -258,6 +264,51 @@ public class ManagerUtilisateur extends Manager {
 				//Ajout des activités de l'utilisateur
 				acts = manager.getActivitesUtilisateur(u.getId());
 				u.setActivites(acts);
+				
+				//Ajout de l'utilisateur à la liste
+				utilisateurs.add(u);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return utilisateurs;
+	}
+	
+	/**
+	 * Méthode qui permet de récupérer tous les utilisateurs de l'application,
+	 * sans leurs activités, moins l'utilisateur qui exécute la requête
+	 * @param login de l'utilisateur qui exécute la requête
+	 * @return liste des utilisateurs de l'application
+	 */
+	public List<Utilisateur> getAllUtilisateursSansActivites(String login) {
+		//Initialisation de la liste
+		List<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
+		
+		try {
+			//Requête
+			String req = "SELECT * FROM Utilisateur WHERE login!=? ORDER BY prenom, nom";
+			//Préparation de la requête
+			PreparedStatement stmt = connection.prepareStatement(req);
+			//Ajout du login à la requête
+			stmt.setString(1, login);
+			//Exécution de la requête
+			ResultSet results = stmt.executeQuery();
+			
+			Utilisateur u;
+			//Pour chaque utilisateur
+			while (results.next()) {
+				u = new Utilisateur();
+				
+				//Ajout des informations de l'utilisateur
+				u.setId(results.getInt("idUtilisateur"));
+				u.setNom(results.getString("nom"));
+				u.setPrenom(results.getString("prenom"));
+				u.setDateNaiss(results.getDate("dateNaiss"));
+				u.setLogin(results.getString("login"));
+				u.setRang(results.getString("rang"));
+				u.setImage(results.getString("image"));				
 				
 				//Ajout de l'utilisateur à la liste
 				utilisateurs.add(u);

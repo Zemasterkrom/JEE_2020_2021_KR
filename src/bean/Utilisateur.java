@@ -51,9 +51,13 @@ public class Utilisateur {
 	 */
 	private List<Ami> amis;
 	/**
-	 * List des demandes d'amis de l'utilisateur
+	 * Liste des demandes d'amis reçues de l'utilisateur
 	 */
-	private List<Ami> demandes;
+	private List<Ami> demandesRecues;
+	/**
+	 * Liste des demandes d'amis envoyées par l'utilisateur
+	 */
+	private List<Ami> demandesEnvoyees;
 	
 	/**
 	 * Méthode getter du nom
@@ -216,19 +220,35 @@ public class Utilisateur {
 	}
 
 	/**
-	 * Méthode getter de la liste des demandes d'ami de l'utilisateur
-	 * @return demandes d'ami de l'utilisateur
+	 * Méthode getter de la liste des demandes d'ami reçues de l'utilisateur
+	 * @return demandes d'ami reçues de l'utilisateur
 	 */
-	public List<Ami> getDemandes() {
-		return demandes;
+	public List<Ami> getDemandesRecues() {
+		return demandesRecues;
 	}
 
 	/**
-	 * Méthode setter de la liste des demandes d'ami de l'utilisateur
-	 * @param demandes d'ami de l'utilisateur
+	 * Méthode setter de la liste des demandes d'ami reçues de l'utilisateur
+	 * @return demandes d'ami reçues de l'utilisateur
 	 */
-	public void setDemandes(List<Ami> demandes) {
-		this.demandes = demandes;
+	public void setDemandesRecues(List<Ami> demandesRecues) {
+		this.demandesRecues = demandesRecues;
+	}
+
+	/**
+	 * Méthode getter de la liste des demandes d'ami envoyées par l'utilisateur
+	 * @return demandes d'ami envoyées par l'utilisateur
+	 */
+	public List<Ami> getDemandesEnvoyees() {
+		return demandesEnvoyees;
+	}
+
+	/**
+	 * Méthode setter de la liste des demandes d'ami envoyées par l'utilisateur
+	 * @return demandes d'ami envoyées par l'utilisateur
+	 */
+	public void setDemandesEnvoyees(List<Ami> demandesEnvoyees) {
+		this.demandesEnvoyees = demandesEnvoyees;
 	}
 		
 }

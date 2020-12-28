@@ -17,21 +17,21 @@ import sql.ManagerUtilisateur;
 
 /**
  * @author Théo Roton
- * Servlet qui gère l'affichage des amis et des demandes d'amis
+ * Servlet qui gère l'affichage des utilisateurs pouvant être ajouté en ami
  */
-public class FriendsServlet extends HttpServlet {
+public class MoreFriendsServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public FriendsServlet() {
+    public MoreFriendsServlet() {
         super();
     }
 
 	/**
-	 * Get : affiche la liste des amis et des demandes d'amis
+	 * Get : affiche la liste des utilisateurs pouvant être ajouté en ami
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Récupération de la session et de l'utilisateur
@@ -47,20 +47,16 @@ public class FriendsServlet extends HttpServlet {
 			
 		//Si l'utilisateur est connecté
 		} else {
-			//Création du manager des amis
-			ManagerAmi manager = new ManagerAmi();
-			//Récupération des amis
-			List<Ami> amis = manager.getAmis(utilisateur.getId());
-			utilisateur.setAmis(amis);
-			//Récupération des demande d'amis reçues
-			List<Ami> demandesRecues = manager.getDemandesAmiRecues(utilisateur.getId());
-			utilisateur.setDemandesRecues(demandesRecues);
-			//Récupération des demande d'amis envoyées
-			List<Ami> demandesEnvoyees = manager.getDemandesAmiEnvoyees(utilisateur.getId());
-			utilisateur.setDemandesEnvoyees(demandesEnvoyees);
+			//Création du manager des utilisateurs
+			ManagerUtilisateur manager = new ManagerUtilisateur();
+			//Récupération des utilisateurs
+			List<Utilisateur> utilisateurs = manager.getAllUtilisateursSansActivites(utilisateur.getLogin());
+			
+			//Ajout des utilisateurs à la requête
+			request.setAttribute("Utilisateurs", utilisateurs);
 			
 			//Affichage de la page des amis
-			request.getRequestDispatcher("/JSP_pages/friends.jsp").forward(request, response);
+			request.getRequestDispatcher("/JSP_pages/moreFriends.jsp").forward(request, response);
 		}
 	}
 

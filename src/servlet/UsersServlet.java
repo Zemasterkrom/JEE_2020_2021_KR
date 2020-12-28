@@ -51,7 +51,7 @@ public class UsersServlet extends HttpServlet {
 				//Création du manager des utilisateurs
 				ManagerUtilisateur manager = new ManagerUtilisateur();
 				//Récupération des utilisateurs
-				List<Utilisateur> utilisateurs = manager.getAllUtilisateurs(utilisateur.getLogin());
+				List<Utilisateur> utilisateurs = manager.getAllUtilisateursSansActivites(utilisateur.getLogin());
 				
 				//Ajout des utilisateurs à la requête
 				request.setAttribute("Utilisateurs", utilisateurs);
