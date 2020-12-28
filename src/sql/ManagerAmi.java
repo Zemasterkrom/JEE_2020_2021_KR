@@ -3,6 +3,7 @@ package sql;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.CallableStatement;
@@ -184,6 +185,29 @@ public class ManagerAmi extends Manager {
 			e.printStackTrace();
 		}		
 	}
+	
+	/**
+	 * Méthode qui permet de créer une demande d'ami
+	 * @param idUtilisateur id de l'utilisateur qui envoi la demande
+	 * @param idAmi id de l'utilisateur ajouté en ami
+	 */
+	public void ajouterAmi(int idUtilisateur, int idAmi) {
+		try {
+			//Requête
+			String req = "INSERT INTO Ami (idUtilisateur, idAmi) VALUES (?, ?)";
+			//Préparation de la requête
+			PreparedStatement stmt = connection.prepareStatement(req);
+			//Ajout des id à la requête
+			stmt.setInt(1, idUtilisateur);
+			stmt.setInt(2, idAmi);
+			
+			//Exécution  de la requête
+			stmt.execute();			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+	}
 
 	/**
 	 * Méthode qui permet de supprimer un ami
@@ -205,6 +229,13 @@ public class ManagerAmi extends Manager {
 		}			
 	}
 	
+	/**
+	 * Méthode qui permet de récupérer un ami et son état
+	 * @param idUtilisateur : id de l'utilisateur courant
+	 * @param idAmi : id de la personne visé
+	 * @return objet Ami  si les utilisateurs sont amis ou on une demande d'ami en cours
+	 * ou null sinon
+	 */
 	public Ami getAmi(int idUtilisateur, int idAmi) {
 		//Initialisation de l'ami
 		Ami ami = null;

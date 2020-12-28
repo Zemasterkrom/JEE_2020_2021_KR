@@ -190,8 +190,14 @@
 			                            			<div class="item-except text-muted text-sm h-1x">Login : <% out.print(u.getLogin()); %></div>											   										  											    
 					                            </div>
 					                            
-					                            <div class="flex" style="width:40%;max-width:40%;">                           		
-					                           		<button type="button" class="btn btn-primary" style="border-radius:15px; float:right;">Ajouter en ami</button> 					                           										   										  											    
+					                            <div class="flex" style="width:40%;max-width:40%;">        
+					                                               		
+					                           		<form action="addFriend" method="post" style="float:right;">
+						      							<input type="hidden" name="idUtilisateur" value="<% out.print(utilisateur.getId()); %>" />
+						      							<input type="hidden" name="idAmi" value="<% out.print(u.getId()); %>" />
+									  					<button type="submit" class="btn btn-primary" style="border-radius:15px;">Ajouter en ami</button>
+									  				</form> 	
+									  								                           										   										  											    
 					                           	</div>
 											
 				                        </div>

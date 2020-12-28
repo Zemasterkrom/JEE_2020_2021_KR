@@ -168,7 +168,6 @@
     <servlet-name>DeleteFriendServlet</servlet-name>
     <url-pattern>/deleteFriend</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>MoreFriendsServlet</servlet-name>
     <servlet-class>servlet.MoreFriendsServlet</servlet-class>
@@ -176,5 +175,14 @@
   <servlet-mapping>
     <servlet-name>MoreFriendsServlet</servlet-name>
     <url-pattern>/moreFriends</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>AddFriendServlet</servlet-name>
+    <servlet-class>servlet.AddFriendServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AddFriendServlet</servlet-name>
+    <url-pattern>/addFriend</url-pattern>
   </servlet-mapping>
 </web-app>

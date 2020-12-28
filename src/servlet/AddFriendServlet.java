@@ -11,29 +11,29 @@ import sql.ManagerAmi;
 
 /**
  * @author Théo Roton
- * Servlet qui gère la suppression d'un ami
+ * Servlet qui gère l'ajout d'un ami
  */
-public class DeleteFriendServlet extends HttpServlet {
+public class AddFriendServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public DeleteFriendServlet() {
+    public AddFriendServlet() {
         super();
     }
 
 	/**
-	 * Get : redirection vers la page des amis
+	 *  Get : redirection vers la page d'ajout des amis
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Redirection vers la page des amis
-		response.sendRedirect("friends");
+		//Redirection vers la page d'ajout des amis
+		response.sendRedirect("moreFriends");
 	}
 
 	/**
-	 * Post : suppression de l'ami
+	 * Post : ajout et envoi d'une requête d'ami
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Création du manager des amis
@@ -42,12 +42,12 @@ public class DeleteFriendServlet extends HttpServlet {
 		int idUtilisateur = Integer.parseInt(request.getParameter("idUtilisateur"));
 		//Récupération de l'id de l'ami
 		int idAmi = Integer.parseInt(request.getParameter("idAmi"));
-	
-		//Suppression de la demande d'ami
-		manager.refuserDemandeAmi(idUtilisateur, idAmi);
+		
+		//Création de la demande d'ami
+		manager.ajouterAmi(idUtilisateur, idAmi);
 		
 		//Redirection vers la page des amis
-		response.sendRedirect("friends");
+		response.sendRedirect("moreFriends");
 	}
 
 }
