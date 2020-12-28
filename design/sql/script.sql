@@ -2,6 +2,8 @@ DROP DATABASE IF EXISTS COVID_KR_TR;
 CREATE DATABASE COVID_KR_TR;
 USE COVID_KR_TR;
 
+SET GLOBAL event_scheduler = ON;
+
 --
 -- Création des tables
 --
@@ -95,7 +97,8 @@ CREATE TABLE Utilisateur (
   dateNaiss DATE NOT NULL,
   login VARCHAR(64) NOT NULL CHECK (LENGTH(TRIM(login)) > 0 AND LENGTH(login) >= 3),
   motDePasse BINARY(60) NOT NULL CHECK (CONVERT(motDePasse, CHAR(60)) != ''),
-  rang SET('normal','admin') NOT NULL CHECK (LENGTH(TRIM(rang)) > 0)
+  rang SET('normal','admin') NOT NULL CHECK (LENGTH(TRIM(rang)) > 0),
+  image VARCHAR(255) DEFAULT NULL CHECK(LENGTH(TRIM(image)) > 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -850,6 +853,21 @@ BEGIN
 
     INSERT INTO NotificationAmi(message, idUtilisateur, idAmi, idConcerne) VALUES(notification, OLD.idUtilisateur, OLD.idAmi, OLD.idUtilisateur);
   END IF;
+END;
+$$;
+DELIMITER ;
+
+DELIMITER $$;
+CREATE EVENT maj_etat_automatique ON SCHEDULE EVERY 1 DAY
+DO BEGIN
+  INSERT INTO Etat(dateEtat, positif, idUtilisateur)
+    SELECT TIMESTAMP(CURRENT_DATE()), b'0', E.dateEtat, E.idUtilisateur FROM Etat E INNER JOIN(
+      SELECT dateEtat, MAX(idEtat) AS idEtat FROM Etat GROUP BY idUtilisateur
+    ) EM
+    ON E.idEtat = EM.idEtat
+    WHERE E.positif = b'1'
+    AND DATEDIFF(CURRENT_DATE(), DATE(EM.dateEtat)) >= 10
+    GROUP BY idUtilisateur;
 END;
 $$;
 DELIMITER ;
