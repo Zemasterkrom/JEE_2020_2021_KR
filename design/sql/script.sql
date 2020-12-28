@@ -7,9 +7,8 @@ USE COVID_KR_TR;
 --
 CREATE TABLE Activite (
   idActivite INT NOT NULL,
-  dateActivite DATE NOT NULL,
-  heureDebut time NOT NULL,
-  heureFin time NOT NULL,
+  dateDebut TIMESTAMP NOT NULL,
+  dateFin TIMESTAMP NOT NULL,
   idUtilisateur INT NOT NULL,
   idLieu INT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -50,7 +49,7 @@ CREATE TABLE Lieu (
   nom VARCHAR(64) NOT NULL CHECK (LENGTH(TRIM(nom)) > 0),
   adresse VARCHAR(255) NOT NULL CHECK (LENGTH(TRIM(adresse)) > 0),
   longitude DECIMAL(17, 15) DEFAULT NULL CHECK(ISNULL(longitude) OR (longitude >= -180 AND longitude <= 180)),
-  latitude DECIMAL(17, 15) DEFAULT NULL CHECK (ISNULL(latitude) OR (latitude >= -90 AND latitude <= 90))
+  latitude DECIMAL(17, 15) DEFAULT NULL CHECK(ISNULL(latitude) OR (latitude >= -90 AND latitude <= 90))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -281,35 +280,132 @@ DELIMITER ;
 --
 -- Procédure commune à l'ajout et la mise à jour des activités : vérifier que les données sont cohérentes
 --
-/*DELIMITER $$;
-CREATE PROCEDURE verifier_activite(IN id_utilisateur INT, IN id_lieu INT, IN date_activite DATE, IN heure_debut TIME, IN heure_fin TIME) READS SQL DATA
+DELIMITER $$;
+CREATE PROCEDURE verifier_activite(IN id_utilisateur INT, IN id_lieu INT, IN date_debut_activite TIMESTAMP, IN date_fin_activite TIMESTAMP) READS SQL DATA
 BEGIN
   DECLARE lieu_existe INT;
   DECLARE utilisateur_existe INT;
+  DECLARE activite_existe INT;
   DECLARE date_naiss DATE;
+  DECLARE date_timestamp TIMESTAMP;
+  DECLARE date_dernier_etat TIMESTAMP;
+  DECLARE etat_incoherent INT;
+  DECLARE message VARCHAR(512);
 
-  SELECT COUNT(idUtilisateur), dateNaiss INTO utilisateur_existe FROM Utilisateur WHERE idUtilisateur = id_utilisateur;
+  SELECT COUNT(idUtilisateur), dateNaiss INTO utilisateur_existe, date_naiss FROM Utilisateur
+  WHERE idUtilisateur = id_utilisateur;
 
   IF (utilisateur_existe = 0) THEN
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "L'utilisateur spécifié n'existe pas.";
   END IF;
 
+  IF (DATE(date_debut_activite) < date_naiss) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date du nouvel état ne peut être inférieure à votre date de naissance.";
+  ELSEIF (DATE(date_debut_activite) < STR_TO_DATE('17-11-2019','%d-%m-%Y')) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date du nouvel état ne peut être inférieure à la date de début de l'épidémie du COVID-19 (17/11/2019).";
+  ELSEIF (date_debut_activite > CURRENT_TIMESTAMP() OR date_fin_activite > CURRENT_TIMESTAMP()) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date du nouvel état ne peut être supérieure à la date actuelle.";
+  END IF;
+
+
   SELECT COUNT(idLieu) INTO lieu_existe FROM Lieu WHERE idLieu = id_lieu;
 
   IF (lieu_existe = 0) THEN
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Le lieu spécifié n'existe pas.";
+  ELSEIF (date_debut_activite >= date_fin_activite) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date de début de l'activité doit être inférieure à la date de fin de l'activité.";
   END IF;
 
-  IF (date_activite <= date_naiss) THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date de l'activité ne peut être inférieure ou égale à votre date de naissance.";
+  SELECT COUNT(idEtat) INTO etat_incoherent FROM Etat E NATURAL JOIN Utilisateur U
+  WHERE idEtat = (SELECT MAX(idEtat) FROM Etat WHERE idUtilisateur = id_utilisateur)
+  AND positif = b'1'
+  AND (date_fin_activite > dateEtat
+  OR date_debut_activite < (SELECT dateEtat FROM Etat WHERE idUtilisateur = id_utilisateur AND idEtat = E.idEtat - 1))
+  ORDER BY dateEtat DESC LIMIT 1;
+
+  IF (etat_incoherent != 0 AND date_debut_activite IS NOT NULL AND date_fin_activite IS NOT NULL) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Vous ne pouvez pas déclarer d'activités dans une période où vous êtes en isolement ou inférieure à votre dernier état positif.";
   END IF;
 
-  IF (heure_debut >= heure_fin) THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "L'heure de début de l'activité doit être inférieure à l'heure de fin de l'activité.";
+  SELECT COUNT(idActivite) INTO activite_existe FROM Activite
+  WHERE ((date_debut_activite BETWEEN dateDebut AND dateFin) OR (date_fin_activite BETWEEN dateDebut and dateFin)
+  OR (date_debut_activite < dateDebut AND date_fin_activite > dateFin))
+  AND idUtilisateur = id_utilisateur;
+
+  IF (activite_existe != 0) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Vous avez déjà déclaré une activité à cette période.";
   END IF;
 END;
 $$;
-DELIMITER ;*/
+DELIMITER ;
+
+--
+-- Procédure pour envoyer une notification aux utilisateurs à risque lorsqu'un utilisateur est positif
+--
+DELIMITER $$;
+CREATE PROCEDURE envoyer_notification_contamination_positif(IN id_utilisateur_positif INT, IN id_max_etat INT) READS SQL DATA
+BEGIN
+  DECLARE id_infecte_potentiel INT;
+  DECLARE id_ami INT;
+  DECLARE nom_utilisateur_positif VARCHAR(64);
+  DECLARE prenom_utilisateur_positif VARCHAR(64);
+  DECLARE notification_utilisateur_externe VARCHAR(512);
+  DECLARE notification_ami VARCHAR(512);
+
+  IF (id_max_etat IS NOT NULL) THEN
+    SELECT nom, prenom INTO nom_utilisateur_positif, prenom_utilisateur_positif FROM Utilisateur WHERE idUtilisateur = id_utilisateur_positif;
+
+    SELECT CONCAT("Vous avez probablement été en contact avec ", nom_utilisateur_positif, " ", nom_utilisateur_positif, " au cours de ces 10 derniers jours. Cet individu s'est déclaré positif.") INTO notification_utilisateur_externe FROM DUAL;
+    SELECT CONCAT("Votre ami ", nom_utilisateur_positif, " ", nom_utilisateur_positif, " s'est déclaré positif.") INTO notification_ami FROM DUAL;
+
+    -- Pour chaque ami de l'utilisateur positif , on émet une notification
+    INSERT INTO NotificationContamination(message, idUtilisateur, idContamine, idEtat)
+      SELECT notification_ami, idUtilisateur, id_utilisateur_positif, id_max_etat FROM (
+        SELECT idAmi AS idUtilisateur FROM Ami WHERE idUtilisateur = id_utilisateur_positif AND accepte = b'1'
+          UNION
+        SELECT idUtilisateur FROM Ami WHERE idAmi = id_utilisateur_positif AND accepte = b'1'
+      ) amis
+      WHERE NOT EXISTS (
+        SELECT idNotification FROM NotificationContamination
+        WHERE idEtat = id_max_etat
+        AND idContamine = id_utilisateur_positif
+        AND idUtilisateur = amis.idUtilisateur
+      );
+
+    -- Pour chaque utilisateur ayant été cas contact, on émet une notification
+    INSERT INTO NotificationContamination(message, idUtilisateur, idContamine, idEtat)
+      SELECT DISTINCT notification_utilisateur_externe, idUtilisateur, id_utilisateur_positif, id_max_etat FROM Activite AM INNER JOIN (
+        SELECT idLieu, dateDebut, dateFin, dateEtat FROM Activite A INNER JOIN Etat E
+          ON A.idUtilisateur = E.idUtilisateur
+          WHERE E.positif = b'1'
+          AND E.idEtat = id_max_etat
+          AND A.idUtilisateur = id_utilisateur_positif
+          AND ((DATE(A.dateDebut) BETWEEN DATE(E.dateEtat - INTERVAL 10 DAY) AND DATE(E.dateEtat)) OR (DATE(A.dateFin) BETWEEN DATE(E.dateEtat - INTERVAL 10 DAY) AND DATE(E.dateEtat)))
+          ORDER BY dateDebut, dateFin
+      ) lieux
+      WHERE idUtilisateur IN (
+        SELECT idUtilisateur FROM Activite AC
+        WHERE idUtilisateur != id_utilisateur_positif
+        AND idLieu = lieux.idLieu
+        AND (DATE(AC.dateDebut) >= DATE(lieux.dateEtat - INTERVAL 10 DAY) OR DATE(AC.dateFin) >= DATE(lieux.dateEtat - INTERVAL 10 DAY))
+        AND (((AC.dateDebut BETWEEN lieux.dateDebut AND lieux.dateFin) OR (AC.dateFin BETWEEN lieux.dateDebut AND lieux.dateFin))
+        OR ((AC.dateDebut < lieux.dateDebut) AND (AC.dateFin > lieux.dateFin)))
+      )
+      AND NOT EXISTS ( -- S'il n'existe pas déjà de notification concernant l'utilisateur potentiellement positif sur sa période positive
+        SELECT idNotification FROM NotificationContamination
+        WHERE idEtat = id_max_etat
+        AND idContamine = id_utilisateur_positif
+        AND idUtilisateur = AM.idUtilisateur
+      )
+      AND idUtilisateur NOT IN ( -- Si les utilisateurs ne sont pas des amis (car notification personnalisée)
+        SELECT idAmi AS idUtilisateur FROM Ami WHERE idUtilisateur = id_utilisateur_positif AND accepte = b'1'
+          UNION
+        SELECT idUtilisateur FROM Ami WHERE idAmi = id_utilisateur_positif AND accepte = b'1'
+      );
+  END IF;
+END;
+$$;
+DELIMITER ;
 
 --
 -- Création des triggers
@@ -352,7 +448,7 @@ DELIMITER ;
 --
 -- Trigger pour supprimer totalement un utilisateur après sa suppression (suppression des amis le possédant ou des amis associés à cet utilisateur)
 --
-/*DELIMITER $$;
+DELIMITER $$;
 CREATE TRIGGER suppression_totale_utilisateur BEFORE DELETE ON Utilisateur FOR EACH ROW
 BEGIN
   DECLARE utilisateur_existe INT;
@@ -364,12 +460,12 @@ BEGIN
   END IF;
 
   DELETE FROM Activite WHERE idUtilisateur = OLD.idUtilisateur;
-  DELETE FROM NotificationActivite WHERE idUtilisateur = OLD.idUtilisateur;
+  DELETE FROM NotificationContamination WHERE idUtilisateur = OLD.idUtilisateur;
   DELETE FROM NotificationAmi WHERE idConcerne = OLD.idUtilisateur;
   DELETE FROM Etat WHERE idUtilisatuer = OLD.idUtilisateur;
 END;
 $$;
-DELIMITER ;*/
+DELIMITER ;
 
 --
 -- Trigger pour vérifier si une demande d’ami peut être effectuée (utilisateur existant, requête pas encore effectuée, pas encore ami)
@@ -470,29 +566,29 @@ DELIMITER ;
 --
 -- Trigger pour vérifier qu'une activité peut être ajoutée (qu'elle est cohérente vis-à-vis du lieu et des heures)
 --
-/*DELIMITER $$;
+DELIMITER $$;
 CREATE TRIGGER verifier_ajout_activite BEFORE INSERT ON Activite FOR EACH ROW
 BEGIN
-  CALL verifier_activite(NEW.idUtilisateur, NEW.idLieu, NEW.dateActivite, NEW.heureDebut, NEW.heureFin);
+  CALL verifier_activite(NEW.idUtilisateur, NEW.idLieu, NEW.dateDebut, NEW.dateFin);
 END;
 $$;
-DELIMITER ;*/
+DELIMITER ;
 
 --
 -- Trigger pour vérifier qu'une activité peut être mise à jour (qu'elle est cohérente vis-à-vis du lieu et des heures)
 --
-/*DELIMITER $$;
+DELIMITER $$;
 CREATE TRIGGER verifier_maj_activite BEFORE UPDATE ON Activite FOR EACH ROW
 BEGIN
-  CALL verifier_activite(NEW.idUtilisateur, NEW.idLieu, NEW.dateActivite, NEW.heureDebut, NEW.heureFin);
+  CALL verifier_activite(NEW.idUtilisateur, NEW.idLieu, NEW.dateDebut, NEW.dateFin);
 END;
 $$;
-DELIMITER ;*/
+DELIMITER ;
 
 --
 -- Trigger pour vérifier qu'une activité peut bien être supprimée si elle existe
 --
-/*DELIMITER $$;
+DELIMITER $$;
 CREATE TRIGGER verifier_suppression_activite BEFORE DELETE ON Activite FOR EACH ROW
 BEGIN
   DECLARE activite_existe INT;
@@ -504,7 +600,7 @@ BEGIN
   END IF;
 END;
 $$;
-DELIMITER ;*/
+DELIMITER ;
 
 --
 -- Trigger pour vérifier qu'un lieu peut être ajouté (le nom du lieu ne doit pas déjà exister)
@@ -543,7 +639,7 @@ DELIMITER ;
 --
 -- Trigger pour vérifier qu'un lieu peut bien être supprimé s'il existe et qu'il n'est associé à aucune activité
 --
-/*DELIMITER $$;
+DELIMITER $$;
 CREATE TRIGGER verifier_suppression_lieu BEFORE DELETE ON Lieu FOR EACH ROW
 BEGIN
   DECLARE lieu_existe INT;
@@ -562,193 +658,136 @@ BEGIN
   END IF;
 END;
 $$;
-DELIMITER ;*/
+DELIMITER ;
 
 --
 -- Trigger pour vérifier que l'ajout d'un état est cohérent pour un utilisateur (état différent du précédent, date supérieure à celle de l'état précédent)
 --
-/*DELIMITER $$;
+DELIMITER $$;
 CREATE TRIGGER verifier_etat BEFORE INSERT ON Etat FOR EACH ROW
 BEGIN
-  DECLARE derniere_DATE_etat TIMESTAMP;
+  DECLARE date_naissance_utilisateur_positif DATE;
+  DECLARE derniere_date_etat TIMESTAMP;
   DECLARE dernier_etat BIT;
+  DECLARE etat_incoherent INT;
+  DECLARE message VARCHAR(512);
 
-  SELECT dateEtat, positif INTO derniere_DATE_etat, dernier_etat FROM Etat
+  SELECT dateEtat, positif INTO derniere_date_etat, dernier_etat FROM Etat
   WHERE idUtilisateur = NEW.idUtilisateur
   ORDER BY idEtat DESC LIMIT 1;
 
-  IF (NEW.dateEtat <= derniere_DATE_etat) THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date du nouvel état doit être supérieure à celle du dernier état.";
-  ELSEIF (NEW.positif = dernier_etat) THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Le nouvel état correspond déjà à l'état précédent.";
+  SELECT dateNaiss INTO date_naissance_utilisateur_positif FROM Utilisateur WHERE idUtilisateur = NEW.idUtilisateur;
+
+  IF (NEW.dateEtat < date_naissance_utilisateur_positif) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date du nouvel état ne peut être inférieure à votre date de naissance.";
+  ELSEIF (NEW.dateEtat < STR_TO_DATE('17-11-2019 00:00:00','%d-%m-%Y %T')) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date du nouvel état ne peut être inférieure à la date de début de l'épidémie du COVID-19 (17/11/2019).";
+  ELSEIF (NEW.dateEtat > CURRENT_TIMESTAMP()) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date du nouvel état ne peut être supérieure à la date actuelle.";
+  ELSEIF (derniere_date_etat IS NOT NULL) THEN
+    IF (NEW.dateEtat <= derniere_date_etat) THEN
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date du nouvel état doit être supérieure à celle du dernier état.";
+    ELSEIF (dernier_etat = b'1' AND NEW.positif = b'0' AND (DATE(NEW.dateEtat) < DATE(derniere_date_etat) + 10)) THEN
+      SELECT CONCAT("L'état est réinitialisé tous les 10 jours. Temps restant : ", DATEDIFF(DATE(derniere_date_etat) + 10, DATE(NEW.dateEtat)), " jours.") INTO message FROM DUAL;
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = message;
+    ELSEIF (NEW.positif = dernier_etat) THEN
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Le nouvel état correspond déjà à l'état précédent.";
+    END IF;
+  ELSEIF (NEW.positif = b'0') THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Le premier état déclaré d'un utilisateur doit forcément être positif.";
+  END IF;
+
+  SELECT COUNT(idActivite) INTO etat_incoherent FROM Activite
+  WHERE idUtilisateur = NEW.idUtilisateur
+  AND NEW.dateEtat < dateFin
+  ORDER BY dateFin DESC LIMIT 1;
+
+  IF (etat_incoherent != 0) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date du nouvel état doit forcément être supérieure à la date des dernières activités déclarées.";
   END IF;
 END;
 $$;
-DELIMITER ;*/
+DELIMITER ;
+
+--
+-- Trigger pour empêcher la mise à jour de la table des états (un nouvel état = une nouvelle ligne)
+--
+DELIMITER $$;
+CREATE TRIGGER refuser_maj_etat BEFORE UPDATE ON Etat FOR EACH ROW
+BEGIN
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Pour insérer un nouvel état, un nouvel état doit être déclaré, aucun état ne doit être modifié.";
+END;
+$$;
+DELIMITER ;
 
 --
 -- Trigger pour envoyer une notification aux utilisateurs à risque lorsqu'un utilisateur se déclare positif
 --
-/*DELIMITER $$;
+DELIMITER $$;
 CREATE TRIGGER envoi_notification_positif_nouvel_etat AFTER INSERT ON Etat FOR EACH ROW
 BEGIN
-  DECLARE id_infecte_potentiel INT;
-  DECLARE id_ami INT;
   DECLARE id_max_etat INT;
-  DECLARE nom_utilisateur VARCHAR(64);
-  DECLARE prenom_utilisateur VARCHAR(64);
-  DECLARE nom_utilisateur_positif VARCHAR(64);
-  DECLARE prenom_utilisateur_positif VARCHAR(64);
-  DECLARE notification_utilisateur_externe VARCHAR(512);
-  DECLARE notification_ami VARCHAR(512);
-  DECLARE done INT DEFAULT 0;
 
-  -- Récupérer les utilisateurs pouvant avoir été contaminés par l'utilisatuer positif (si lieux communs : lieux fréquentés par l'utilisateur positif sur ses 10 derniers jours)
-  DECLARE cur_infectes_potentiels CURSOR FOR
-    SELECT DISTINCT idUtilisateur FROM Activite AC
-    INNER JOIN (
-      -- On récupère les lieux visités durant les 10 derniers jours du contaminé
-      SELECT idLieu FROM Activite A INNER JOIN Etat E
-        ON A.idUtilisateur = E.idUtilisateur
-        WHERE E.positif = b'1'
-        AND E.idEtat = id_max_etat
-        AND A.idUtilisateur = id_utilisateur_positif
-        AND A.dateActivite BETWEEN E.dateEtat AND E.dateEtat - 10
-        AND EXISTS ( -- Où les utilisateurs sont allés dans des lieux de l'utilisateur positif pendant le même jour et entre la période de début et de fin
-          -- On récupère les lieux visités par tous les utilisateurs autres que celui positif qui sont en corrélation avec les dernières activités du contaminé
-          SELECT idLieu FROM Activite
-          WHERE idUtilisateur != NEW.idUtilisateur
-          AND idLieu = A.idLieu
-          AND dateActivite = A.dateActivite
-          AND (heureDebut BETWEEN A.heureDebut AND A.heureFin) OR (heureFin BETWEEN A.heureDebut AND A.heureFin)
-        )
-        ORDER BY dateActivite, heureDebut, heureFin
-      ) lieux
-    ON AC.idLieu = lieux.idLieu
-    WHERE NOT EXISTS ( -- S'il n'existe pas déjà de notification concernant l'utilisateur potentiellement positif sur sa période positive
-      SELECT idNotification FROM NotificationContamination
-      WHERE idEtat = id_max_etat
-      AND idContamine = NEW.idUtilisateur
-      AND idUtilisateur = AC.idUtilisateur
-    )
-    AND idUtilisateur NOT IN ( -- Si les utilisateurs ne sont pas des amis (car notification personnalisée)
-      SELECT idAmi AS idUtilisateur FROM Ami WHERE idUtilisateur = id_utilisateur_positif AND accepte = b'1'
-      UNION
-      SELECT idUtilisateur FROM Ami WHERE idAmi = id_utilisateur_positif AND accepte = b'1'
-    );
+  SELECT idEtat INTO id_max_etat FROM Etat
+  WHERE idUtilisateur = NEW.idUtilisateur
+  AND positif = b'1'
+  AND idEtat = (SELECT MAX(idEtat) FROM Etat WHERE idUtilisateur = NEW.idUtilisateur);
 
-  -- Amis de l'utilisateur infecté
-  DECLARE cur_amis CURSOR FOR
-    SELECT idUtilisateur FROM (
-      SELECT idAmi AS idUtilisateur FROM Ami WHERE idUtilisateur = id_utilisateur_positif AND accepte = b'1'
-        UNION
-      SELECT idUtilisateur FROM Ami WHERE idAmi = id_utilisateur_positif AND accepte = b'1'
-    ) amis
-    WHERE NOT EXISTS (
-      SELECT idNotification FROM NotificationContamination
-      WHERE idEtat = id_max_etat
-      AND idContamine = id_utilisateur_positif
-      AND idUtilisateur = amis.idUtilisateur
-    );
-
-  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
-
-  IF (NEW.positif = b'1') THEN
-    SELECT nom, prenom INTO nom_utilisateur_positif, prenom_utilisateur_positif FROM Utilisateur WHERE idUtilisateur = id_utilisateur_positif;
-
-    SELECT CONCAT("Vous avez été en probablement été en contact avec ", nom_utilisateur_positif, " ", nom_utilisateur_positif, " au cours de ces 10 derniers jours. Cet individu s'est déclaré positif.") INTO notification_utilisateur_externe FROM DUAL;
-    SELECT CONCAT("Votre ami ", nom_utilisateur_positif, " ", nom_utilisateur_positif, " s'est déclaré positif.") INTO notification_ami FROM DUAL;
-
-    SELECT idEtat INTO id_max_etat FROM Etat
-    WHERE idUtilisateur = id_utilisateur_positif
-    AND positif = b'1'
-    AND idEtat = (SELECT MAX(idEtat) FROM Etat WHERE idUtilisateur = id_utilisateur_positif);
-
-    -- Pour chaque utilisateur ayant été cas contact, on émet une notification
-    OPEN cur_infectes_potentiels;
-    cur_infectes_potentiels: LOOP
-      FETCH cur_infectes_potentiels INTO id_infecte_potentiel;
-
-      IF (done = 1) THEN
-        SET done = 0;
-        LEAVE cur_infectes_potentiels;
-      END IF;
-
-      INSERT INTO NotificationContamination(message, idUtilisateur, idContamine, idActivitePremiere) VALUES(notification_utilisateur_externe, id_infecte_potentiel, id_utilisateur_positif, id_max_etat);
-    END LOOP;
-    CLOSE cur_infectes_potentiels;
-
-    -- Pour chaque ami de l'utilisateur positif , on émet une notification
-
-    OPEN cur_amis;
-    cur_amis: LOOP
-      FETCH cur_amis INTO id_ami;
-
-      IF (done = 1) THEN
-        LEAVE cur_amis;
-      END IF;
-
-      INSERT INTO NotificationContamination(message, idUtilisateur, idContamine, idActivitePremiere) VALUES(notification_ami, id_ami, id_utilisateur_positif, id_max_etat);
-    END LOOP;
-    CLOSE cur_amis;
-  END IF;
+  CALL envoyer_notification_contamination_positif(NEW.idUtilisateur, id_max_etat);
 END;
 $$;
-DELIMITER ;*/
+DELIMITER ;
 
 --
 -- Trigger permettant de déclencher l'envoi des notifications de contaminations lors de la création d'une activité par un utilisateur
 --
-/*DELIMITER $$;
+DELIMITER $$;
 CREATE TRIGGER envoi_notifications_creation_activite_contamination AFTER INSERT ON Activite FOR EACH ROW
 BEGIN
   DECLARE id_utilisateur_positif INT;
   DECLARE id_max_etat INT;
-  DECLARE nom_utilisateur_positif VARCHAR(64);
-  DECLARE prenom_utilisateur_positif VARCHAR(64);
-  DECLARE notification_utilisateur VARCHAR(512);
-  DECLARE done INT DEFAULT 0;
 
-  DECLARE cur_utilisateurs_proches_infectes CURSOR FOR
-    SELECT * FROM (
-      SELECT idUtilisateur, nom, prenom, idEtat FROM Activite A INNER JOIN Etat E NATURAL JOIN Utilisateur
-      ON A.idUtilisateur = E.idUtilisateur
-      WHERE idLieu = NEW.idLieu
-      AND positif = b'1'
-      AND idEtat = (SELECT MAX(idEtat) FROM Etat WHERE idUtilisateur = E.idUtilisateur)
-    ) infectes
-    WHERE NOT EXISTS (
-      SELECT idNotification FROM NotificationContamination
-      WHERE idEtat = infectes.idEtat
-      AND idContamine = infectes.idUtilisateur
-      AND idUtilisateur = NEW.idUtilisateur
-    );
+  SELECT idEtat INTO id_max_etat FROM Etat
+  WHERE idUtilisateur = NEW.idUtilisateur
+  AND positif = b'1'
+  AND idEtat = (SELECT MAX(idEtat) FROM Etat WHERE idUtilisateur = NEW.idUtilisateur);
 
-  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
-
-  OPEN cur_utilisateurs_proches_infectes;
-  cur_utilisateurs_proches_infectes: LOOP
-    FETCH cur_utilisateurs_proches_infectes INTO id_utilisateur_positif, nom_utilisateur_positif, prenom_utilisateur_positif, id_max_etat;
-
-    SELECT nom, prenom INTO nom_utilisateur_positif, prenom_utilisateur_positif FROM Utilisateur WHERE idUtilisateur = id_utilisateur_positif;
-
-    SELECT CONCAT("Vous avez été en probablement été en contact avec ", nom_utilisateur_positif, " ", nom_utilisateur_positif, " au cours de ces 10 derniers jours. Cet individu s'est déclaré positif.") INTO notification_utilisateur FROM DUAL;
-
-    IF (done = 1) THEN
-      LEAVE cur_utilisateurs_proches_infectes;
-    END IF;
-
-    INSERT INTO NotificationContamination(message, idUtilisateur, idContamine, idActivitePremiere) VALUES(notification_utilisateur, NEW.idUtilisateur, id_utilisateur_positif, id_max_etat);
-  END LOOP;
-  CLOSE cur_utilisateurs_proches_infectes;
+  IF (id_max_etat IS NOT NULL) THEN
+    CALL envoyer_notification_contamination_positif(NEW.idUtilisateur, id_max_etat);
+  ELSE
+    INSERT INTO NotificationContamination(message, idUtilisateur, idContamine, idEtat)
+      SELECT DISTINCT CONCAT("Vous avez probablement été en contact avec ", nom, " ", prenom, " au cours de ces 10 derniers jours. Cet individu s'est déclaré positif."), NEW.idUtilisateur, infectes.idUtilisateur, idEtat FROM Activite AM INNER JOIN (
+        SELECT DISTINCT idLieu, A.idUtilisateur, nom, prenom, dateDebut, dateFin, idEtat, dateEtat FROM Activite A INNER JOIN Etat E NATURAL JOIN Utilisateur
+          ON A.idUtilisateur = E.idUtilisateur
+          WHERE E.positif = b'1'
+          AND idLieu = NEW.idLieu
+          AND E.idEtat = (SELECT MAX(idEtat) FROM Etat WHERE idUtilisateur = E.idUtilisateur)
+          AND ((DATE(A.dateDebut) BETWEEN DATE(E.dateEtat - INTERVAL 10 DAY) AND DATE(E.dateEtat)) OR (DATE(A.dateFin) BETWEEN DATE(E.dateEtat - INTERVAL 10 DAY) AND DATE(E.dateEtat)))
+          ORDER BY dateDebut, dateFin
+      ) infectes
+      WHERE NEW.idUtilisateur IN (
+        SELECT idUtilisateur FROM Activite AC
+        WHERE idUtilisateur != infectes.idUtilisateur
+        AND idLieu = infectes.idLieu
+        AND (DATE(AC.dateDebut) >= DATE(infectes.dateEtat - INTERVAL 10 DAY) OR DATE(AC.dateFin) >= DATE(infectes.dateEtat - INTERVAL 10 DAY))
+        AND (((AC.dateDebut BETWEEN infectes.dateDebut AND infectes.dateFin) OR (AC.dateFin BETWEEN infectes.dateDebut AND infectes.dateFin))
+        OR ((AC.dateDebut < infectes.dateDebut) AND (AC.dateFin > infectes.dateFin)))
+      )
+      AND NOT EXISTS ( -- S'il n'existe pas déjà de notification concernant l'utilisateur potentiellement positif sur sa période positive
+        SELECT idNotification FROM NotificationContamination
+        WHERE idEtat = infectes.idEtat
+        AND idContamine = infectes.idUtilisateur
+        AND idUtilisateur = NEW.idUtilisateur
+      );
+  END IF;
 END;
 $$;
-DELIMITER ;*/
+DELIMITER ;
 
 --
 -- Trigger permettant d'envoyer une notification de contamination potentielle à un demandeur d'ami si sa requête est acceptée
 --
-/*DELIMITER $$;
+DELIMITER $$;
 CREATE TRIGGER envoi_notifications_nouvel_ami_contamination AFTER UPDATE ON Ami FOR EACH ROW
 BEGIN
   DECLARE id_utilisateur_positif INT;
@@ -758,26 +797,22 @@ BEGIN
   DECLARE notification_ami VARCHAR(512);
   DECLARE done INT DEFAULT 0;
 
-  SELECT idUtilisateur, nom, prenom, idEtat into id_utilisateur_positif, nom_utilisateur_positif, prenom_utilisateur_positif, id_max_etat FROM (
-    SELECT idUtilisateur, nom, prenom, idEtat FROM Activite A NATURAL JOIN Etat E NATURAL JOIN Utilisateur
-    WHERE positif = b'1'
-    AND idEtat = (SELECT MAX(idEtat) FROM Etat WHERE idUtilisateur = NEW.idAmi)
-    AND idUtilisateur = NEW.idAmi
-  ) ami
-  WHERE NOT EXISTS (
-    SELECT idNotification FROM NotificationContamination
-    WHERE idEtat = ami.idEtat
-    AND idContamine = ami.idUtilisateur
-    AND idUtilisateur = NEW.idAmi
-  );
-
-  IF (id_utilisateur_positif IS NOT NULL) THEN
-    SELECT CONCAT("Votre ami ", nom_utilisateur_positif, " ", nom_utilisateur_positif, " s'est déclaré positif.") INTO notification_ami FROM DUAL;
-    INSERT INTO NotificationContamination(message, idUtilisateur, idContamine, idEtat) VALUES(notification_ami, NEW.idUtilisateur, id_utilisateur_positif, id_max_etat);
-  END IF;
+  INSERT INTO NotificationContamination(message, idUtilisateur, idContamine, idEtat)
+    SELECT CONCAT("Votre ami ", nom, prenom," s'est déclaré positif."), idConcerne, idUtilisateur, idEtat FROM (
+      SELECT idUtilisateur, IF(idUtilisateur = NEW.idUtilisateur, NEW.idAmi, NEW.idUtilisateur) AS idConcerne, nom, prenom, idEtat FROM Etat NATURAL JOIN Utilisateur U
+      WHERE positif = b'1'
+      AND idEtat = (SELECT MAX(idEtat) FROM Etat WHERE idUtilisateur = U.idUtilisateur)
+      AND idUtilisateur IN (NEW.idUtilisateur, NEW.idAmi)
+    ) notif
+    WHERE NOT EXISTS (
+      SELECT idNotification FROM NotificationContamination
+      WHERE idEtat = notif.idEtat
+      AND idContamine = notif.idUtilisateur
+      AND idUtilisateur = notif.idConcerne
+    );
 END;
 $$;
-DELIMITER ;*/
+DELIMITER ;
 
 
 --
