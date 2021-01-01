@@ -240,4 +240,14 @@
   	<servlet-name>DeleteFriendNotificationServlet</servlet-name>
   	<servlet-class>servlet.DeleteFriendNotificationServlet</servlet-class>
   </servlet>
+  
+  
+  <servlet-mapping>
+  	<servlet-name>PositiveDeclarationServlet</servlet-name>
+  	<url-pattern>/declaration</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>PositiveDeclarationServlet</servlet-name>
+  	<servlet-class>servlet.PositiveDeclarationServlet</servlet-class>
+  </servlet>
 </web-app>

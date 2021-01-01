@@ -31,14 +31,13 @@
           <div class="col-md-12" style="text-align: center;">
             <h2>Vous n'êtes pas connecté</h2>
             
-            <br>
+            <hr>
             
             <p><a class="btn btn-secondary" href="login" role="button">Se connecter</a></p>
             <p><a class="btn btn-secondary" href="register" role="button">S'inscrire</a></p>
           </div>
         </div>
 
-        <hr>
 
       </div>
 

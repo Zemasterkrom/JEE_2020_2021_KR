@@ -360,4 +360,6 @@ INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DA
 INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DATE('17-02-2020 15:00', '%d-%m-%Y %T'), STR_TO_DATE('21-02-2020 14:59', '%d-%m-%Y %T'), 9, 5); -- Aucune notification émise car notification déjà émise pour l'utilisateur 9
 SELECT * FROM NotificationContamination; -- 39 notifications
 
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestAdminNom', 'TestAdminPrenom', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestAdmin', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'admin');
+
 SET SQL_SAFE_UPDATES = 1;

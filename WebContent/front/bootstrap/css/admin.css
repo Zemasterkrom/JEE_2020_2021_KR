@@ -34,9 +34,8 @@ body {
     text-align: center
 }
 
-.our-services:hover h4,
-.our-services:hover p {
-    color: #fff
+.our-services:hover * {
+    color: #fff !important;
 }
 
 .speedup:hover {

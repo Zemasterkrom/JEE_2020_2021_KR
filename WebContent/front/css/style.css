@@ -13,3 +13,11 @@
 .notification {
 	font-size: 1.2em;
 }
+
+.actionTitle {
+	font-size: xx-large;
+}
+
+.actionDescription {
+	font-size: large;
+}
