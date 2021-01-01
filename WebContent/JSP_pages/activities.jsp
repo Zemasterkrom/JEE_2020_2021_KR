@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.util.ArrayList" %> 
+<%@ page import="java.util.List" %> 
 <%@ page import="bean.Utilisateur" %>
 <%@ page import="bean.Activite" %>
 <%@ page import="bean.Lieu" %>
@@ -19,7 +19,7 @@
 
 <body>
 
-	<% ArrayList<Utilisateur> utilisateurs = (ArrayList<Utilisateur>) request.getAttribute("Utilisateurs"); int util = 1; 
+	<% List<Utilisateur> utilisateurs = (List<Utilisateur>) request.getAttribute("Utilisateurs"); int util = 1; 
 	   SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); format.setTimeZone(TimeZone.getTimeZone("UTC"));
 	   ManagerLieu manager = new ManagerLieu(request, response); Lieu l; int activites = 0;
 	   for (Utilisateur u : utilisateurs) {

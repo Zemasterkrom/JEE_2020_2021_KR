@@ -42,8 +42,10 @@ public class DeleteFriendServlet extends HttpServlet {
 		try {
 			//Création du manager des amis
 			ManagerAmi manager = new ManagerAmi(request, response);
+			
 			//Récupération de l'id de l'utilisateur
 			int idUtilisateur = ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant")).getId();
+			
 			//Récupération de l'id de l'ami
 			int idAmi = Integer.parseInt(request.getParameter("idAmi"));
 		

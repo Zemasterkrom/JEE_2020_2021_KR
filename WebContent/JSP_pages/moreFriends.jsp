@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.util.ArrayList" %> 
+<%@ page import="java.util.List" %> 
 <%@page import="bean.Utilisateur"%>
 <%@page import="bean.Ami"%>
 <%@page import="sql.ManagerAmi" %>
@@ -16,7 +16,7 @@
 	<body>
 	
 		<% Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
-		   ArrayList<Utilisateur> utilisateurs = (ArrayList<Utilisateur>) request.getAttribute("Utilisateurs");
+		   List<Utilisateur> utilisateurs = (List<Utilisateur>) request.getAttribute("Utilisateurs");
 		   ManagerAmi manager = new ManagerAmi(request, response); Ami a; %>
 		
 		<jsp:include page="navbar.jsp" />

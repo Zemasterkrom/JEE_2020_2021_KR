@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.util.ArrayList" %> 
+<%@ page import="java.util.List" %> 
 <%@ page import="bean.Lieu" %>
 <%! @SuppressWarnings("unchecked") %>
     
@@ -13,7 +13,7 @@
 	</head>
 	
 	<body>
-		<% ArrayList<Lieu> lieux = (ArrayList<Lieu>) request.getAttribute("Lieux"); int drop = 1; %>
+		<% List<Lieu> lieux = (List<Lieu>) request.getAttribute("Lieux"); int drop = 1; %>
 		
 		<jsp:include page="navbar.jsp" />
 		<div class="page-content page-container" id="page-content">

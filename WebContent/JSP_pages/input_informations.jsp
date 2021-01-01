@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.util.ArrayList" %> 
+<%@ page import="java.util.List" %> 
 <%@ page import="bean.Utilisateur" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%! @SuppressWarnings("unchecked") %>
 
 	<body>
-			<% ArrayList<String> erreurs = (ArrayList<String>) request.getAttribute("Erreurs"); 
+			<% List<String> erreurs = (List<String>) request.getAttribute("Erreurs"); 
 			   Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant"); 
 			   String nom, prenom, dateNaiss, login, image;
 			   

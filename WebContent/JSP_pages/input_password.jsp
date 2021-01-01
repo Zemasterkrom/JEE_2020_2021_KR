@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.List" %>
 <%! @SuppressWarnings("unchecked") %>
    
 	<body>
-			<% ArrayList<String> erreurs = (ArrayList<String>) request.getAttribute("Erreurs"); %>
+			<% List<String> erreurs = (List<String>) request.getAttribute("Erreurs"); %>
 			
 		    <label for="mdp" class="visually-hidden">Mot de passe</label>
 		    <span class="infobulle" aria-label="Le mot de passe doit faire entre 6 et 64 caractères">

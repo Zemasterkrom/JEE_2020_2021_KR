@@ -172,7 +172,6 @@
     <servlet-name>RejectFriendRequestServlet</servlet-name>
     <url-pattern>/rejectFriendRequest</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>CancelFriendRequestServlet</servlet-name>
     <servlet-class>servlet.CancelFriendRequestServlet</servlet-class>
@@ -205,4 +204,40 @@
     <servlet-name>AddFriendServlet</servlet-name>
     <url-pattern>/addFriend</url-pattern>
   </servlet-mapping>
+  
+  
+  <servlet-mapping>
+  	<servlet-name>ContaminationNotificationsServlet</servlet-name>
+  	<url-pattern>/contaminationNotifications</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>ContaminationNotificationsServlet</servlet-name>
+  	<servlet-class>servlet.ContaminationNotificationsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>DeleteContaminationNotificationServlet</servlet-name>
+  	<url-pattern>/deleteContaminationNotification</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>DeleteContaminationNotificationServlet</servlet-name>
+  	<servlet-class>servlet.DeleteContaminationNotificationServlet</servlet-class>
+  </servlet>
+  
+  
+  <servlet-mapping>
+  	<servlet-name>FriendNotificationsServlet</servlet-name>
+  	<url-pattern>/friendNotifications</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>FriendNotificationsServlet</servlet-name>
+  	<servlet-class>servlet.FriendNotificationsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>DeleteFriendNotificationServlet</servlet-name>
+  	<url-pattern>/deleteFriendNotification</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>DeleteFriendNotificationServlet</servlet-name>
+  	<servlet-class>servlet.DeleteFriendNotificationServlet</servlet-class>
+  </servlet>
 </web-app>

@@ -26,7 +26,7 @@ public class NotificationAmi extends Notification {
 	 * Méthode getter de l'id du demandeur dans le couple
 	 * @return id du demandeur
 	 */
-	protected int getIdUtilisateur() {
+	public int getIdUtilisateur() {
 		return this.idUtilisateur;
 	}
 	
@@ -34,7 +34,7 @@ public class NotificationAmi extends Notification {
 	 * Méthode setter de l'id du demandeur dans le couple
 	 * @param idUtilisateur id du demandeur
 	 */
-	protected void setIdUtilisateur(int idUtilisateur) {
+	public void setIdUtilisateur(int idUtilisateur) {
 		this.idUtilisateur = idUtilisateur;
 	}
 	
@@ -42,7 +42,7 @@ public class NotificationAmi extends Notification {
 	 * Méthode getter de l'id de l'ami dans le couple
 	 * @return id de l'ami
 	 */
-	protected int getIdAmi() {
+	public int getIdAmi() {
 		return this.idAmi;
 	}
 	
@@ -50,7 +50,7 @@ public class NotificationAmi extends Notification {
 	 * Méthode setter de l'id de l'ami dans le couple
 	 * @param idAmi id de l'ami
 	 */
-	protected void setIdAmi(int idUtilisateur) {
+	public void setIdAmi(int idUtilisateur) {
 		this.idUtilisateur = idUtilisateur;
 	}
 	
@@ -58,7 +58,7 @@ public class NotificationAmi extends Notification {
 	 * Méthode getter de l'id de l'utilisateur concerné par la notification
 	 * @return id de l'utilisateur concerné par la notification
 	 */
-	protected int getIdConcerne() {
+	public int getIdConcerne() {
 		return this.idConcerne;
 	}
 	
@@ -66,7 +66,7 @@ public class NotificationAmi extends Notification {
 	 * Méthode setter de l'id de l'utilisateur concerné par la notification
 	 * @param idAmi id de l'utilisateur concerné
 	 */
-	protected void setIdConcerne(int idConcerne) {
+	public void setIdConcerne(int idConcerne) {
 		this.idConcerne = idConcerne;
 	}
 }

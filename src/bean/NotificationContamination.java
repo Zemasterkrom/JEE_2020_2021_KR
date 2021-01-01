@@ -58,7 +58,7 @@ public class NotificationContamination extends Notification {
 	 * Méthode getter de l'id de l'état positif de l'utilisateur contaminé
 	 * @return id de l'état positif de l'utilisateur contaminé
 	 */
-	protected int getIdEtat() {
+	public int getIdEtat() {
 		return this.idEtat;
 	}
 	
@@ -66,7 +66,7 @@ public class NotificationContamination extends Notification {
 	 * Méthode setter de l'id de l'état positif de l'utilisateur contaminé
 	 * @param idAmi id de l'état positif de l'utilisateur contaminé
 	 */
-	protected void setIdEtat(int idEtat) {
+	public void setIdEtat(int idEtat) {
 		this.idEtat = idEtat;
 	}
 }

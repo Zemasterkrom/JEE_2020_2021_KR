@@ -15,7 +15,7 @@ public abstract class Notification {
 	 * Méthode getter de l'id
 	 * @return id de la notification
 	 */
-	protected int getId() {
+	public int getId() {
 		return id;
 	}
 	
@@ -23,7 +23,7 @@ public abstract class Notification {
 	 * Méthode setter de l'id
 	 * @param id de la notification
 	 */
-	protected void setId(int id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	
@@ -31,7 +31,7 @@ public abstract class Notification {
 	 * Méthode getter du message
 	 * @return Message de la notification
 	 */
-	protected String getMessage() {
+	public String getMessage() {
 		return this.message;
 	}
 	
@@ -39,7 +39,7 @@ public abstract class Notification {
 	 * Méthode setter du message
 	 * @param message Message de la notification
 	 */
-	protected void setMessage(String message) {
+	public void setMessage(String message) {
 		this.message = message;
 	}
 	
@@ -47,7 +47,7 @@ public abstract class Notification {
 	 * Méthode getter de l'état de la notification
 	 * @return Etat de la notification  (false = non vue, true = vue)
 	 */
-	protected boolean getVue() {
+	public boolean getVue() {
 		return this.vue;
 	}
 	
@@ -55,7 +55,7 @@ public abstract class Notification {
 	 * Méthode setter de l'état de la notification
 	 * @param vue Etat de la notification  (false = non vue, true = vue)
 	 */
-	protected void setVue(boolean vue) {
+	public void setVue(boolean vue) {
 		this.vue = vue;
 	}
 }

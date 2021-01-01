@@ -1,25 +1,31 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="bean.Utilisateur" %>
+<%@ page import="sql.ManagerNotification" %>
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 	  	  <a class="navbar-brand" href="home">Tous AntiLaCovid <img src="front/img/logo.png" id="logo" alt="Tous AntiLaCovid" /></a>
 		  
 		  <div class="collapse navbar-collapse" id="navbarSupportedContent">
 		    <ul class="navbar-nav mr-auto">
 		      
-		      <% Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");  
+		      <% Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant"); 
+		      	 ManagerNotification manager = new ManagerNotification(request, response);
+		      	 
 		      if (utilisateur == null) { %>
 		      
-			      <li class="nav-item">
-			        <a class="nav-link" href="login"><i class="fas fa-sign-in-alt fa-lg"></i> Se connecter</a>		        
-			      </li>
-			      
-			       <li class="nav-item">
-			        <a class="nav-link" href="register"><i class="fas fa-plus-square fa-lg"></i> S'inscrire</a>		        
-			      </li>
-			 
-			 <% } else { %>	
-			 
+		      <li class="nav-item">
+		        <a class="nav-link" href="login"><i class="fas fa-sign-in-alt fa-lg"></i> Se connecter</a>		        
+		      </li>
+		      
+		       <li class="nav-item">
+		        <a class="nav-link" href="register"><i class="fas fa-plus-square fa-lg"></i> S'inscrire</a>		        
+		      </li>
+		 
+		 <% } else { 
+		         int nbNotifications = manager.getNbNotificationsNonVues(utilisateur.getId());
+		         String nbNotificationsNonVues = nbNotifications != 0 ? String.valueOf("("+nbNotifications+")") : "";
+		         
+		         %>	
 			 	  <li class="nav-item">
 			        <a class="nav-link" href="account"><i class="fas fa-address-card fa-lg"></i> Voir le profil</a>		        
 			      </li>
@@ -29,7 +35,7 @@
 			      </li>
 			      
 			      <li class="nav-item">
-			      	<a class="nav-link" href="notificationsContaminations"><i class="fas fa-bell fa-lg"></i> Notifications</a>
+			      	<a class="nav-link" href="contaminationNotifications"><i class="fas fa-bell fa-lg"></i> Notifications <% out.print(nbNotificationsNonVues); %></a>
 			      </li>
 			      
 			      <% if (utilisateur.getRang().equals("admin")) { %>

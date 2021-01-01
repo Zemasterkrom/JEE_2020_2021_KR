@@ -207,10 +207,9 @@ public class ManagerAmi extends Manager {
 	 */
 	public void annulerDemandeAmi(int idAnnuleur, int idAmi) throws AppException {
 		try {
-			//Requête
-			String req = "DELETE FROM Ami WHERE idUtilisateur=? AND idAmi=?";
 			//Préparation de la requête
-			PreparedStatement stmt = this.doRequest(req);
+			CallableStatement stmt = connection.prepareCall("{call supprimer_refuser_ami(?, ?)}");
+			
 			//Ajout des id à la requête
 			stmt.setInt(1, idAnnuleur);
 			stmt.setInt(2, idAmi);

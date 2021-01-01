@@ -268,10 +268,15 @@ BEGIN
   SELECT idUtilisateur, idAmi, accepte INTO id_utilisateur, id_ami, etat_ami FROM Ami WHERE (idUtilisateur = id_utilisateur_courant AND idAmi = id_ami_supprime) OR (idUtilisateur = id_ami_supprime AND idAmi = id_utilisateur_courant);
   SELECT nom, prenom INTO nom_utilisateur, prenom_utilisateur FROM Utilisateur WHERE idUtilisateur = id_utilisateur_courant;
 
-  IF (id_utilisateur IS NOT NULL AND etat_ami = b'1') THEN
-    SELECT CONCAT(nom_utilisateur, " ", prenom_utilisateur, " vous a supprimé de vos amis.") INTO notification FROM DUAL;
-    INSERT INTO NotificationAmi(message, idUtilisateur, idAmi, idConcerne) VALUES(notification, id_utilisateur, id_ami, id_ami_supprime);
-  ELSEIF (id_utilisateur IS NULL) THEN
+  IF (id_utilisateur IS NOT NULL) THEN
+	IF (etat_ami = b'1') THEN
+		SELECT CONCAT(nom_utilisateur, " ", prenom_utilisateur, " vous a supprimé de vos amis.") INTO notification FROM DUAL;
+		INSERT INTO NotificationAmi(message, idUtilisateur, idAmi, idConcerne) VALUES(notification, id_utilisateur, id_ami, id_ami_supprime);
+	ELSEIF (id_utilisateur_courant != id_utilisateur) THEN
+		SELECT CONCAT("Votre demande d'ami de ", nom_utilisateur, " ", prenom_utilisateur, " a été rejetée.") INTO notification FROM DUAL;
+		INSERT INTO NotificationAmi(message, idUtilisateur, idAmi, idConcerne) VALUES(notification, id_utilisateur, id_ami, id_ami_supprime);
+	END IF;
+  ELSE
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Aucune requête n'existe pour cette demande d'ami.";
   END IF;
 
@@ -837,26 +842,8 @@ $$;
 DELIMITER ;
 
 --
--- Trigger permettant l'envoi d'une notification d'acceptation lorsqu'un utilisateur refuse une demande d'ami
+-- Evénement automatique tous les 10 jours à partir du moment ou un utilisateur s'est déclaré positif : changer l'état en non positif
 --
-DELIMITER $$;
-CREATE TRIGGER envoi_notification_ami_refuse AFTER DELETE ON Ami FOR EACH ROW
-BEGIN
-  DECLARE nom_utilisateur VARCHAR(64);
-  DECLARE prenom_utilisateur VARCHAR(64);
-  DECLARE etat_utilisateur BIT(1);
-  DECLARE notification VARCHAR(512);
-
-  IF (OLD.accepte = b'0') THEN
-    SELECT nom, prenom INTO nom_utilisateur, prenom_utilisateur FROM Utilisateur WHERE idUtilisateur = OLD.idAmi;
-    SELECT CONCAT("Votre demande d'ami de ", nom_utilisateur, " ", prenom_utilisateur, " a été rejetée.") INTO notification FROM DUAL;
-
-    INSERT INTO NotificationAmi(message, idUtilisateur, idAmi, idConcerne) VALUES(notification, OLD.idUtilisateur, OLD.idAmi, OLD.idUtilisateur);
-  END IF;
-END;
-$$;
-DELIMITER ;
-
 DELIMITER $$;
 CREATE EVENT maj_etat_automatique ON SCHEDULE EVERY 1 DAY
 DO BEGIN

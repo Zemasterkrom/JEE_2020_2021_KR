@@ -1,4 +1,15 @@
+/**
+ * Author : Raphaël Kimm
+ */
 #logo {
 	width: 64px !important;
 	height: 64px !important;
+}
+
+.btn-primary i {
+	color: white;
+}
+
+.notification {
+	font-size: 1.2em;
 }

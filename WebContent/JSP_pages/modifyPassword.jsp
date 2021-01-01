@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.util.ArrayList" %> 
+<%@ page import="java.util.List" %> 
 <%! @SuppressWarnings("unchecked") %>
 
 <!DOCTYPE html>
@@ -12,7 +12,7 @@
 	
 	<body>
 	
-		<% ArrayList<String> erreurs = (ArrayList<String>) request.getAttribute("Erreurs"); %>
+		<% List<String> erreurs = (List<String>) request.getAttribute("Erreurs"); %>
 		
 		<div class="col-md-12" style="padding-left:0;">
 			<jsp:include page="navbar.jsp"/>
