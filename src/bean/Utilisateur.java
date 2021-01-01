@@ -14,50 +14,71 @@ public class Utilisateur {
 	 * Id de l'utilisateur
 	 */
 	private int id;
+	
 	/**
 	 * Nom de l'utilisateur
 	 */
 	private String nom;
+	
 	/**
 	 * Prénom de l'utilisateur
 	 */
 	private String prenom;
+	
 	/**
 	 * Date de naissance de l'utilisateur
 	 */
 	private Date dateNaiss;
+	
 	/**
 	 * Login de l'utilisateur
 	 */
 	private String login;
+	
 	/**
 	 * Mot de passe de l'utilisateur
 	 */
 	private String motDePasse;
+	
 	/**
 	 * Rang de l'utilisateur
 	 */
 	private String rang;
+	
 	/**
 	 * image de profil de l'utilisateur
 	 */
 	private String image;
+	
 	/**
 	 * Liste des activités de l'utilisateur
 	 */
 	private List<Activite> activites;
+	
 	/**
 	 * Liste des amis de l'utilisateur
 	 */
 	private List<Ami> amis;
+	
 	/**
 	 * Liste des demandes d'amis reçues de l'utilisateur
 	 */
 	private List<Ami> demandesRecues;
+	
 	/**
 	 * Liste des demandes d'amis envoyées par l'utilisateur
 	 */
 	private List<Ami> demandesEnvoyees;
+	
+	/**
+	 * Liste des notifications d'amis de l'utilisateur
+	 */
+	private List<NotificationAmi> notificationAmi;
+	
+	/**
+	 * Liste des notifications de contaminations de l'utilisateur
+	 */
+	private List<NotificationContamination> notificationsContaminations;
 	
 	/**
 	 * Méthode getter du nom
@@ -185,6 +206,42 @@ public class Utilisateur {
 	 */
 	public void setImage(String image) {
 		this.image = image;
+	}
+	
+	/**
+	 * Méthode setter des notifications de contamination
+	 * @author Raphaël Kimm
+	 * @param notifications Notifications de contamination de l'utilisateur
+	 */
+	public void setNotificationsContaminations(List<NotificationContamination> notifications) {
+		this.notificationsContaminations = notifications;
+	}
+	
+	/**
+	 * Méthode getter des notifications de contamination
+	 * @author Raphaël Kimm
+	 * @return Notifications de contamination de l'utilisateur
+	 */
+	public List<NotificationContamination> getNotificationsContaminations() {
+		return this.notificationsContaminations;
+	}
+	
+	/**
+	 * Méthode setter des notifications d'amis
+	 * @author Raphaël Kimm
+	 * @param notifications Notifications d'amis de l'utilisateur
+	 */
+	public void setNotificationsAmis(List<NotificationAmi> notifications) {
+		this.notificationAmi = notifications;
+	}
+	
+	/**
+	 * Méthode getter des notifications d'amis
+	 * @author Raphaël Kimm
+	 * @return Notifications d'amis de l'utilisateur
+	 */
+	public List<NotificationAmi> getNotificationsAmi() {
+		return this.notificationAmi;
 	}
 
 	/**

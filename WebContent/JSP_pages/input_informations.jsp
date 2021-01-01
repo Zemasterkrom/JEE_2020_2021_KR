@@ -3,14 +3,9 @@
 <%@ page import="java.util.ArrayList" %> 
 <%@ page import="bean.Utilisateur" %>
 <%@ page import="java.text.SimpleDateFormat" %>
-   
-<!DOCTYPE html>
-<html>
+<%! @SuppressWarnings("unchecked") %>
 
-<head>
-</head>
-
-<body>
+	<body>
 			<% ArrayList<String> erreurs = (ArrayList<String>) request.getAttribute("Erreurs"); 
 			   Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant"); 
 			   String nom, prenom, dateNaiss, login, image;
@@ -86,6 +81,4 @@
 				};
 				
 			</script>    
-			
-</body>
-</html>
+	</body>

@@ -10,10 +10,7 @@
 	<title>Amis</title>
 	
 	<link href="front/bootstrap/css/list.css" rel="stylesheet">
-	<link href="front/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<script src="front/jquery/jquery-3.5.1.js"></script>
-    <script src="front/bootstrap/js/bootstrap.min.js"></script>
-    
+	<jsp:include page="head.jsp" />
     <script>
     
 	//Dirige vers la page d'ajout d'un ami
@@ -27,11 +24,15 @@
 <body>
 
 	<% Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
-	   ManagerUtilisateur manager = new ManagerUtilisateur(); Utilisateur u; %>
+	   ManagerUtilisateur manager = new ManagerUtilisateur(request, response); Utilisateur u; %>
 	
 	<jsp:include page="navbar.jsp" />
 	
+	
 	<div class="page-content page-container" id="page-content">
+	
+		<% if (request.getParameter("error") != null)
+					out.print("<div class='alert alert-warning'>"+request.getParameter("error")+"</div>"); %>
 	
 	    <div class="padding">
 	        
@@ -121,7 +122,7 @@
 		                    
 								<div class="list-item">
 								
-				                	<h3>Vous n'avez aucun ami</h2>	
+				                	<h3>Vous n'avez aucun ami</h3>	
 				                								
 				                </div>
 				                

@@ -10,15 +10,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import bean.Ami;
 import bean.Utilisateur;
-import sql.ManagerAmi;
+import exception.AppException;
 import sql.ManagerUtilisateur;
 
 /**
  * @author Théo Roton
  * Servlet qui gère l'affichage des utilisateurs pouvant être ajouté en ami
  */
+@WebServlet("/MoreFriendsServlet")
 public class MoreFriendsServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
@@ -34,29 +34,33 @@ public class MoreFriendsServlet extends HttpServlet {
 	 * Get : affiche la liste des utilisateurs pouvant être ajouté en ami
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Récupération de la session et de l'utilisateur
-		HttpSession session = request.getSession();
-		Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
-		
-		response.setContentType("text/html");
-		
-		//Si l'utilisateur n'est pas connecté
-		if (utilisateur == null) {
-			//Redirection vers la page d'accueil
-			response.sendRedirect("home");
+		try {
+			//Récupération de la session et de l'utilisateur
+			HttpSession session = request.getSession();
+			Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
 			
-		//Si l'utilisateur est connecté
-		} else {
-			//Création du manager des utilisateurs
-			ManagerUtilisateur manager = new ManagerUtilisateur();
-			//Récupération des utilisateurs
-			List<Utilisateur> utilisateurs = manager.getAllUtilisateursSansActivites(utilisateur.getLogin());
+			response.setContentType("text/html");
 			
-			//Ajout des utilisateurs à la requête
-			request.setAttribute("Utilisateurs", utilisateurs);
-			
-			//Affichage de la page des amis
-			request.getRequestDispatcher("/JSP_pages/moreFriends.jsp").forward(request, response);
+			//Si l'utilisateur n'est pas connecté
+			if (utilisateur == null) {
+				//Redirection vers la page d'accueil
+				response.sendRedirect("home");
+				
+			//Si l'utilisateur est connecté
+			} else {
+				//Création du manager des utilisateurs
+				ManagerUtilisateur manager = new ManagerUtilisateur(request, response);
+				//Récupération des utilisateurs
+				List<Utilisateur> utilisateurs = manager.getAllUtilisateursSansActivites(utilisateur.getLogin());
+				
+				//Ajout des utilisateurs à la requête
+				request.setAttribute("Utilisateurs", utilisateurs);
+				
+				//Affichage de la page des amis
+				request.getRequestDispatcher("/JSP_pages/moreFriends.jsp").forward(request, response);
+			}
+		} catch (AppException e) {
+			e.redirigerPageErreur();
 		}
 	}
 

@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import bean.Utilisateur;
+import exception.AppException;
 import sql.BCrypt;
 import sql.ManagerUtilisateur;
 
@@ -18,6 +20,7 @@ import sql.ManagerUtilisateur;
  * @author Théo Roton
  * Servlet qui gère la connexion
  */
+@WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
@@ -55,53 +58,57 @@ public class LoginServlet extends HttpServlet {
 	 * Post : on traite la connexion de l'utilisateur
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Création du manager des utilisateurs
-		ManagerUtilisateur manager = new ManagerUtilisateur();
-		//Liste des erreurs à afficher
-		List<String> erreurs = new ArrayList<String>();
-		//Utilisateur à connecter
-		Utilisateur utilisateur = null;
-		//UTF-8
-		request.setCharacterEncoding("UTF-8");
-		
-		//Login de l'utilisateur
-		String login = request.getParameter("login");
-		//On vérifie que le login existe
-		if (manager.verifierUtilisateurPresent(login)) {
-			request.setAttribute("login", login);
+		try {
+			//Création du manager des utilisateurs
+			ManagerUtilisateur manager = new ManagerUtilisateur(request, response);
+			//Liste des erreurs à afficher
+			List<String> erreurs = new ArrayList<String>();
+			//Utilisateur à connecter
+			Utilisateur utilisateur = null;
+			//UTF-8
+			request.setCharacterEncoding("UTF-8");
 			
-			//Mot de passe de l'utilisateur
-			String mdp = request.getParameter("mdp");
-			//Utilisateur
-			utilisateur = manager.getUtilisateur(login);
-			
-			//On vérifie que le mot de passe entré correspond au mot de passe de l'utilisateur
-			if (!BCrypt.checkpw(mdp, utilisateur.getMotDePasse())) {
-				erreurs.add("MDPIncorrect");
+			//Login de l'utilisateur
+			String login = request.getParameter("login");
+			//On vérifie que le login existe
+			if (manager.verifierUtilisateurPresent(login)) {
+				request.setAttribute("login", login);
+				
+				//Mot de passe de l'utilisateur
+				String mdp = request.getParameter("mdp");
+				//Utilisateur
+				utilisateur = manager.getUtilisateur(login);
+				
+				//On vérifie que le mot de passe entré correspond au mot de passe de l'utilisateur
+				if (!BCrypt.checkpw(mdp, utilisateur.getMotDePasse())) {
+					erreurs.add("MDPIncorrect");
+				}
+				
+			} else {
+				erreurs.add("LoginInexistant");
 			}
 			
-		} else {
-			erreurs.add("LoginInexistant");
-		}
-		
-
-		
-		//Si on a des erreurs, on renvoie sur le formulaire
-		if (erreurs.size() > 0) {
-			request.setAttribute("Erreurs", erreurs);
-			doGet(request, response);
+	
 			
-		//Sinon on ajoute l'utilisateur dans la BDD
-		} else {
-			//Création de la session
-			HttpSession session = request.getSession();
-			
-			//Ajout de l'utilisateur à la session
-			session.setAttribute("Utilisateur_courant", utilisateur);
-			request.setAttribute("Utilisateur_courant", utilisateur);
-			
-			//Redirection
-			response.sendRedirect("home");
+			//Si on a des erreurs, on renvoie sur le formulaire
+			if (erreurs.size() > 0) {
+				request.setAttribute("Erreurs", erreurs);
+				doGet(request, response);
+				
+			//Sinon on ajoute l'utilisateur dans la BDD
+			} else {
+				//Création de la session
+				HttpSession session = request.getSession();
+				
+				//Ajout de l'utilisateur à la session
+				session.setAttribute("Utilisateur_courant", utilisateur);
+				request.setAttribute("Utilisateur_courant", utilisateur);
+				
+				//Redirection
+				response.sendRedirect("home");
+			}
+		} catch (AppException e) {
+			e.redirigerPageErreur();
 		}
 	}
 

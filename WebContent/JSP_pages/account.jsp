@@ -10,15 +10,12 @@
 	
 	<!-- https://bbbootstrap.com/snippets/social-profile-container-63944396# -->
 	<link href="front/bootstrap/css/account.css" rel="stylesheet">
-	<link href="front/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<jsp:include page="head.jsp" />
 </head>
 
 <body>
-
-	<jsp:include page="navbar.jsp" />
-	
 	<% Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant"); %>
-	
+	<jsp:include page="navbar.jsp" />
 	<div class="page-content page-container" id="page-content">
 	    <div class="padding" align="center">
 	        <div class="row container d-flex justify-content-center">

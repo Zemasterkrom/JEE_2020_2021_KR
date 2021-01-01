@@ -1,44 +1,56 @@
 package sql;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import bean.Activite;
 import bean.Lieu;
-import bean.Utilisateur;
+import exception.AppException;
+import exception.FormAppException;
+import exception.SevereAppException;
 
 /**
  * 
- * @author Théo Roton
+ * @author Théo Roton, Raphaël Kimm
  * Classe ManagerLieu
  */
 public class ManagerLieu extends Manager {
 
 	/**
 	 * Constructeur de la classe ManagerLieu
+	 * @param request Objet associé à la requête HTTP actuelle
+	 * @param response Objet associé à la réponse HTTP
+	 * @throws AppException
 	 */
-	public ManagerLieu() {
-		super();
+	public ManagerLieu(HttpServletRequest request, HttpServletResponse response) throws AppException  {
+		super(request, response);
 	}
 	
 	/**
 	 * Méthode qui permet de récupérer tous les lieux de l'application
 	 * @return liste des lieux de l'application
+	 * @throws IOException 
+	 * @throws ServletException 
 	 */
-	public List<Lieu> getAllLieux() {
+	public List<Lieu> getAllLieux() throws AppException  {
 		//Initialisation de la liste
 		List<Lieu> lieux = new ArrayList<Lieu>();
 		//Création du manager des activités
-		ManagerActivite manager = new ManagerActivite();
+		ManagerActivite manager = new ManagerActivite(this.request, this.response);
 		
 		try {
 			//Requête
 			String req = "SELECT * FROM Lieu";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Exécution de la requête
 			ResultSet results = stmt.executeQuery();
 			
@@ -62,7 +74,7 @@ public class ManagerLieu extends Manager {
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SevereAppException(e, this.request, this.response);
 		}
 		
 		return lieux;
@@ -72,8 +84,9 @@ public class ManagerLieu extends Manager {
 	 * Méthode qui permet de récupérer un lieu dans la BDD (sans ses activités)
 	 * @param id du lieu
 	 * @return lieu correspondant
+	 * @throws SevereAppException 
 	 */
-	public Lieu getLieuSansActivites(int id) {
+	public Lieu getLieuSansActivites(int id) throws AppException {
 		//Création du lieu
 		Lieu lieu = new Lieu();
 		
@@ -81,7 +94,7 @@ public class ManagerLieu extends Manager {
 			//Requête
 			String req = "SELECT * FROM Lieu WHERE idLieu=?";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout de l'id à la requête
 			stmt.setInt(1, id);
 			//Exécution de la requête
@@ -96,7 +109,7 @@ public class ManagerLieu extends Manager {
 			lieu.setAdresse(results.getString("adresse"));	
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SevereAppException(e, this.request, this.response);
 		}
 		
 		return lieu;
@@ -105,20 +118,21 @@ public class ManagerLieu extends Manager {
 	/**
 	 * Méthode qui permet de supprimer un lieu
 	 * @param id du lieu à supprimer
+	 * @throws SevereAppException 
 	 */
-	public void supprimerLieu(int id) {
+	public void supprimerLieu(int id) throws AppException {
 		try {
 			//Requête
 			String req = "DELETE FROM Lieu WHERE idLieu=?";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout de l'id à la requête
 			stmt.setInt(1, id);
 			//Exécution  de la requête
 			stmt.execute();	
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new FormAppException(e, this.request, this.response);
 		}
 	}
 	
@@ -126,15 +140,16 @@ public class ManagerLieu extends Manager {
 	 * Méthode pour vérifier si un lieu peut être supprimé
 	 * @param id : id du lieu
 	 * @return true si le lieu peut être supprimé
+	 * @throws SevereAppException 
 	 */
-	public boolean verifierLieuPeutEtreSupprimer(int id) {
+	public boolean verifierLieuPeutEtreSupprimer(int id) throws AppException {
 		boolean res = false;
 	
 		try {
 			//Requête
 			String req = "SELECT count(*) FROM Lieu l INNER JOIN Activite a ON l.idLieu = a.idLieu WHERE l.idLieu=?";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout de l'id à la requête
 			stmt.setInt(1, id);
 			//Exécution  de la requête
@@ -149,7 +164,7 @@ public class ManagerLieu extends Manager {
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SevereAppException(e, this.request, this.response);
 		}
 		
 		return res;

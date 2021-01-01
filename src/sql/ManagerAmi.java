@@ -3,33 +3,41 @@ package sql;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import java.sql.CallableStatement;
 
 import bean.Ami;
+import exception.AppException;
+import exception.FormAppException;
+import exception.SevereAppException;
 
 /**
  * 
- * @author Théo Roton
+ * @author Théo Roton, Raphaël Kimm
  * Classe ManagerAmi
  */
 public class ManagerAmi extends Manager {
 
 	/**
 	 * Constructeur de la classe ManagerAmi
+	 * @throws AppException
 	 */
-	public ManagerAmi() {
-		super();
+	public ManagerAmi(HttpServletRequest request, HttpServletResponse response) throws AppException {
+		super(request, response);
 	}
 	
 	/**
 	 * Méthode qui permet de récupérer tous les amis d'un utilisateur
 	 * @param id de l'utilisateur
 	 * @return liste d'amis de l'utilisateur
+	 * @throws SevereAppException 
 	 */
-	public List<Ami> getAmis(int id) {
+	public List<Ami> getAmis(int id) throws AppException {
 		//Initialisation de la liste
 		List<Ami> amis = new ArrayList<Ami>();
 		
@@ -37,7 +45,7 @@ public class ManagerAmi extends Manager {
 			//Requête
 			String req = "SELECT * FROM Ami WHERE (idUtilisateur=? OR idAmi=?) AND accepte=1";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout de l'id à la requête
 			stmt.setInt(1, id);
 			stmt.setInt(2, id);
@@ -59,7 +67,7 @@ public class ManagerAmi extends Manager {
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SevereAppException(e, this.request, this.response);
 		}
 		
 		return amis;
@@ -69,8 +77,9 @@ public class ManagerAmi extends Manager {
 	 * Méthode qui permet de récupérer toutes les demandes d'ami reçues de l'utilisateur
 	 * @param id de l'utilisateur
 	 * @return liste des demandes d'ami de l'utilisateur
+	 * @throws SevereAppException 
 	 */
-	public List<Ami> getDemandesAmiRecues(int id) {
+	public List<Ami> getDemandesAmiRecues(int id) throws AppException {
 		//Initialisation de la liste
 		List<Ami> demandes = new ArrayList<Ami>();
 		
@@ -78,7 +87,7 @@ public class ManagerAmi extends Manager {
 			//Requête
 			String req = "SELECT * FROM Ami WHERE idAmi=? AND accepte=0";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout de l'id à la requête
 			stmt.setInt(1, id);
 			//Exécution de la requête
@@ -99,7 +108,7 @@ public class ManagerAmi extends Manager {
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SevereAppException(e, this.request, this.response);
 		}
 		
 		return demandes;
@@ -109,8 +118,9 @@ public class ManagerAmi extends Manager {
 	 * Méthode qui permet de récupérer toutes les demandes d'ami envoyées par l'utilisateur
 	 * @param id de l'utilisateur
 	 * @return liste des demandes d'ami de l'utilisateur
+	 * @throws SevereAppException 
 	 */
-	public List<Ami> getDemandesAmiEnvoyees(int id) {
+	public List<Ami> getDemandesAmiEnvoyees(int id) throws AppException {
 		//Initialisation de la liste
 		List<Ami> demandes = new ArrayList<Ami>();
 		
@@ -118,7 +128,7 @@ public class ManagerAmi extends Manager {
 			//Requête
 			String req = "SELECT * FROM Ami WHERE idUtilisateur=? AND accepte=0";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout de l'id à la requête
 			stmt.setInt(1, id);
 			//Exécution de la requête
@@ -139,7 +149,7 @@ public class ManagerAmi extends Manager {
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SevereAppException(e, this.request, this.response);
 		}
 		
 		return demandes;
@@ -149,8 +159,10 @@ public class ManagerAmi extends Manager {
 	 * Méthode qui permet d'accepter une demande d'ami
 	 * @param idAccepteur : id de l'utilisateur qui accepte la demande
 	 * @param idAmi : id de l'utilisateur dont la demande émane
+	 * @throws SevereAppException 
+	 * @throws FormAppException 
 	 */
-	public void accepterDemandeAmi(int idAccepteur, int idAmi) {		
+	public void accepterDemandeAmi(int idAccepteur, int idAmi) throws AppException {		
 		try {
 			//Préparation de la requête
 			CallableStatement cstmt = connection.prepareCall("{call accepter_ami(?, ?)}");
@@ -161,7 +173,7 @@ public class ManagerAmi extends Manager {
 			cstmt.execute();
 						
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new FormAppException(e, this.request, this.response);
 		}
 		
 	}
@@ -170,8 +182,9 @@ public class ManagerAmi extends Manager {
 	 * Méthode qui permet de refuser une demande d'ami
 	 * @param idRefuseur : id de l'utilisateur qui refuse la demande
 	 * @param idAmi : id de l'utilisateur dont la demande émane
+	 * @throws SevereAppException 
 	 */
-	public void refuserDemandeAmi(int idRefuseur, int idAmi) {
+	public void refuserDemandeAmi(int idRefuseur, int idAmi) throws AppException {
 		try {
 			//Préparation de la requête
 			CallableStatement cstmt = connection.prepareCall("{call supprimer_refuser_ami(?, ?)}");
@@ -182,7 +195,7 @@ public class ManagerAmi extends Manager {
 			cstmt.execute();
 						
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new FormAppException(e, this.request, this.response);
 		}		
 	}
 	
@@ -190,13 +203,14 @@ public class ManagerAmi extends Manager {
 	 * Méthode qui permet d'annuler une demande d'ami
 	 * @param idAnnuleur : id de l'utilisateur qui annule la demande
 	 * @param idAmi : id de l'utilisateur dont la demande été à destination
+	 * @throws SevereAppException 
 	 */
-	public void annulerDemandeAmi(int idAnnuleur, int idAmi) {
+	public void annulerDemandeAmi(int idAnnuleur, int idAmi) throws AppException {
 		try {
 			//Requête
 			String req = "DELETE FROM Ami WHERE idUtilisateur=? AND idAmi=?";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout des id à la requête
 			stmt.setInt(1, idAnnuleur);
 			stmt.setInt(2, idAmi);
@@ -205,7 +219,7 @@ public class ManagerAmi extends Manager {
 			stmt.execute();	
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new FormAppException(e, this.request, this.response);
 		}		
 	}
 	
@@ -213,13 +227,14 @@ public class ManagerAmi extends Manager {
 	 * Méthode qui permet de créer une demande d'ami
 	 * @param idUtilisateur id de l'utilisateur qui envoi la demande
 	 * @param idAmi id de l'utilisateur ajouté en ami
+	 * @throws SevereAppException 
 	 */
-	public void ajouterAmi(int idUtilisateur, int idAmi) {
+	public void ajouterAmi(int idUtilisateur, int idAmi) throws AppException {
 		try {
 			//Requête
 			String req = "INSERT INTO Ami (idUtilisateur, idAmi) VALUES (?, ?)";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout des id à la requête
 			stmt.setInt(1, idUtilisateur);
 			stmt.setInt(2, idAmi);
@@ -228,7 +243,7 @@ public class ManagerAmi extends Manager {
 			stmt.execute();			
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new FormAppException(e, this.request, this.response);
 		}		
 	}
 
@@ -236,8 +251,9 @@ public class ManagerAmi extends Manager {
 	 * Méthode qui permet de supprimer un ami
 	 * @param idUtilisateur : id de l'utilisateur qui supprime un ami
 	 * @param idAmi : id de l'ami supprimer
+	 * @throws SevereAppException 
 	 */
-	public void supprimerAmi(int idUtilisateur, int idAmi) {
+	public void supprimerAmi(int idUtilisateur, int idAmi) throws AppException {
 		try {
 			//Préparation de la requête
 			CallableStatement cstmt = connection.prepareCall("{call supprimer_refuser_ami(?, ?)}");
@@ -248,7 +264,7 @@ public class ManagerAmi extends Manager {
 			cstmt.execute();
 						
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new FormAppException(e, this.request, this.response);
 		}			
 	}
 	
@@ -258,8 +274,9 @@ public class ManagerAmi extends Manager {
 	 * @param idAmi : id de la personne visé
 	 * @return objet Ami  si les utilisateurs sont amis ou on une demande d'ami en cours
 	 * ou null sinon
+	 * @throws SevereAppException 
 	 */
-	public Ami getAmi(int idUtilisateur, int idAmi) {
+	public Ami getAmi(int idUtilisateur, int idAmi) throws AppException {
 		//Initialisation de l'ami
 		Ami ami = null;
 		
@@ -267,7 +284,7 @@ public class ManagerAmi extends Manager {
 			//Requête
 			String req = "SELECT * FROM Ami WHERE (idUtilisateur=? AND idAmi=?) OR (idUtilisateur=? AND idAmi=?)";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout des id à la requête
 			stmt.setInt(1, idUtilisateur);
 			stmt.setInt(2, idAmi);
@@ -288,7 +305,7 @@ public class ManagerAmi extends Manager {
 			} 
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SevereAppException(e, this.request, this.response);
 		}
 		
 		return ami;

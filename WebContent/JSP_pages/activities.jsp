@@ -7,24 +7,21 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.TimeZone" %>
 <%@ page import="sql.ManagerLieu" %>
+<%! @SuppressWarnings("unchecked") %>
     
 <!DOCTYPE html>
 <html>
 
 <head>
 	<title>Activités</title>
-	
-	<link href="front/bootstrap/css/list.css" rel="stylesheet">
-	<link href="front/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<script src="front/jquery/jquery-3.5.1.js"></script>
-    <script src="front/bootstrap/js/bootstrap.min.js"></script>
+	<jsp:include page="head.jsp" />
 </head>
 
 <body>
 
 	<% ArrayList<Utilisateur> utilisateurs = (ArrayList<Utilisateur>) request.getAttribute("Utilisateurs"); int util = 1; 
 	   SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); format.setTimeZone(TimeZone.getTimeZone("UTC"));
-	   ManagerLieu manager = new ManagerLieu(); Lieu l; int activites = 0;
+	   ManagerLieu manager = new ManagerLieu(request, response); Lieu l; int activites = 0;
 	   for (Utilisateur u : utilisateurs) {
 		   activites += u.getActivites().size();
 	   } %>
@@ -34,6 +31,9 @@
 	<div class="page-content page-container" id="page-content">
 	
 	    <div class="padding">
+	
+		<% if (request.getParameter("error") != null)
+					out.print("<div class='alert alert-warning'>"+request.getParameter("error")+"</div>"); %>
 	    
 	        <div class="row">
 	        

@@ -9,7 +9,7 @@
 	
     <!-- https://bbbootstrap.com/snippets/bootstrap-our-services-section-hover-effect-38722692 -->
 	<link href="front/bootstrap/css/admin.css" rel="stylesheet">
-	<link href="front/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<jsp:include page="head.jsp" />
 	
 	<script>
 

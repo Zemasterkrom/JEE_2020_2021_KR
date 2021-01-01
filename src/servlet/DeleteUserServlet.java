@@ -7,12 +7,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import exception.AppException;
 import sql.ManagerUtilisateur;
 
 /**
  * @author Théo Roton
  * Servlet qui gère la suppression d'un utilisateur
  */
+@WebServlet("/DeleteUserServlet")
 public class DeleteUserServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
@@ -36,16 +38,20 @@ public class DeleteUserServlet extends HttpServlet {
 	 * Post : on supprime l'utilisateur
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Création du manager des utilisateurs
-		ManagerUtilisateur manager = new ManagerUtilisateur();
-		//Récupération de l'id de l'utilisateur
-		int id = Integer.parseInt(request.getParameter("idUtilisateur"));
-	
-		//Suppression de l'utilisateur
-		manager.supprimerUtilisateur(id);
+		try {
+			//Création du manager des utilisateurs
+			ManagerUtilisateur manager = new ManagerUtilisateur(request, response);
+			//Récupération de l'id de l'utilisateur
+			int id = Integer.parseInt(request.getParameter("idUtilisateur"));
 		
-		//Redirection vers la page d'administration des utilisateus
-		response.sendRedirect("users");
+			//Suppression de l'utilisateur
+			manager.supprimerUtilisateur(id);
+			
+			//Redirection vers la page d'administration des utilisateus
+			response.sendRedirect("users");
+		} catch (AppException e) {
+			e.redirigerPageErreur("users");
+		}
 	}
 
 }

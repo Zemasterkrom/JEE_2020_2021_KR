@@ -1,5 +1,6 @@
 package sql;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,22 +9,31 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import bean.Activite;
 import bean.Ami;
 import bean.Utilisateur;
+import exception.AppException;
+import exception.SevereAppException;
 
 /**
  * 
- * @author Théo Roton
+ * @author Théo Roton, Raphaël Kimm
  * Classe ManagerUtilisateur
  */
 public class ManagerUtilisateur extends Manager {
 
 	/**
 	 * Constructeur de la classe ManagerUtilisateur
+	 * @param request Objet associé à la requête HTTP actuelle
+	 * @param response Objet associé à la réponse HTTP
+	 * @throws AppException
 	 */
-	public ManagerUtilisateur() {
-		super();
+	public ManagerUtilisateur(HttpServletRequest request, HttpServletResponse response) throws AppException {
+		super(request, response);
 	}
 	
 	/**
@@ -33,13 +43,14 @@ public class ManagerUtilisateur extends Manager {
 	 * @param dateNaiss de l'utilisateur
 	 * @param login de l'utilisateur
 	 * @param motDePasse de l'utilisateur
+	 * @throws SevereAppException 
 	 */
-	public void ajouterUtilisateur(String nom, String prenom, Date dateNaiss, String login, String motDePasse, String image) {
+	public void ajouterUtilisateur(String nom, String prenom, Date dateNaiss, String login, String motDePasse, String image) throws AppException {
 		try {
 			//Requête
 			String req = "INSERT INTO Utilisateur (nom, prenom, dateNaiss, login, motDePasse, rang, image) VALUES (?, ?, ?, ?, ?, 'normal', ?)";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout des informations à la requête
 			stmt.setString(1, nom);
 			stmt.setString(2, prenom);
@@ -59,7 +70,7 @@ public class ManagerUtilisateur extends Manager {
 			stmt.execute();			
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SevereAppException(e, this.request, this.response);
 		}
 	}
 	
@@ -68,15 +79,16 @@ public class ManagerUtilisateur extends Manager {
 	 * de son login.
 	 * @param login : login de l'utilisateur
 	 * @return true si l'utilisateur existe déjà
+	 * @throws SevereAppException 
 	 */
-	public boolean verifierUtilisateurPresent(String login) {
+	public boolean verifierUtilisateurPresent(String login) throws AppException {
 		boolean res = false;
 	
 		try {
 			//Requête
 			String req = "SELECT count(*) FROM Utilisateur WHERE login = ?";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout du login à la requête
 			stmt.setString(1, login);
 			//Exécution  de la requête
@@ -91,7 +103,7 @@ public class ManagerUtilisateur extends Manager {
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SevereAppException(e, this.request, this.response);
 		}
 		
 		return res;
@@ -101,8 +113,10 @@ public class ManagerUtilisateur extends Manager {
 	 * Méthode qui permet de récupérer un utilisateur dans la BDD
 	 * @param login de l'utilisateur
 	 * @return utilisateur correspondant
+	 * @throws IOException 
+	 * @throws ServletException 
 	 */
-	public Utilisateur getUtilisateur(String login) {
+	public Utilisateur getUtilisateur(String login) throws AppException  {
 		//Création de l'utilisateur
 		Utilisateur utilisateur = new Utilisateur();
 		//Création de la liste des activités de l'utilisateur
@@ -114,15 +128,15 @@ public class ManagerUtilisateur extends Manager {
 		//Création de la liste des demande d'ami envoyées par l'utilisateur
 		List<Ami> demandesEnvoyees;
 		//Création du manager des activités
-		ManagerActivite managerActivite = new ManagerActivite();
+		ManagerActivite managerActivite = new ManagerActivite(this.request, this.response);
 		//Création du manager des amis
-		ManagerAmi managerAmi = new ManagerAmi();
+		ManagerAmi managerAmi = new ManagerAmi(this.request, this.response);
 		
 		try {
 			//Requête
 			String req = "SELECT * FROM Utilisateur WHERE login = ?";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout du login à la requête
 			stmt.setString(1, login);
 			//Exécution de la requête
@@ -158,7 +172,7 @@ public class ManagerUtilisateur extends Manager {
 			utilisateur.setDemandesEnvoyees(demandesEnvoyees);
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SevereAppException(e, this.request, this.response);
 		}
 		
 		return utilisateur;
@@ -171,13 +185,14 @@ public class ManagerUtilisateur extends Manager {
 	 * @param prenom de l'utilisateur
 	 * @param dateNaiss de l'utilisateur
 	 * @param login de l'utilisateur
+	 * @throws SevereAppException 
 	 */
-	public void modifierUtilisateur(int id, String nom, String prenom, Date dateNaiss, String login, String image) {
+	public void modifierUtilisateur(int id, String nom, String prenom, Date dateNaiss, String login, String image) throws AppException {
 		try {
 			//Requête
 			String req = "UPDATE Utilisateur SET nom=?, prenom=?, dateNaiss=?, login=?, image=? WHERE idUtilisateur=?";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout des informations à la requête
 			stmt.setString(1, nom);
 			stmt.setString(2, prenom);
@@ -196,7 +211,7 @@ public class ManagerUtilisateur extends Manager {
 			stmt.execute();			
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SevereAppException(e, this.request, this.response);
 		}	
 	}
 
@@ -204,13 +219,14 @@ public class ManagerUtilisateur extends Manager {
 	 * Méthode qui permet de modifier le mot de passe d'un utilisateur dans la BDD.
 	 * @param id de l'utilisateur
 	 * @param motDePasse de l'utilisateur
+	 * @throws SevereAppException 
 	 */
-	public void modifierMDPUtilisateur(int id, String motDePasse) {
+	public void modifierMDPUtilisateur(int id, String motDePasse) throws AppException {
 		try {
 			//Requête
 			String req = "UPDATE Utilisateur SET motDePasse=? WHERE idUtilisateur=?";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout des informations à la requête
 			String mdp = BCrypt.hashpw(motDePasse, BCrypt.gensalt());
 			stmt.setString(1, mdp);
@@ -220,7 +236,7 @@ public class ManagerUtilisateur extends Manager {
 			stmt.execute();			
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SevereAppException(e, this.request, this.response);
 		}			
 	}
 	
@@ -229,18 +245,21 @@ public class ManagerUtilisateur extends Manager {
 	 * moins l'utilisateur qui exécute la requête
 	 * @param login de l'utilisateur qui exécute la requête
 	 * @return liste des utilisateurs de l'application
+	 * @throws IOException 
+	 * @throws ServletException 
 	 */
-	public List<Utilisateur> getAllUtilisateurs(String login) {
+	public List<Utilisateur> getAllUtilisateurs(String login) throws AppException  {
 		//Initialisation de la liste
 		List<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
 		//Création du manager des activités
-		ManagerActivite manager = new ManagerActivite();
+		ManagerActivite manager = new ManagerActivite(this.request, this.response);
+
 		
 		try {
 			//Requête
 			String req = "SELECT * FROM Utilisateur WHERE login!=? ORDER BY prenom, nom";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout du login à la requête
 			stmt.setString(1, login);
 			//Exécution de la requête
@@ -270,7 +289,7 @@ public class ManagerUtilisateur extends Manager {
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SevereAppException(e, this.request, this.response);
 		}
 		
 		return utilisateurs;
@@ -281,8 +300,9 @@ public class ManagerUtilisateur extends Manager {
 	 * sans leurs activités, moins l'utilisateur qui exécute la requête
 	 * @param login de l'utilisateur qui exécute la requête
 	 * @return liste des utilisateurs de l'application
+	 * @throws SevereAppException 
 	 */
-	public List<Utilisateur> getAllUtilisateursSansActivites(String login) {
+	public List<Utilisateur> getAllUtilisateursSansActivites(String login) throws AppException {
 		//Initialisation de la liste
 		List<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
 		
@@ -290,7 +310,7 @@ public class ManagerUtilisateur extends Manager {
 			//Requête
 			String req = "SELECT * FROM Utilisateur WHERE login!=? ORDER BY prenom, nom";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout du login à la requête
 			stmt.setString(1, login);
 			//Exécution de la requête
@@ -315,7 +335,7 @@ public class ManagerUtilisateur extends Manager {
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SevereAppException(e, this.request, this.response);
 		}
 		
 		return utilisateurs;
@@ -324,40 +344,42 @@ public class ManagerUtilisateur extends Manager {
 	/**
 	 * Méthode qui permet de modifier le rang d'un utilisateur
 	 * @param id de l'utilisateur à modifier
+	 * @throws SevereAppException 
 	 */
-	public void modifierRang(int id) {
+	public void modifierRang(int id) throws AppException {
 		try {
 			//Requête
 			String req = "UPDATE Utilisateur SET rang='admin' WHERE idUtilisateur=?";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout du login à la requête
 			stmt.setInt(1, id);
 			//Exécution  de la requête
 			stmt.execute();	
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SevereAppException(e, this.request, this.response);
 		}
 	}
 
 	/**
 	 * Méthode qui permet de supprimer un utilisateur
 	 * @param id de l'utilisateur à supprimer
+	 * @throws SevereAppException 
 	 */
-	public void supprimerUtilisateur(int id) {
+	public void supprimerUtilisateur(int id) throws AppException {
 		try {
 			//Requête
 			String req = "DELETE FROM Utilisateur WHERE idUtilisateur=?";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout de l'id à la requête
 			stmt.setInt(1, id);
 			//Exécution  de la requête
 			stmt.execute();	
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SevereAppException(e, this.request, this.response);
 		}
 	}
 	
@@ -366,15 +388,16 @@ public class ManagerUtilisateur extends Manager {
 	 * de son id
 	 * @param id de l'utilisateur ami
 	 * @return utilisateur ami
+	 * @throws SevereAppException 
 	 */
-	public Utilisateur getUtilisateurAmi(int id) {
+	public Utilisateur getUtilisateurAmi(int id) throws AppException {
 		//Création de l'utilisateur
 		Utilisateur utilisateur = new Utilisateur();
 		try {
 			//Requête
 			String req = "SELECT * FROM Utilisateur WHERE idUtilisateur = ?";
 			//Préparation de la requête
-			PreparedStatement stmt = connection.prepareStatement(req);
+			PreparedStatement stmt = this.doRequest(req);
 			//Ajout de l'id à la requête
 			stmt.setInt(1, id);
 			//Exécution de la requête
@@ -392,7 +415,7 @@ public class ManagerUtilisateur extends Manager {
 			utilisateur.setImage(results.getString("image"));
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SevereAppException(e, this.request, this.response);
 		}
 		
 		return utilisateur;

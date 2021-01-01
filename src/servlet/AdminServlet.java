@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +14,7 @@ import bean.Utilisateur;
  * @author Théo Roton
  * Servlet qui gère l'affichage de l'interface admin
  */
+@WebServlet("/AdminServlet")
 public class AdminServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;

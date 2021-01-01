@@ -14,6 +14,7 @@ import bean.Utilisateur;
  * @author Théo Roton
  * Servlet qui gère l'affichage du profil de l'utilisateur
  */
+@WebServlet("/SeeAccountServlet")
 public class SeeAccountServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;

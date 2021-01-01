@@ -5,10 +5,8 @@
 <html>
 	<head>	    
 	    <title>Inscription</title>
- 
-	    <!-- Custom styles for this template -->
-	    <link href="front/bootstrap/css/signin.css" rel="stylesheet">
-		<link href="front/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+ 		<link href="front/bootstrap/css/signin.css" rel="stylesheet">
+	    <jsp:include page="head.jsp" />
 	</head>
 	
 	<body>
@@ -17,9 +15,9 @@
 	
 		<jsp:include page="navbar.jsp"/>
 	
-		<br>
-	
 		<div class="container">
+			<% if (request.getParameter("error") != null)
+					out.print("<div class='alert alert-warning'>"+request.getParameter("error")+"</div>"); %>
 	     	<div class="row">
 	     	
 				<div class="form-signin" class="col-md-6">

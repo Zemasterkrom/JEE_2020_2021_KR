@@ -1,14 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.util.ArrayList" %> 
+<%@ page import="java.util.ArrayList" %>
+<%! @SuppressWarnings("unchecked") %>
    
-<!DOCTYPE html>
-<html>
-
-<head>
-</head>
-
-<body>
+	<body>
 			<% ArrayList<String> erreurs = (ArrayList<String>) request.getAttribute("Erreurs"); %>
 			
 		    <label for="mdp" class="visually-hidden">Mot de passe</label>
@@ -24,7 +19,5 @@
 		    <input type="password" id="mdpVerif" name="mdpVerif" class="form-control" required>			    
 		    <% if (erreurs != null && erreurs.contains("MDPPasEgal")) { 
 			    	out.print("<p style=\"color:red;font-size:11px;\">Les mots de passe sont différents</p>");
-		    } else { out.print("<p></p>"); } %>
-			    
-</body>
-</html>
+		    } else { out.print("<p></p>"); } %>    
+	</body>
