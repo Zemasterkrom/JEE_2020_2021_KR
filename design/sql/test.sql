@@ -1,4 +1,10 @@
 --
+-- Note : ce test a été réalisé sur MySQL Workbench qui donne la possibilité de continuer l'exécution du script malgré les erreurs, notamment pour vérifier le fonctionnement des triggers.
+-- Note : à exécuter après la création des tables de la base de données.
+-- Option utilisée : Toggle whether execution of SQL script should continue after failed statements.
+--
+
+--
 -- Suppression des données des tables pour le test
 --
 SET FOREIGN_KEY_CHECKS = 0;
@@ -121,7 +127,7 @@ SELECT * FROM NotificationAmi;
 --
 INSERT INTO Lieu(nom, adresse) VALUES('TestNonContamine', 'Test');
 INSERT INTO Lieu(nom, adresse) VALUES('TestContamine', 'Test');
-INSERT INTO Lieu(nom, adresse, longitude, latitude) VALUES('TestPositionGPS', 'Test', 48.692054, 6.184417);
+INSERT INTO Lieu(nom, adresse) VALUES('TestPositionGPS', 'Test'); -- Gardé pour ne pas perturber le fonctionnement des tests, mais les coordonnées GPS ne sont pas utilisées
 INSERT INTO Lieu(nom, adresse) VALUES('TestContamine2', 'Test');
 
 -- Fails : données des lieux incohérentes ou lieux déjà existants
@@ -130,12 +136,6 @@ INSERT INTO Lieu(nom, adresse) VALUES(NULL, 'Test');
 INSERT INTO Lieu(nom, adresse) VALUES('Test', '');
 INSERT INTO Lieu(nom, adresse) VALUES('Test', NULL);
 INSERT INTO Lieu(nom, adresse) VALUES('TestNonContamine', 'Test'); -- Fail : lieu déjà existant
-INSERT INTO Lieu(nom, adresse, longitude, latitude) VALUES('TestPositionGPSIncorrecte', 'Test', -180.01, 6.184417); -- Fail : longitude incorrecte
-INSERT INTO Lieu(nom, adresse, longitude, latitude) VALUES('TestPositionGPSIncorrecte', 'Test', 180.01, 6.184417); -- Fail : longitude incorrecte
-INSERT INTO Lieu(nom, adresse, longitude, latitude) VALUES('TestPositionGPSIncorrecte', 'Test', 48.692054, -90.01); -- Fail : latitude incorrecte
-INSERT INTO Lieu(nom, adresse, longitude, latitude) VALUES('TestPositionGPSIncorrecte', 'Test', 48.692054, 90.01); -- Fail : latitude incorrecte
-INSERT INTO Lieu(nom, adresse, longitude, latitude) VALUES('TestPositionGPSIncorrecte', 'Test', -180.01, -90.01); -- Fail : longitude et latitude incorrectes
-INSERT INTO Lieu(nom, adresse, longitude, latitude) VALUES('TestPositionGPSIncorrecte', 'Test', -180.01, -90.01); -- Fail : longitude et latitude incorrectes
 SELECT * FROM Lieu;
 
 --

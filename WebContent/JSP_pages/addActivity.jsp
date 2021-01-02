@@ -12,6 +12,12 @@
  		<link href="front/bootstrap/css/signin.css" rel="stylesheet">
  		<link href="front/bootstrap/css/admin.css" rel="stylesheet">
 	    <jsp:include page="head.jsp" />
+	   	<script>
+			//Dirige vers la page d'ajout d'un lieu
+			function ajouterLieu() {
+				  document.location.href = 'addPlace';
+			}
+	   	</script> 
 	</head>
 	
 	<body>
@@ -70,7 +76,7 @@
 						    <div class="col-md-8 mx-auto">
 								<div class="row">
 							    	<div class="box">
-							        	<div class="our-services settings d-flex align-items-center flex-column align-self-center justify-content-center">
+							        	<div class="our-services settings d-flex align-items-center flex-column align-self-center justify-content-center" onclick="ajouterLieu()">
 								        	<a href="addPlace" class="container-fluid text-decoration-none"><span class="actionTitle container-fluid text-decoration-none text-dark">Ajouter un lieu</span></a>
 								            <a href="addPlace" class="container-fluid text-decoration-none"><span class="actionDescription container-fluid text-decoration-none text-dark">Créer un lieu afin de l'associer à une activité</span></a>
 							        	</div>

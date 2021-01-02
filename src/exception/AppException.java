@@ -14,11 +14,26 @@ import javax.servlet.http.HttpServletResponse;
  */
 public abstract class AppException extends Exception {
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Pages génériques de redirection
+	 */
 	protected static final String HOME = "/", ERROR = "error";
 	
+	/**
+	 * Requête HTTP actuelle
+	 */
 	protected HttpServletRequest request;
+	
+	/**
+	 * Réponse HTTP actuelle
+	 */
 	protected HttpServletResponse response;
-	protected String message, url;
+	
+	/**
+	 * Message de l'erreur, URL et paramètres supplémentaires
+	 */
+	protected String message, url, params;
 
 	/**
 	 * Constructeur d'une exception de l'application
@@ -32,6 +47,7 @@ public abstract class AppException extends Exception {
 		this.request = request;
 		this.response = response;
 		this.message = t.getMessage() != null ? t.getMessage() : "Erreur";
+		this.params = "";
 		try {
 			this.url = url != null ? url + "?error=" + URLEncoder.encode(this.message, "UTF-8") : "/error?error=" + URLEncoder.encode(this.message, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
@@ -49,6 +65,7 @@ public abstract class AppException extends Exception {
 		this.request = request;
 		this.response = response;
 		this.message = s != null ? s : "Erreur";
+		this.params = "";
 		try {
 			this.url = url != null ? url + "?error=" + URLEncoder.encode(this.message, "UTF-8") : "/error?error=" + URLEncoder.encode(this.message, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
@@ -73,12 +90,29 @@ public abstract class AppException extends Exception {
 	}
 	
 	/**
+	 * Ajouter un attribut à la requête de redirection
+	 * @param param Id de l'attribut dans la requête
+	 */
+	public void ajouterAttribut(String param) {
+		if (this.request != null) {
+			try {
+				this.params += "&" + param + "=" + URLEncoder.encode(this.request.getParameter(param), "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			System.err.println("Request can't be null");
+		}
+	}
+	
+	/**
 	 * Rediriger vers une route personnalisée
 	 * @param url Route
 	 */
 	public void redirigerPageErreur(String url) {
 		try {
-			this.url = url != null ? url + "?error=" + URLEncoder.encode(this.message, "UTF-8") : "/error?error=" + URLEncoder.encode(this.message, "UTF-8");
+			this.url = url != null ? url + "?error=" + URLEncoder.encode(this.message, "UTF-8") + this.params : "/error?error=" + URLEncoder.encode(this.message, "UTF-8") + this.params;
 			this.redirigerPageErreur();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -92,4 +126,6 @@ public abstract class AppException extends Exception {
 	public String getMessage() {
 		return this.message;
 	}
+	
+	public String getUrl() {return url;}
 }

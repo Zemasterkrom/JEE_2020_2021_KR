@@ -8,12 +8,15 @@
 <%@ page import="java.util.TimeZone" %>
 <%@ page import="sql.ManagerLieu" %>
 <%! @SuppressWarnings("unchecked") %>
-    
+
 <!DOCTYPE html>
 <html>
 
 <head>
 	<title>Activités</title>
+	
+	<link href="front/bootstrap/css/list.css" rel="stylesheet">
+
 	<jsp:include page="head.jsp" />
 </head>
 
@@ -30,20 +33,17 @@
 		
 	<div class="page-content page-container" id="page-content">
 	
-	    <div>
-	
+	    <div class="padding">
 	    
 	        <div class="row">
 	        
 	            <div class="col-sm-12">
-					<% if (request.getParameter("error") != null)
-								out.print("<div class='alert alert-warning'>"+request.getParameter("error")+"</div>"); %>
 	            
 	                <div class="container-fluid d-flex justify-content-center">
 	                
 	                	<% if (activites > 0) { %>
 	                	
-	                    	<div class="list list-row" style="width: 50%;">
+	                    	<div class="list list-row w-100">
   	
 	                    		<% for (Utilisateur u : utilisateurs) { %>
 	                    		
@@ -63,41 +63,41 @@
 													</div>
 					                            
 					                          
-						                            <div class="flex" style="width:80%;max-width:80%"> 
+						                            <div class="flex m-80 mw-80"> 
 						                            	<% out.print(u.getPrenom() + " " + u.getNom()); %> 	
 						                            	
 					   									<div class="item-except text-muted text-sm h-1x">Activités : <% out.print(u.getActivites().size()); %></div>			
 													</div>
 													
-													<div class="flex" style="width:20%;max-width:20%">
-					   									<img id="rotate<% out.print(util); %>" class="imgs" src="front/img/arrow.png" style="float: right;"/>	
+													<div class="flex m-20 mw-20">
+					   									<img id="rotate<% out.print(util); %>" class="imgs float-right" src="front/img/arrow.png"/>	
 													</div>													
 									            </div>
 									            
 								            </div> 
 						            
-								            <div id="activites<% out.print(util); %>" class="activites" style="display: none;">
+								            <div id="activites<% out.print(util); %>" class="activites" style="display:none">
 									            
 									            	 <% for (Activite a : u.getActivites()) { %>
 									            	 
 									            	 	<% l = manager.getLieuSansActivites(a.getIdLieu()); %>
 									            	 
 														<div class="list-item">     
-															<div class="flex" style="width:5%;max-width:5%"> 								   										  											    
+															<div class="flex w-5 mw-5"> 								   										  											    
 								                            </div>  
 								                            
-						                            		<div class="flex" style="width:35%;max-width:35%"> 
+						                            		<div class="flex w-35 m-35"> 
 								                            	<div class="item-except text-muted text-sm h-1x">Date de début : <% out.print(format.format(a.getDateDebut())); %></div>	
 								                            	<div class="item-except text-muted text-sm h-1x">Date de fin : <% out.print(format.format(a.getDateFin())); %></div>									   										  											    
 								                            </div>     
 								                                        
-								                            <div class="flex" style="width:45%;max-width:45%"> 
+								                            <div class="flex w-45 mw-45"> 
 								                            	<div class="item-except text-muted text-sm h-1x">Lieu : <% out.print(l.getNom()); %></div>
 								                            	<div class="item-except text-muted text-sm h-1x">Adresse : <% out.print(l.getAdresse()); %></div>								   										  											    
 								                            </div>
 								                            
-								                            <div class="flex" style="width:20%;max-width:20%">
-								                            	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalActivite<% out.print(a.getId()); %>" style="border-radius:15px; float:right;">Supprimer</button>							   										  											    
+								                            <div class="flex m-20 mw-20">
+								                            	<button type="button" class="btn btn-primary rounded float-right" data-toggle="modal" data-target="#modalActivite<% out.print(a.getId()); %>">Supprimer</button>							   										  											    
 								                            </div> 
 											           	</div>
 											           	
@@ -162,7 +162,6 @@
 	</div>
 
 	<script>
-
 		<%  util = 1;
 			for (Utilisateur u : utilisateurs) { %>
 			

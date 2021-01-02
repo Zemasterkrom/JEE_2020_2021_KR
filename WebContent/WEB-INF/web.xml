@@ -269,4 +269,14 @@
   	<servlet-name>AddPlaceServlet</servlet-name>
   	<servlet-class>servlet.AddPlaceServlet</servlet-class>
   </servlet>
+  
+  
+  <servlet-mapping>
+  	<servlet-name>ModifyPlaceServlet</servlet-name>
+  	<url-pattern>/modifyPlace</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>ModifyPlaceServlet</servlet-name>
+  	<servlet-class>servlet.ModifyPlaceServlet</servlet-class>
+  </servlet>
 </web-app>

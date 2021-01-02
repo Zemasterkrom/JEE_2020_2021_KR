@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import bean.Utilisateur;
 import exception.AppException;
+import exception.FormAppException;
 import sql.ManagerNotificationAmi;
 
 /**
@@ -56,6 +57,8 @@ public class DeleteFriendNotificationServlet extends HttpServlet {
 				response.sendRedirect("friendNotifications");
 			} catch (AppException e) {
 				e.redirigerPageErreur("friendNotifications");
+			} catch (IllegalArgumentException e) {
+				new FormAppException("Les données ont été a été altérées. Ajout non autorisé.", request, response).redirigerPageErreur("places");
 			}
 	}
 

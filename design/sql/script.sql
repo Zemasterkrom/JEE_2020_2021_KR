@@ -48,9 +48,7 @@ CREATE TABLE Etat (
 CREATE TABLE Lieu (
   idLieu INT NOT NULL,
   nom VARCHAR(64) NOT NULL CHECK (LENGTH(TRIM(nom)) > 0),
-  adresse VARCHAR(255) NOT NULL CHECK (LENGTH(TRIM(adresse)) > 0),
-  longitude DECIMAL(17, 15) DEFAULT NULL CHECK(ISNULL(longitude) OR (longitude >= -180 AND longitude <= 180)),
-  latitude DECIMAL(17, 15) DEFAULT NULL CHECK(ISNULL(latitude) OR (latitude >= -90 AND latitude <= 90))
+  adresse VARCHAR(255) NOT NULL CHECK (LENGTH(TRIM(adresse)) > 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -468,7 +466,7 @@ BEGIN
   DELETE FROM Activite WHERE idUtilisateur = OLD.idUtilisateur;
   DELETE FROM NotificationContamination WHERE idUtilisateur = OLD.idUtilisateur;
   DELETE FROM NotificationAmi WHERE idConcerne = OLD.idUtilisateur;
-  DELETE FROM Etat WHERE idUtilisatuer = OLD.idUtilisateur;
+  DELETE FROM Etat WHERE idUtilisateur = OLD.idUtilisateur;
 END;
 $$;
 DELIMITER ;
@@ -804,7 +802,7 @@ BEGIN
   DECLARE done INT DEFAULT 0;
 
   INSERT INTO NotificationContamination(message, idUtilisateur, idContamine, idEtat)
-    SELECT CONCAT("Votre ami ", nom, prenom," s'est déclaré positif."), idConcerne, idUtilisateur, idEtat FROM (
+    SELECT CONCAT("Votre ami ", nom, " ", prenom," s'est déclaré positif."), idConcerne, idUtilisateur, idEtat FROM (
       SELECT idUtilisateur, IF(idUtilisateur = NEW.idUtilisateur, NEW.idAmi, NEW.idUtilisateur) AS idConcerne, nom, prenom, idEtat FROM Etat NATURAL JOIN Utilisateur U
       WHERE positif = b'1'
       AND idEtat = (SELECT MAX(idEtat) FROM Etat WHERE idUtilisateur = U.idUtilisateur)

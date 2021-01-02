@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import exception.AppException;
+import exception.FormAppException;
 import sql.ManagerActivite;
 
 /**
@@ -53,6 +54,8 @@ public class DeleteActivityServlet extends HttpServlet {
 				response.sendRedirect("activities");
 			} catch (AppException e) {
 				e.redirigerPageErreur("activities");
+			} catch (IllegalArgumentException e) {
+				new FormAppException("Les données ont été a été altérées. Ajout non autorisé.", request, response).redirigerPageErreur("places");
 			}
 	}
 

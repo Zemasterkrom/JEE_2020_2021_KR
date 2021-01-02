@@ -420,4 +420,17 @@ public class ManagerUtilisateur extends Manager {
 		
 		return utilisateur;
 	}
+
+	/**
+	 * Retourner tous les utilisateurs sans exception
+	 * @return Liste de tous les utilisateurs
+	 * @throws AppException
+	 */
+	public List<Utilisateur> getAllUtilisateurs() throws AppException {
+		try {
+			return this.getAllUtilisateurs("");
+		} catch (AppException e) {
+			throw new SevereAppException(e, request, response);
+		}
+	}
 }

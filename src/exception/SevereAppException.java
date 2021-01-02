@@ -17,7 +17,7 @@ public class SevereAppException extends AppException {
 	public SevereAppException(SQLException e, HttpServletRequest request, HttpServletResponse response)  {
 		super(ERROR, e, request, response);
 		if (e.getErrorCode() != 1644) // Code erreur trigger MySQL
-			this.message = "Les données ont été a été altérées. Ajout non autorisé.";
+			this.message = "Une erreur sévère s'est produite lors de l'accès à la base de données.";
 	}
 
 	public SevereAppException(Throwable t, HttpServletRequest request, HttpServletResponse response)  {

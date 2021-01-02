@@ -43,7 +43,7 @@
 			      <% if (utilisateur.getRang().equals("admin")) { %>
 			      
 				      <li class="nav-item">
-				        <a class="nav-link" href="admin">Interface administrateur</a>		        
+				        <a class="nav-link" href="admin"><i class="fas fa-key fa-lg"></i> Interface administrateur</a>		        
 				      </li>
 			      
 			      <% } %>

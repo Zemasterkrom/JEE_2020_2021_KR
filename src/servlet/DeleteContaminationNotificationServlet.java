@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import bean.Utilisateur;
 import exception.AppException;
+import exception.FormAppException;
 import sql.ManagerNotificationContamination;
 
 /**
@@ -56,6 +57,8 @@ public class DeleteContaminationNotificationServlet extends HttpServlet {
 				response.sendRedirect("contaminationNotifications");
 			} catch (AppException e) {
 				e.redirigerPageErreur("contaminationNotifications");
+			} catch (IllegalArgumentException e) {
+				new FormAppException("Les données ont été a été altérées. Ajout non autorisé.", request, response).redirigerPageErreur("places");
 			}
 	}
 

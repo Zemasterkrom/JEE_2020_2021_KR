@@ -19,42 +19,32 @@
 		<div class="page-content page-container" id="page-content">
 		    <div>
 		        <div class="row">
-		            <div class="col-sm-12">
-					<% if (request.getParameter("error") != null)
-								out.print("<div class='alert alert-warning'>"+request.getParameter("error")+"</div>"); %>
+		            <div class="col-sm-12 p-4">
+		           		 <% if (request.getParameter("error") != null)
+							out.print("<div class='alert alert-warning'>"+request.getParameter("error")+"</div>"); %>             	
 		                <div class="container-fluid d-flex justify-content-center">
 		                	<% if (lieux.size() > 0) { %>
-		                    	<div class="list list-row card" style="width: 50%;">                	
+		                    	<div class="list list-row card w-100">  
 			                    	<% for (Lieu l : lieux) { %>
 			                    		<div class="utilisateur">
 					                        <div class="list-item">                    
-						                            <div class="flex" style="width:50%;max-width:50%"> 
+						                            <div class="flexm-80 mw-80"> 
 						                            	<% out.print(l.getNom()); %>  	
 						                            	
 			   											<div class="item-except text-muted text-sm h-1x">Adresse : <% out.print(l.getAdresse()); %></div>
 			   											<div class="item-except text-muted text-sm h-1x">Activités : <% out.print(l.getActivites().size()); %></div>															   										  											    
 						                            </div>
 						                            
-						                          											   	
-							                        <div class="flex" style="width:30%;max-width:30%"> 
-						                            	<div class="item-except text-muted text-sm h-1x">Latitude : </div>	
-						                            	<div class="item-except text-muted text-sm h-1x">Longitude : </div>									   										  											    
-						                            </div>
-					                            
-					                            	<div class="flex" style="width:20%;max-width:20%">
-									                    <div class="dropdown" style="float:right">
-													  		<button onclick="dropList<% out.print(drop); %>()" class="dropbtn" style="border-radius:15px">Actions</button>
+					                            	<div class="flex w-20 mw-20">
+									                    <div class="dropdown float-right">
+													  		<button onclick="dropList<% out.print(drop); %>()" class="dropbtn rounded">Actions</button>
 													  		
 														  	<div id="myDropdown<% out.print(drop); %>" class="dropdown-content">
-														  		<form action="modifyPlace" method="get">
-														  			<input type="hidden" name="idLieu" value="<% out.print(l.getId()); %>" />
-														  			<a href="#" onclick="this.parentNode.submit()">Modifier le lieu</a>
-														  		</form>										  	
-														  		
+														  		<a href="modifyPlace?idLieu=<% out.print(l.getId()); %>" class="text-decoration-none">Modifier le lieu</a>
+														  	</div>							  	
+														  	<div>
 														  		<% if (l.getActivites().size() == 0) { %>
-														  		
-														  			<a data-toggle="modal" data-target="#modalSupprimer<% out.print(drop); %>">Supprimer le lieu</a>
-														  														  		
+														  			<a data-toggle="modal" data-target="#modalSupprimer<% out.print(drop); %>">Supprimer le lieu</a>											  		
 														  		<% } %>
 														  	</div>
 														</div>
@@ -74,13 +64,11 @@
 														        		Voulez vous vraiment supprimer le lieu 	&#xAB; <% out.print(l.getNom()); %> &#xBB; de l'application  ?
 														      		</div>
 														      		<div class="modal-footer">
-														      		
 											      						<form action="deletePlace" method="post">
 											      							<input type="hidden" name="idLieu" value="<% out.print(l.getId()); %>" />
 														  					<button type="submit" class="btn btn-primary">Valider</button>
 														  				</form>
-														        		<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>	
-														        										        
+														        		<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>							        
 														      		</div>
 														    	</div>
 														  	</div>
@@ -92,7 +80,7 @@
 			                    </div>
 		                    <% } else { %>
 		                    
-								<div class="list-item" style="display:inline; text-align:center;">
+								<div class="list-itemd-inline text-center">
 				                	<h2 >Aucun lieu trouvé</h2>								
 				                </div>
 								

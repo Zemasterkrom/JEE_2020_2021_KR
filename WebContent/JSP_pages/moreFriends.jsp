@@ -46,10 +46,10 @@
 																	out.print("uploads/" + u.getImage()); 
 													 			 }	%>" class="img-radius" alt="User-Profile-Image" />
 													 </div>
-						                            <div class="flex" style="width:30%;max-width:30%"> 
+						                            <div class="flex w-30 mw-30"> 
 						                            	<% out.print(u.getPrenom() + " " + u.getNom()); %>  					                            			                            											   
 													</div>	
-						                            <div class="flex" style="width:30%;max-width:30%"> 					                            	
+						                            <div class="flex w-30 mw-30"> 					                            	
 				                            			<div class="item-except text-muted text-sm h-1x"><% out.print(u.getLogin()); %></div>											   										  											    
 						                            </div>
 						                            		                            
@@ -141,10 +141,10 @@
 																	out.print("uploads/" + u.getImage()); 
 													 			 }	%>" class="img-radius" alt="User-Profile-Image" />
 													 </div>
-						                            <div class="flex" style="width:30%;max-width:30%"> 
+						                            <div class="flex w-30 mw-30"> 
 						                            	<% out.print(u.getPrenom() + " " + u.getNom()); %>  					                            			                            											   
 													</div>	
-						                            <div class="flex" style="width:30%;max-width:30%"> 					                            	
+						                            <div class="flex w-30 mw-30"> 					                            	
 				                            			<div class="item-except text-muted text-sm h-1x"><% out.print(u.getLogin()); %></div>											   										  											    
 						                            </div>
 						                            <div class="flex" style="width:40%;max-width:40%;">        

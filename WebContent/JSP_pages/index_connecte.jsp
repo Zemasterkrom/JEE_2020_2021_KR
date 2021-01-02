@@ -10,9 +10,27 @@
     <title>Tous AntiLaCovid</title>
     
     
-    <jsp:include page="head.jsp" />
     <!-- https://bbbootstrap.com/snippets/bootstrap-our-services-section-hover-effect-38722692 -->
 	<link href="front/bootstrap/css/admin.css" rel="stylesheet">
+    <jsp:include page="head.jsp" />
+	
+	<script>
+			//Dirige vers la page d'ajout d'une activité
+			function ajouterActivite() {
+				  document.location.href = 'addActivity';
+			}
+			
+			//Dirige vers la page d'ajout d'un lieu
+			function ajouterLieu() {
+				  document.location.href = 'addPlace';
+			}
+			
+			//Permet d'effectuer un auto-signalement en tant que positif
+			function signalement() {
+				document.getElementById("signal").submit();
+			}
+			
+	</script>
   </head>
 
   <body>
@@ -23,16 +41,15 @@
 	   Etat e = manager.obtenirDernierEtat(utilisateur.getId());
 	   String tempsRestant = "Vous êtes actuellement en isolement. Temps restant : " + manager.obtenirNbJoursRestant(utilisateur.getId()) + " jours.";
 	%>
-	 
-	<jsp:include page="navbar.jsp" />
+	
+    <jsp:include page="navbar.jsp" />
 
     <main role="main">
       <div class="jumbotron rounded">
         <div class="container">
         	<h1 class="display-3">Accueil</h1>
         	<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bienvenue <% out.print(utilisateur.getPrenom()); %>.</p>
-        	
-        	<jsp:include page="index.jsp" />
+        	<p>&nbsp;&nbsp;&nbsp;Pour lutter contre la propagation du virus, cette application a été créée pour vous permettre d'indiquer si vous avez été touché par le virus ou si vous avez été en contact d'une personne que vous avez pu côtoyer lors de vos activités et qui a été atteinte par le virus.</p>
         </div>
       </div>
 
@@ -48,8 +65,8 @@
       			<% if (!e.isPositif()) { %>
 			  		<div class="row">
 			            <div class="box">
-			                <div class="our-services settings d-flex align-items-center flex-column align-self-center justify-content-center">
-			                	<form action="declaration" class="d-flex flex-column" method="POST">
+			                <div class="our-services settings d-flex align-items-center flex-column align-self-center justify-content-center" onclick="signalement()">
+			                	<form id="signal" action="declaration" class="d-flex flex-column" method="POST">
 					            	<span class="actionTitle">Je suis positif</span>
 					            	<button type="submit" class="btn btn-primary">Je me signale et je reste isolé pendant 10 jours</button>
 					            </form>
@@ -59,7 +76,7 @@
 			 	<% } %>
 			 	<div class="row">
 			    	<div class="box">
-			        	<div class="our-services settings d-flex align-items-center flex-column align-self-center justify-content-center">
+			        	<div class="our-services settings d-flex align-items-center flex-column align-self-center justify-content-center" onclick="ajouterActivite()">
 				        	<a href="addActivity" class="container-fluid text-decoration-none"><span class="actionTitle container-fluid text-decoration-none text-dark">Ajouter une activité</span></a>
 				            <a href="addActivity" class="container-fluid text-decoration-none"><span class="actionDescription container-fluid text-decoration-none text-dark">Pour avertir les personnes à risque, je la déclare</span></a>
 			        	</div>
@@ -67,7 +84,7 @@
 			   	</div>
 			   	<div class="row">
 			    	<div class="box">
-			        	<div class="our-services settings d-flex align-items-center flex-column align-self-center justify-content-center">
+			        	<div class="our-services settings d-flex align-items-center flex-column align-self-center justify-content-center" onclick="ajouterLieu()">
 				        	<a href="addPlace" class="container-fluid text-decoration-none"><span class="actionTitle container-fluid text-decoration-none text-dark">Ajouter un lieu</span></a>
 				            <a href="addPlace" class="container-fluid text-decoration-none"><span class="actionDescription container-fluid text-decoration-none text-dark">J'ai visité un lieu, je le déclare</span></a>
 			        	</div>

@@ -11,27 +11,26 @@ import javax.servlet.http.HttpSession;
 
 import bean.Utilisateur;
 import exception.AppException;
-import exception.FormAppException;
-import sql.ManagerActivite;
+import sql.ManagerLieu;
 
 /**
  * @author Raphaël Kimm
- * Servlet qui gère la création d'une activité
+ * Servlet qui gère la modification d'un lieu
  */
-@WebServlet("/AddActivityServlet")
-public class AddActivityServlet extends HttpServlet {
+@WebServlet("/ModifyPlaceServlet")
+public class ModifyPlaceServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddActivityServlet() {
+    public ModifyPlaceServlet() {
         super();
     }
 
 	/**
-	 *  Get : redirection vers la page de création d'une activité
+	 *  Get : redirection vers la page de modification d'un lieu
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Récupération de la session et de l'utilisateur
@@ -44,43 +43,36 @@ public class AddActivityServlet extends HttpServlet {
 		if (utilisateur == null) {
 			//Redirection vers la page d'accueil
 			response.sendRedirect("home");
-					
 		//Si l'utilisateur est connecté
-		} else {
-			//Affichage du formulaire de création d'activité
-			request.getRequestDispatcher("/JSP_pages/addActivity.jsp").forward(request, response);
+		} else {		
+			//Affichage du formulaire de création d'un lieu
+			request.getRequestDispatcher("/JSP_pages/modifyPlace.jsp").forward(request, response);
+	
 		}
 	}
 
 	/**
-	 * Post : ajout de l'activité
+	 * Post : modification du lieu
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			//Création du manager des activités
-			ManagerActivite manager = new ManagerActivite(request, response);
+			ManagerLieu manager = new ManagerLieu(request, response);
 			
 			//Récupération des données
-			HttpSession session = request.getSession();
-			int idUtilisateur = ((Utilisateur)session.getAttribute("Utilisateur_courant")).getId();
 			int idLieu = Integer.valueOf(request.getParameter("idLieu"));
-			
-			// Conversion des chaînes en Timestamp pour les dates de début et de fin
-			String dateDebut = request.getParameter("dateDebut");
-			String heureDebut = request.getParameter("heureDebut");
-			String dateFin = request.getParameter("dateFin");
-			String heureFin = request.getParameter("heureFin");
+			String nom = request.getParameter("nom");
+			String adresse = request.getParameter("adresse");
 
-			//Création de l'activité
-			manager.ajouterActivite(dateDebut, heureDebut, dateFin, heureFin, idUtilisateur, idLieu);
+			//Création du lieu
+			manager.modifierLieu(idLieu, nom, adresse);
 			
 			//Redirection vers la page d'accueil
-			response.sendRedirect("home");
+			response.sendRedirect("places");
 		} catch (AppException e) {
-			e.redirigerPageErreur("addActivity");
-		}  catch (IllegalArgumentException e) {
-			new FormAppException("Les données ont été a été altérées. Ajout non autorisé.", request, response).redirigerPageErreur("addActivity");
-		}
+			e.ajouterAttribut("idLieu");
+			e.redirigerPageErreur("modifyPlace");
+		} 
 	}
 
 }

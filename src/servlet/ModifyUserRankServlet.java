@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import exception.AppException;
+import exception.FormAppException;
 import sql.ManagerUtilisateur;
 
 /**
@@ -51,6 +52,8 @@ public class ModifyUserRankServlet extends HttpServlet {
 				response.sendRedirect("users");
 			} catch (AppException e) {
 				e.redirigerPageErreur();
+			} catch (IllegalArgumentException e) {
+				new FormAppException("Les données ont été a été altérées. Ajout non autorisé.", request, response).redirigerPageErreur("places");
 			}
 	}
 

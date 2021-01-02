@@ -26,14 +26,6 @@ public class JspFilter implements Filter {
 			"/account",
 			"/modifyAccount",
 			"/modifyPassword",
-			"/admin",
-			"/users",
-			"/modifyUserRank",
-			"/deleteUser",
-			"/activities",
-			"/deleteActivity",
-			"/places",
-			"/deletePlace",
 			"/friends",
 			"/acceptFriendRequest",
 			"/rejectFriendRequest",
@@ -48,6 +40,17 @@ public class JspFilter implements Filter {
 			"/declaration",
 			"/addActivity",
 			"/addPlace"
+	};
+	
+	private static String[] ADMIN_RESTRICTED_PAGES = new String[] {
+			"/admin",
+			"/users",
+			"/modifyUserRank",
+			"/deleteUser",
+			"/activities",
+			"/deleteActivity",
+			"/places",
+			"/deletePlace",
 	};
 
     /**
@@ -79,23 +82,30 @@ public class JspFilter implements Filter {
 			((HttpServletResponse) response).sendRedirect("home");
 		}
 		else {
-			boolean authorized = true;
-			
 			if (reqUrl.toString().contains(".jsp")) {
-				authorized = false;
 				((HttpServletResponse) response).sendRedirect("error?error=" + URLEncoder.encode("Vous n'êtes pas autorisé à accéder à cette page", "UTF-8"));
+				return;
 			}
 			
-			for (String restrictedUrl:RESTRICTED_ACCESS_PAGES) {
-				if (reqUrl.toString().contains(restrictedUrl) && utilisateur == null) {
-					authorized = false;
-					((HttpServletResponse) response).sendRedirect("error?error=" + URLEncoder.encode("Vous n'êtes pas autorisé à accéder à cette page", "UTF-8"));
+			if (utilisateur == null) {
+				for (String restrictedUrl:RESTRICTED_ACCESS_PAGES) {
+					if (reqUrl.toString().contains(restrictedUrl)) {
+						((HttpServletResponse) response).sendRedirect("error?error=" + URLEncoder.encode("Vous n'êtes pas autorisé à accéder à cette page", "UTF-8"));
+						return;
+					}
 				}
 			}
 			
-			if (authorized) {
-				chain.doFilter(request, response);
+			if (utilisateur != null && utilisateur.getRang() == "normal") {
+				for (String restrictedUrl:ADMIN_RESTRICTED_PAGES) {
+					if (reqUrl.toString().contains(restrictedUrl)) {
+						((HttpServletResponse) response).sendRedirect("error?error=" + URLEncoder.encode("Vous n'êtes pas autorisé à accéder à cette page", "UTF-8"));
+						return;
+					}
+				}
 			}
+			
+			chain.doFilter(request, response);
 		}	
 	}
 

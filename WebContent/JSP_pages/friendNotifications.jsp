@@ -45,7 +45,7 @@
 							out.print("<div class='alert alert-warning'>"+request.getParameter("error")+"</div>"); %>
 	                <div class="notifications">
 	                	<a href="contaminationNotifications"><button type="button" class="btn btn-light"><i class="fas fa-viruses fa-lg"></i> Contaminations <% out.print(nbNotificationsNonVuesContaminations); %></button></a>
-	                	<a href="friendNotifications"><button type="button" class="btn btn-primary"><i class="fas fa-user-friends fa-lg"></i> Amis <% out.print(nbNotificationsNonVuesAmis); %></button></a>
+	                	<a href="friendNotifications"><button type="button" class="btn btn-primary"><i class="fas fa-user-friends fa-lg text-white"></i> Amis <% out.print(nbNotificationsNonVuesAmis); %></button></a>
 	                	<div class="list list-row card">         	                  	
 		                	<% for (NotificationAmi n : notifications) {
 		                		nb++; %>

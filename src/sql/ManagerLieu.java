@@ -89,6 +89,7 @@ public class ManagerLieu extends Manager {
 	public Lieu getLieuSansActivites(int id) throws AppException {
 		//Création du lieu
 		Lieu lieu = new Lieu();
+		lieu.setId(-1);
 		
 		try {
 			//Requête
@@ -112,7 +113,54 @@ public class ManagerLieu extends Manager {
 			throw new SevereAppException(e, this.request, this.response);
 		}
 		
+		if (lieu.getId() == -1) {
+			throw new FormAppException("Le lieu est inexistant.", request, response);
+		}
+		
 		return lieu;
+	}
+	
+	/**
+	 * Méthode qui permet d'obtenir un lieu
+	 * @author Raphaël Kimm
+	 * @param id Id du lieu
+	 * @throws AppException 
+	 */
+	public Lieu obtenirLieu(int idLieu) throws AppException {
+		Lieu l = new Lieu();
+		l.setId(-1);
+		
+		try {
+			//Requête
+			String req = "SELECT * FROM Lieu WHERE idLieu = ?";
+			
+			//Préparation de la requête
+			PreparedStatement stmt = this.doRequest(req);
+
+			//Ajout des paramètres à la requête
+			stmt.setInt(1, idLieu);
+			
+			// Exécution de la requête
+			ResultSet rs = stmt.executeQuery();
+			
+			// Obtention des résultats
+			if (rs.next()) {
+				l.setId(rs.getInt("idLieu"));
+				l.setNom(rs.getString("nom"));
+				l.setAdresse(rs.getString("adresse"));
+			}
+			
+			//Exécution de la requête
+			stmt.execute();	
+		} catch (SQLException e) {
+			throw new FormAppException(e, this.request, this.response);
+		}
+		
+		if (l.getId() == -1) {
+			throw new FormAppException("Le lieu est inexistant.", request, response);
+		}
+		
+		return l;
 	}
 	
 	/**
@@ -191,6 +239,34 @@ public class ManagerLieu extends Manager {
 			
 			//Exécution de la requête
 			stmt.execute();	
+		} catch (SQLException e) {
+			throw new FormAppException(e, this.request, this.response);
+		}
+	}
+	
+	/**
+	 * Méthode qui permet de modifier un lieu
+	 * @author Raphaël Kimm
+	 * @param id Id du lieu
+	 * @param nom Nom du lieu
+	 * @param adresse Adresse du lieu
+	 * @throws AppException 
+	 */
+	public void modifierLieu(int idLieu, String nom, String adresse) throws AppException {
+		try {
+			//Requête
+			String req = "UPDATE Lieu SET nom = ?, adresse = ? WHERE idLieu = ?";
+			
+			//Préparation de la requête
+			PreparedStatement stmt = this.doRequest(req);
+
+			//Ajout des paramètres à la requête
+			stmt.setString(1, nom);
+			stmt.setString(2, adresse);
+			stmt.setInt(3, idLieu);
+			
+			//Exécution de la requête
+			stmt.executeUpdate();	
 		} catch (SQLException e) {
 			throw new FormAppException(e, this.request, this.response);
 		}

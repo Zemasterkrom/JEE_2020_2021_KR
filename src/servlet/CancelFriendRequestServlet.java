@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import bean.Utilisateur;
 import exception.AppException;
+import exception.FormAppException;
 import sql.ManagerAmi;
 
 /**
@@ -58,6 +59,8 @@ public class CancelFriendRequestServlet extends HttpServlet {
 				response.sendRedirect(redirect);
 			} catch (AppException e) {
 				e.redirigerPageErreur(redirect);
+			} catch (IllegalArgumentException e) {
+				new FormAppException("Les données ont été a été altérées. Ajout non autorisé.", request, response).redirigerPageErreur("places");
 			}
 	}
 

@@ -21,13 +21,13 @@
 		
 		<div class="page-content page-container" id="page-content">
 		    <div>
-			<% if (request.getParameter("error") != null)
-					out.print("<div class='alert alert-warning'>"+request.getParameter("error")+"</div>"); %>
 		        <div class="row">
-		            <div class="col-sm-12">
+		            <div class="col-sm-12 p-4">
+					<% if (request.getParameter("error") != null)
+							out.print("<div class='alert alert-warning'>"+request.getParameter("error")+"</div>"); %>
 		                <div class="container-fluid d-flex justify-content-center">
 		                	<% if (utilisateurs.size() > 0) { %>
-		                    	<div class="list list-row card" style="width: 50%;">
+		                    	<div class="list list-row card w-100">
 			                    	<% for (Utilisateur u : utilisateurs) { %>
 			                    		<div class="utilisateur">
 					                        <div class="list-item">
@@ -38,21 +38,21 @@
 																	out.print("uploads/" + u.getImage()); 
 													 			 }	%>" class="img-radius" alt="User-Profile-Image" />
 													 </div>
-						                            <div class="flex" style="width:50%;max-width:50%"> 
+						                            <div class="flex w-50 mw-50"> 
 						                            	<% out.print(u.getPrenom() + " " + u.getNom()); %>  
 						                            		 
 					   									<div class="item-except text-muted text-sm h-1x">Né(e) le <% SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 					   																								 out.print(format.format(u.getDateNaiss())); %></div>		                            											   
 													</div>	
-						                            <div class="flex" style="width:30%;max-width:30%"> 					                            	
+						                            <div class="flex w-30 mw-30"> 					                            	
 				                            			<div class="item-except text-muted text-sm h-1x">Login : <% out.print(u.getLogin()); %></div>
 				                            			<div class="item-date text-muted text-sm d-none d-md-block">Rang : <% out.print(u.getRang()); %></div>												   										  											    
 						                            </div>              
 					                            <% if (u.getRang().equals("normal")) { %>
 					                            
-					                            	<div class="flex" style="width:20%;max-width:20%">
-									                    <div class="dropdown" style="float:right">
-													  		<button onclick="dropList<% out.print(drop); %>()" class="dropbtn" style="border-radius:15px">Actions</button>
+					                            	<div class="flex w-20 mw-20">
+									                    <div class="dropdownfloat-right">
+													  		<button onclick="dropList<% out.print(drop); %>()" class="dropbtn rounded">Actions</button>
 													  		
 														  	<div id="myDropdown<% out.print(drop); %>" class="dropdown-content">										  	
 														  		<a data-toggle="modal" data-target="#modalRang<% out.print(drop); %>">Passer administrateur</a>
@@ -120,14 +120,14 @@
 													  	</div>
 													</div>
 												<% } else { %>
-													<div class="flex" style="width:20%;max-width:20%"></div>
+													<div class="flex w-20 mw-20"></div>
 												<% } %>
 					                        </div>
 				                        </div>
 				                    <% drop++; } %>
 			                     </div>
 	                    	<% } else { %>
-								<div class="list-item" style="display:inline; text-align:center;">
+								<div class="list-itemd-inline text-center">
 				                	<h2 >Aucun utilisateur trouvé</h2>								
 				                </div>
 							<% } %>                                      

@@ -17,7 +17,7 @@ public class FormAppException extends AppException {
 	public FormAppException(SQLException e, HttpServletRequest request, HttpServletResponse response)  {
 		super(request.getRequestURL().toString(), e, request, response);
 		if (e.getErrorCode() != 1644) // Code erreur trigger MySQL
-			this.message = "Une erreur sévère s'est produite lors de l'accès à la base de données.";
+			this.message = "Les données sont incorrectes. Ajout non autorisé.";
 	}
 	
 	public FormAppException(Throwable t, HttpServletRequest request, HttpServletResponse response)  {
