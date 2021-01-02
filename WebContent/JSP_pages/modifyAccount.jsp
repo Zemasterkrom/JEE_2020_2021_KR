@@ -17,7 +17,7 @@
 					out.print("<div class='alert alert-warning'>"+request.getParameter("error")+"</div>"); %>
 		     	<div class="row">
 					<div class="form-signin" class="col-md-6">
-					  <form method="post" action="modifyAccount" enctype="multipart/form-data text-center">
+					  <form method="post" action="modifyAccount" enctype="multipart/form-data">
 					  	<h1 class="h3 mb-3 fw-normal text-center">Modifiez vos informations</h1>
 					  	<hr>				    
 					    <jsp:include page="input_informations.jsp" />

@@ -43,7 +43,7 @@
 	                
 	                	<% if (activites > 0) { %>
 	                	
-	                    	<div class="list list-row w-100">
+	                    	<div class="list list-row" style="width:90%;">
   	
 	                    		<% for (Utilisateur u : utilisateurs) { %>
 	                    		

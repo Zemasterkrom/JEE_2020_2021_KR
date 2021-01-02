@@ -463,6 +463,7 @@ BEGIN
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "L'utilisateur spécifié n'existe pas.";
   END IF;
 
+  DELETE FROM Ami WHERE idUtilisateur = OLD.idUtilisateur OR idAmi = OLD.idUtilisateur;
   DELETE FROM Activite WHERE idUtilisateur = OLD.idUtilisateur;
   DELETE FROM NotificationContamination WHERE idUtilisateur = OLD.idUtilisateur;
   DELETE FROM NotificationAmi WHERE idConcerne = OLD.idUtilisateur;

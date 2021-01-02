@@ -24,7 +24,7 @@
 							out.print("<div class='alert alert-warning'>"+request.getParameter("error")+"</div>"); %>             	
 		                <div class="container-fluid d-flex justify-content-center">
 		                	<% if (lieux.size() > 0) { %>
-		                    	<div class="list list-row card w-100">  
+		                    	<div class="list list-row card" style="width:90%;">  
 			                    	<% for (Lieu l : lieux) { %>
 			                    		<div class="utilisateur">
 					                        <div class="list-item">                    
@@ -41,8 +41,7 @@
 													  		
 														  	<div id="myDropdown<% out.print(drop); %>" class="dropdown-content">
 														  		<a href="modifyPlace?idLieu=<% out.print(l.getId()); %>" class="text-decoration-none">Modifier le lieu</a>
-														  	</div>							  	
-														  	<div>
+														  		
 														  		<% if (l.getActivites().size() == 0) { %>
 														  			<a data-toggle="modal" data-target="#modalSupprimer<% out.print(drop); %>">Supprimer le lieu</a>											  		
 														  		<% } %>

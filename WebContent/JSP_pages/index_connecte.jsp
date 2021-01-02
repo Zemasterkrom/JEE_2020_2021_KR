@@ -68,7 +68,7 @@
 			                <div class="our-services settings d-flex align-items-center flex-column align-self-center justify-content-center" onclick="signalement()">
 			                	<form id="signal" action="declaration" class="d-flex flex-column" method="POST">
 					            	<span class="actionTitle">Je suis positif</span>
-					            	<button type="submit" class="btn btn-primary">Je me signale et je reste isolé pendant 10 jours</button>
+					            	<span class="actionDescription">Je me signale et je reste isolé pendant 10 jours</span>
 					            </form>
 				          	</div>
 			            </div>
@@ -78,7 +78,7 @@
 			    	<div class="box">
 			        	<div class="our-services settings d-flex align-items-center flex-column align-self-center justify-content-center" onclick="ajouterActivite()">
 				        	<a href="addActivity" class="container-fluid text-decoration-none"><span class="actionTitle container-fluid text-decoration-none text-dark">Ajouter une activité</span></a>
-				            <a href="addActivity" class="container-fluid text-decoration-none"><span class="actionDescription container-fluid text-decoration-none text-dark">Pour avertir les personnes à risque, je la déclare</span></a>
+				            <a href="addActivity" class="container-fluid text-decoration-none"><span class="actionDescription container-fluid text-decoration-none text-dark">J'ai quitté mon domicile pour faire une activité, je la déclare</span></a>
 			        	</div>
 			   		</div>
 			   	</div>

@@ -54,9 +54,11 @@
 						                            </div>
 						                            		                            
 						                            <% if (a.getIdUtilisateur() == utilisateur.getId()) { %>
-						                            	<div class="flex" style="width:40%;max-width:40%;">
-						                            		<div class="item-except text-muted text-sm h-1x" style="float:right;">Vous avez déjà envoyé une demande d'ami à cet utilisateur</div>					                                                 		
-							                           		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAnnuler<% out.print(u.getId()); %>" style="border-radius:15px; float:right;">Annuler la demande</button>
+						                            	<div class="flex" style="width:40%;max-width:40%;display: flex;flex-direction: column;flex-wrap: wrap;">
+						                            		<div class="item-except text-muted text-sm h-1x" style="text-align:right;">Vous avez déjà envoyé une demande d'ami à cet utilisateur</div>
+						                            		<div style="display:flex;justify-content:flex-end;">					                                                 		
+							                           			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAnnuler<% out.print(u.getId()); %>" style="border-radius:15px;">Annuler la demande</button>
+							                           		</div>
 							                        	</div>
 							                        	
 							                        	<!-- Modal annuler demande d'ami -->
