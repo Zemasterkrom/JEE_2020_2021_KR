@@ -39,8 +39,7 @@ public class CancelFriendRequestServlet extends HttpServlet {
 	 * Post : on annule la demande d'ami envoyée à un utilisateur
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {	
-			//Récupération de la redicrection
+			//Récupération de la redirection
 			String[] split = request.getHeader("referer").split("/");
 			String redirect = split[split.length-1];
 			try {
@@ -60,9 +59,6 @@ public class CancelFriendRequestServlet extends HttpServlet {
 			} catch (AppException e) {
 				e.redirigerPageErreur(redirect);
 			}
-		} else {
-			response.sendRedirect("home");
-		}
 	}
 
 }

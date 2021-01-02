@@ -21,7 +21,7 @@
       <div class="container mx-auto">
         <div class="row">
           <div class="col-md-12">
-            <h2 class="text-center">La page que vous recherchez n'existe pas.</h2>
+            <h2 class="text-center">La page que vous recherchez n'existe pas</h2>
           </div>
         </div>
         <hr>

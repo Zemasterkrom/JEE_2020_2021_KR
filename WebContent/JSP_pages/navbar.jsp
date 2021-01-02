@@ -3,13 +3,14 @@
 <%@ page import="bean.Utilisateur" %>
 <%@ page import="sql.ManagerNotification" %>
 		<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-	  	  <a class="navbar-brand" href="home">Tous AntiLaCovid <img src="front/img/logo.png" id="logo" alt="Tous AntiLaCovid" /></a>
-		  
-		  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-		    <ul class="navbar-nav mr-auto">
+		  <a class="navbar-brand" href="home">Tous AntiLaCovid <img src="front/img/logo.png" id="logo" alt="Tous AntiLaCovid" /></a>
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		    <span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarNav">
+		    <ul class="navbar-nav">
 		      
 		      <% Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant"); 
-		      	 ManagerNotification manager = new ManagerNotification(request, response);
 		      	 
 		      if (utilisateur == null) { %>
 		      
@@ -22,6 +23,7 @@
 		      </li>
 		 
 		 <% } else { 
+	      	 	 ManagerNotification manager = new ManagerNotification(request, response);
 		         int nbNotifications = manager.getNbNotificationsNonVues(utilisateur.getId());
 		         String nbNotificationsNonVues = nbNotifications != 0 ? String.valueOf("("+nbNotifications+")") : "";
 		         
@@ -47,7 +49,7 @@
 			      <% } %>
 			      
 			 	  <li class="nav-item">
-			        <a class="nav-link" href="signout" style="color:red;"><i class="fas fa-sign-out-alt fa-lg"></i> Se déconnecter</a>		        
+			        <a class="nav-link text-danger" href="signout"><i class="fas fa-sign-out-alt fa-lg"></i> Se déconnecter</a>		        
 			      </li>
 			 
 			 <% } %>	  

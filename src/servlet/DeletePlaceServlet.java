@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import bean.Utilisateur;
+
 import exception.AppException;
 import sql.ManagerLieu;
 
@@ -39,7 +39,6 @@ public class DeletePlaceServlet extends HttpServlet {
 	 * Post : on supprime le lieu
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {
 			try {
 				//Création du manager des lieux
 				ManagerLieu manager = new ManagerLieu(request, response);
@@ -57,9 +56,6 @@ public class DeletePlaceServlet extends HttpServlet {
 			} catch (AppException e) {
 				e.redirigerPageErreur("places");
 			}
-		} else {
-			response.sendRedirect("home");
-		}
 	}
 
 }

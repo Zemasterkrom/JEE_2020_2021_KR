@@ -20,7 +20,7 @@
 		<jsp:include page="navbar.jsp" />
 		
 		<div class="page-content page-container" id="page-content">
-		    <div class="padding">
+		    <div>
 			<% if (request.getParameter("error") != null)
 					out.print("<div class='alert alert-warning'>"+request.getParameter("error")+"</div>"); %>
 		        <div class="row">

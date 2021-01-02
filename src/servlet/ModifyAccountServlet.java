@@ -67,7 +67,6 @@ public class ModifyAccountServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {
 			try {
 				//Création du manager des utilisateurs
 				ManagerUtilisateur manager = new ManagerUtilisateur(request, response);
@@ -210,9 +209,6 @@ public class ModifyAccountServlet extends HttpServlet {
 			} catch (AppException e) {
 				e.redirigerPageErreur();
 			}
-		} else {
-			response.sendRedirect("home");
-		}
 	}
 
 }

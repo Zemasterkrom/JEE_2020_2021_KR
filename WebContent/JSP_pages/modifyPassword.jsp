@@ -7,6 +7,7 @@
 <html>
 	<head>	    
 	    <title>Modifier le mot de passe</title>
+ 		<link href="front/bootstrap/css/signin.css" rel="stylesheet">
     	<jsp:include page="head.jsp" />
 	</head>
 	

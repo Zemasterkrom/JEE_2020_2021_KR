@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import bean.Utilisateur;
+
 import exception.AppException;
 import sql.ManagerActivite;
 
@@ -38,8 +38,7 @@ public class DeleteActivityServlet extends HttpServlet {
 	/**
 	 * Post : on supprime l'activité
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
 			try {
 				//Création du manager des activité
 				ManagerActivite manager = new ManagerActivite(request, response);
@@ -55,7 +54,6 @@ public class DeleteActivityServlet extends HttpServlet {
 			} catch (AppException e) {
 				e.redirigerPageErreur("activities");
 			}
-		}
 	}
 
 }

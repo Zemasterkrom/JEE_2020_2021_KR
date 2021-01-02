@@ -90,11 +90,9 @@ public class SQLConnector {
 				this.connected = true;
 					
 			} catch (IOException e) {
-				database = null;
 				this.connected = false;
 				e.printStackTrace();
 			} catch (SQLException e) {
-				database = null;
 				this.connected = false;
 				e.printStackTrace();
 			}

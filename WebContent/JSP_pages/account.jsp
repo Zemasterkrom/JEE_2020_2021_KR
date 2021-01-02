@@ -15,9 +15,9 @@
 
 <body>
 	<% Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant"); %>
-	<jsp:include page="navbar.jsp" />
 	<div class="page-content page-container" id="page-content">
-	    <div class="padding" align="center">
+		<jsp:include page="navbar.jsp" />
+	    <div align="center">
 	        <div class="row container d-flex justify-content-center">
 	            <div class="col-xl-10 col-md-4">
 	            

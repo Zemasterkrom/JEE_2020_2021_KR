@@ -15,25 +15,28 @@
 	</head>
 	<body>
 	
-		<% Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
+		<% boolean allAccepted = true;
+		   Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
 		   List<Utilisateur> utilisateurs = (List<Utilisateur>) request.getAttribute("Utilisateurs");
 		   ManagerAmi manager = new ManagerAmi(request, response); Ami a; %>
 		
 		<jsp:include page="navbar.jsp" />
 		
 		<div class="page-content page-container" id="page-content">
-		    <div class="padding">
+		    <div>
+	            <div class="col-sm-12">
 			<% if (request.getParameter("error") != null)
 					out.print("<div class='alert alert-warning'>"+request.getParameter("error")+"</div>"); %>
-	            <div class="col-sm-12">
 	                <div class="ami">
 	                	<h1> Utilisateurs </h1>
-	                	<div class="list list-row card" style="width:70%;">
+	                	<div class="list list-row card">
 	                		<% if (utilisateurs.size() > 0) { %>              	                  	
 		                    	<% for (Utilisateur u : utilisateurs) { %>
 		                    		<% a = manager.getAmi(utilisateur.getId(), u.getId()); %>
 		                    		<% if (a != null) { %>
-		                    			<% if (!a.isAccepte()) { %>
+		                    			<% if (!a.isAccepte()) { 
+		                    				allAccepted = false;
+		                    			%>
 				                    		<div class="utilisateur">
 						                        <div class="list-item">
 					                            	<div>
@@ -47,7 +50,7 @@
 						                            	<% out.print(u.getPrenom() + " " + u.getNom()); %>  					                            			                            											   
 													</div>	
 						                            <div class="flex" style="width:30%;max-width:30%"> 					                            	
-				                            			<div class="item-except text-muted text-sm h-1x">Login : <% out.print(u.getLogin()); %></div>											   										  											    
+				                            			<div class="item-except text-muted text-sm h-1x"><% out.print(u.getLogin()); %></div>											   										  											    
 						                            </div>
 						                            		                            
 						                            <% if (a.getIdUtilisateur() == utilisateur.getId()) { %>
@@ -142,7 +145,7 @@
 						                            	<% out.print(u.getPrenom() + " " + u.getNom()); %>  					                            			                            											   
 													</div>	
 						                            <div class="flex" style="width:30%;max-width:30%"> 					                            	
-				                            			<div class="item-except text-muted text-sm h-1x">Login : <% out.print(u.getLogin()); %></div>											   										  											    
+				                            			<div class="item-except text-muted text-sm h-1x"><% out.print(u.getLogin()); %></div>											   										  											    
 						                            </div>
 						                            <div class="flex" style="width:40%;max-width:40%;">        
 						                                               		
@@ -155,7 +158,14 @@
 			                        	</div>
 			                        <% } %>
 			                        
-			                    <% } %>
+			                    <% }
+		                    	   if (utilisateurs.size() == 0 && allAccepted == true) { %>
+			                    	   	<div class="utilisateur">
+											<div class="list-item">
+							                	<h3>Vous possédez tous les utilisateurs en tant qu'ami</h3>							
+							                </div>
+					                	</div>
+				                	<% } %>
 			                    	                   	                    
 		                   	<% } else { %>
 			                    <div class="utilisateur">

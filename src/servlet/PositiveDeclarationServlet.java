@@ -39,7 +39,6 @@ public class PositiveDeclarationServlet extends HttpServlet {
 	 * Post : mise à jour de l'état en positif si possible
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {
 			try {
 				//Création du manager d'état
 				ManagerEtat manager = new ManagerEtat(request, response);
@@ -55,9 +54,6 @@ public class PositiveDeclarationServlet extends HttpServlet {
 			} catch (AppException e) {
 				e.redirigerPageErreur("home");
 			}
-		} else {
-			response.sendRedirect("home");
-		}
 	}
 
 }

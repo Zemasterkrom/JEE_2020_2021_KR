@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import bean.Utilisateur;
 import exception.AppException;
 import sql.ManagerUtilisateur;
 
@@ -39,7 +38,6 @@ public class ModifyUserRankServlet extends HttpServlet {
 	 * Post : on modifie le rang de l'utilisateur de 'normal' à 'admin'
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {
 			try {
 				//Création du manager des utilisateurs
 				ManagerUtilisateur manager = new ManagerUtilisateur(request, response);
@@ -54,9 +52,6 @@ public class ModifyUserRankServlet extends HttpServlet {
 			} catch (AppException e) {
 				e.redirigerPageErreur();
 			}
-		} else {
-			response.sendRedirect("home");
-		}
 	}
 
 }

@@ -39,7 +39,6 @@ public class DeleteFriendNotificationServlet extends HttpServlet {
 	 * Post : suppression de la notification
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {
 			try {
 				//Création du manager des notifications
 				ManagerNotificationAmi manager = new ManagerNotificationAmi(request, response);
@@ -58,9 +57,6 @@ public class DeleteFriendNotificationServlet extends HttpServlet {
 			} catch (AppException e) {
 				e.redirigerPageErreur("friendNotifications");
 			}
-		} else {
-			response.sendRedirect("home");
-		}
 	}
 
 }

@@ -9,9 +9,10 @@
   <head>
     <title>Tous AntiLaCovid</title>
     
+    
+    <jsp:include page="head.jsp" />
     <!-- https://bbbootstrap.com/snippets/bootstrap-our-services-section-hover-effect-38722692 -->
 	<link href="front/bootstrap/css/admin.css" rel="stylesheet">
-    <jsp:include page="head.jsp" />
   </head>
 
   <body>
@@ -26,7 +27,7 @@
 	<jsp:include page="navbar.jsp" />
 
     <main role="main">
-      <div class="jumbotron rounded-1">
+      <div class="jumbotron rounded">
         <div class="container">
         	<h1 class="display-3">Accueil</h1>
         	<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bienvenue <% out.print(utilisateur.getPrenom()); %>.</p>
@@ -41,8 +42,8 @@
 		</div>
 		<hr>
       	<div class="col-md-12 mx-auto text-center">
-	    	<% if (request.getParameter("error") != null)
-		out.print("<div class='alert alert-warning'>"+request.getParameter("error")+"</div>"); %>
+			<% if (request.getParameter("error") != null)
+					out.print("<div class='alert alert-warning'>"+request.getParameter("error")+"</div>"); %>
  			<div class="col-md-8 mx-auto">
       			<% if (!e.isPositif()) { %>
 			  		<div class="row">

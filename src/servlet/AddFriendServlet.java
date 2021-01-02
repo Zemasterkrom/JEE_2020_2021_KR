@@ -39,7 +39,7 @@ public class AddFriendServlet extends HttpServlet {
 	 * Post : ajout et envoi d'une requête d'ami
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {	
+		
 			try {
 				//Création du manager des amis
 				ManagerAmi manager = new ManagerAmi(request, response);
@@ -58,9 +58,6 @@ public class AddFriendServlet extends HttpServlet {
 			} catch (AppException e) {
 				e.redirigerPageErreur("moreFriends");
 			}
-		} else {
-			response.sendRedirect("home");
-		}
 	}
 
 }

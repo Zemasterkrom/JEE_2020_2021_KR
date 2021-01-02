@@ -39,7 +39,6 @@ public class DeleteFriendServlet extends HttpServlet {
 	 * Post : suppression de l'ami
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {
 			try {
 				//Création du manager des amis
 				ManagerAmi manager = new ManagerAmi(request, response);
@@ -58,9 +57,6 @@ public class DeleteFriendServlet extends HttpServlet {
 			} catch (AppException e) {
 				e.redirigerPageErreur("friends");
 			}
-		} else {
-			response.sendRedirect("home");
-		}
 	}
 
 }

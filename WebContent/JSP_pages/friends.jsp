@@ -34,7 +34,7 @@
 		<% if (request.getParameter("error") != null)
 					out.print("<div class='alert alert-warning'>"+request.getParameter("error")+"</div>"); %>
 	
-	    <div class="padding">
+	    <div>
 	        
             <div class="col-sm-12">
                 
@@ -42,7 +42,7 @@
                 
                 	<h1> Amis </h1>
                 
-                	<div class="list list-row card" style="width:70%;">
+                	<div class="list list-row card">
                 	
                 		<% if (utilisateur.getAmis().size() > 0) { %>
                 		                                  	                  	
@@ -150,7 +150,7 @@
                 	
 	                		<h1> Demandes d'ami reçues en attente </h1>
 	                		
-	                    	<div class="list list-row card" style="width:70%;">
+	                    	<div class="list list-row card">
 	                    	                  	
 		                    	<% for (Ami a : utilisateur.getDemandesRecues()) { %>
 		                    	
@@ -235,7 +235,7 @@
                 	
 	                		<h1> Demandes d'ami envoyées en attente </h1>
 	                		
-	                    	<div class="list list-row card" style="width:70%;">
+	                    	<div class="list list-row card">
 	                    	                  	
 		                    	<% for (Ami a : utilisateur.getDemandesEnvoyees()) { %>
 		                    	

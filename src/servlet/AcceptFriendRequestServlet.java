@@ -39,7 +39,6 @@ public class AcceptFriendRequestServlet extends HttpServlet {
 	 * Post : acceptation de la demande d'ami
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {
 			//Récupération de la redicrection
 			String[] split = request.getHeader("referer").split("/");
 			String redirect = split[split.length-1];
@@ -62,9 +61,6 @@ public class AcceptFriendRequestServlet extends HttpServlet {
 			} catch (AppException e) {
 				e.redirigerPageErreur(redirect);
 			}
-		} else {
-			response.sendRedirect("home");
-		}
 	}
 
 }

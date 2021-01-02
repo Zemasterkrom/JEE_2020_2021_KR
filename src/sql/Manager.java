@@ -42,6 +42,8 @@ public abstract class Manager {
 			this.request = request;
 			this.response = response;
 			
+			if (this.connection == null)
+				throw new SevereAppException("Une erreur est survenue lors de la connexion à la base de données.", request, response);
 			if (this.request == null)
 				throw new Exception("Request can't be null");
 			if (this.response == null)
