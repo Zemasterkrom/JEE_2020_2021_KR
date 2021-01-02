@@ -14,7 +14,6 @@ CREATE TABLE Activite (
   idUtilisateur INT NOT NULL,
   idLieu INT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 -- --------------------------------------------------------
 
 --
@@ -307,21 +306,20 @@ BEGIN
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "L'utilisateur spécifié n'existe pas.";
   END IF;
 
-  IF (DATE(date_debut_activite) < date_naiss) THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date du nouvel état ne peut être inférieure à votre date de naissance.";
+  IF (date_debut_activite >= date_fin_activite) THEN
+	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date de début de l'activité doit être inférieure à la date de fin de l'activité.";
+  ELSEIF (DATE(date_debut_activite) < date_naiss) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date de début de l'activité ne peut être inférieure à votre date de naissance.";
   ELSEIF (DATE(date_debut_activite) < STR_TO_DATE('17-11-2019','%d-%m-%Y')) THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date du nouvel état ne peut être inférieure à la date de début de l'épidémie du COVID-19 (17/11/2019).";
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date de début de l'activité ne peut être inférieure à la date de début de l'épidémie du COVID-19 (17/11/2019).";
   ELSEIF (date_debut_activite > CURRENT_TIMESTAMP() OR date_fin_activite > CURRENT_TIMESTAMP()) THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date du nouvel état ne peut être supérieure à la date actuelle.";
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Les dates de début ou de fin de l'activité ne peuvent pas être supérieures à la date actuelle.";
   END IF;
-
 
   SELECT COUNT(idLieu) INTO lieu_existe FROM Lieu WHERE idLieu = id_lieu;
 
   IF (lieu_existe = 0) THEN
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Le lieu spécifié n'existe pas.";
-  ELSEIF (date_debut_activite >= date_fin_activite) THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date de début de l'activité doit être inférieure à la date de fin de l'activité.";
   END IF;
 
   SELECT COUNT(idEtat) INTO etat_incoherent FROM Etat E NATURAL JOIN Utilisateur U
@@ -841,9 +839,6 @@ END;
 $$;
 DELIMITER ;
 
---
--- Evénement automatique tous les 10 jours à partir du moment ou un utilisateur s'est déclaré positif : changer l'état en non positif
---
 DELIMITER $$;
 CREATE EVENT maj_etat_automatique ON SCHEDULE EVERY 1 DAY
 DO BEGIN

@@ -39,25 +39,29 @@ public class CancelFriendRequestServlet extends HttpServlet {
 	 * Post : on annule la demande d'ami envoyée à un utilisateur
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Récupération de la redicrection
-		String[] split = request.getHeader("referer").split("/");
-		String redirect = split[split.length-1];
-		try {
-			//Création du manager des amis
-			ManagerAmi manager = new ManagerAmi(request, response);
-			//Récupération de l'id du refuseur
-			int idAnnuleur = ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant")).getId();
+		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {	
+			//Récupération de la redicrection
+			String[] split = request.getHeader("referer").split("/");
+			String redirect = split[split.length-1];
+			try {
+				//Création du manager des amis
+				ManagerAmi manager = new ManagerAmi(request, response);
+				//Récupération de l'id du refuseur
+				int idAnnuleur = ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant")).getId();
+				
+				//Récupération de l'id de l'ami
+				int idAmi = Integer.parseInt(request.getParameter("idAmi"));
 			
-			//Récupération de l'id de l'ami
-			int idAmi = Integer.parseInt(request.getParameter("idAmi"));
-		
-			//Suppression de l'ami
-			manager.annulerDemandeAmi(idAnnuleur, idAmi);
-			
-			//Redirection
-			response.sendRedirect(redirect);
-		} catch (AppException e) {
-			e.redirigerPageErreur(redirect);
+				//Suppression de l'ami
+				manager.annulerDemandeAmi(idAnnuleur, idAmi);
+				
+				//Redirection
+				response.sendRedirect(redirect);
+			} catch (AppException e) {
+				e.redirigerPageErreur(redirect);
+			}
+		} else {
+			response.sendRedirect("home");
 		}
 	}
 

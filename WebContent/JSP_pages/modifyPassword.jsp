@@ -14,7 +14,7 @@
 	
 		<% List<String> erreurs = (List<String>) request.getAttribute("Erreurs"); %>
 		
-		<div class="col-md-12" style="padding-left:0;">
+		<div class="col-md-12 pl-0">
 			<jsp:include page="navbar.jsp"/>
 			<div class="container">
 				<% if (request.getParameter("error") != null)
@@ -22,7 +22,7 @@
 		     	<div class="row">
 					<div class="form-signin" class="col-md-6">
 					  <form method="post" action="modifyPassword">
-					  	<h1 class="h3 mb-3 fw-normal" style="text-align:center;">Modifiez votre mot de passe</h1>
+					  	<h1 class="h3 mb-3 fw-normal text-center">Modifiez votre mot de passe</h1>
 					    <br>
 					    			
 					    <label for="ancienmdp" class="visually-hidden">Ancien mot de passe</label>

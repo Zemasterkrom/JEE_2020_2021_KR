@@ -14,7 +14,7 @@
 
     <main role="main">
 
-      <div class="jumbotron">
+      <div class="jumbotron rounded">
         <div class="container">
         	<h1 class="display-3">Accueil</h1>
         	<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bienvenue sur l'application Tous AntiLaCovid.</p>

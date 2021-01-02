@@ -39,27 +39,31 @@ public class AcceptFriendRequestServlet extends HttpServlet {
 	 * Post : acceptation de la demande d'ami
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Récupération de la redicrection
-		String[] split = request.getHeader("referer").split("/");
-		String redirect = split[split.length-1];
-		
-		try {
-			//Création du manager des amis
-			ManagerAmi manager = new ManagerAmi(request, response);
+		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {
+			//Récupération de la redicrection
+			String[] split = request.getHeader("referer").split("/");
+			String redirect = split[split.length-1];
 			
-			//Récupération de l'id de l'accepteur
-			int idAccepteur = ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant")).getId();
+			try {
+				//Création du manager des amis
+				ManagerAmi manager = new ManagerAmi(request, response);
+				
+				//Récupération de l'id de l'accepteur
+				int idAccepteur = ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant")).getId();
+				
+				//Récupération de l'id de l'ami
+				int idAmi = Integer.parseInt(request.getParameter("idAmi"));
 			
-			//Récupération de l'id de l'ami
-			int idAmi = Integer.parseInt(request.getParameter("idAmi"));
-		
-			//Accpeter la demande d'ami
-			manager.accepterDemandeAmi(idAccepteur, idAmi);
-
-			//Redirection
-			response.sendRedirect(redirect);
-		} catch (AppException e) {
-			e.redirigerPageErreur(redirect);
+				//Accpeter la demande d'ami
+				manager.accepterDemandeAmi(idAccepteur, idAmi);
+	
+				//Redirection
+				response.sendRedirect(redirect);
+			} catch (AppException e) {
+				e.redirigerPageErreur(redirect);
+			}
+		} else {
+			response.sendRedirect("home");
 		}
 	}
 

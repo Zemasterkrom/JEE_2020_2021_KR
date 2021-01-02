@@ -39,23 +39,27 @@ public class DeleteContaminationNotificationServlet extends HttpServlet {
 	 * Post : suppression de la notification
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			//Création du manager des amis
-			ManagerNotificationContamination manager = new ManagerNotificationContamination(request, response);
+		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {	
+			try {
+				//Création du manager des amis
+				ManagerNotificationContamination manager = new ManagerNotificationContamination(request, response);
+				
+				//Récupération de l'id de l'utilisateur
+				int idUtilisateur = ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant")).getId();
+				
+				//Récupération de l'id de la notification
+				int idNotification = Integer.parseInt(request.getParameter("idNotification"));
 			
-			//Récupération de l'id de l'utilisateur
-			int idUtilisateur = ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant")).getId();
-			
-			//Récupération de l'id de la notification
-			int idNotification = Integer.parseInt(request.getParameter("idNotification"));
-		
-			//Suppression de la notification
-			manager.supprimerNotification(idUtilisateur, idNotification);
-			
-			//Redirection vers la page des notifications
-			response.sendRedirect("contaminationNotifications");
-		} catch (AppException e) {
-			e.redirigerPageErreur("contaminationNotifications");
+				//Suppression de la notification
+				manager.supprimerNotification(idUtilisateur, idNotification);
+				
+				//Redirection vers la page des notifications
+				response.sendRedirect("contaminationNotifications");
+			} catch (AppException e) {
+				e.redirigerPageErreur("contaminationNotifications");
+			}
+		} else {
+			response.sendRedirect("home");
 		}
 	}
 

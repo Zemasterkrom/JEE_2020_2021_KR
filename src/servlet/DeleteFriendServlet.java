@@ -39,23 +39,27 @@ public class DeleteFriendServlet extends HttpServlet {
 	 * Post : suppression de l'ami
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			//Création du manager des amis
-			ManagerAmi manager = new ManagerAmi(request, response);
+		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {
+			try {
+				//Création du manager des amis
+				ManagerAmi manager = new ManagerAmi(request, response);
+				
+				//Récupération de l'id de l'utilisateur
+				int idUtilisateur = ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant")).getId();
+				
+				//Récupération de l'id de l'ami
+				int idAmi = Integer.parseInt(request.getParameter("idAmi"));
 			
-			//Récupération de l'id de l'utilisateur
-			int idUtilisateur = ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant")).getId();
-			
-			//Récupération de l'id de l'ami
-			int idAmi = Integer.parseInt(request.getParameter("idAmi"));
-		
-			//Suppression de la demande d'ami
-			manager.refuserDemandeAmi(idUtilisateur, idAmi);
-			
-			//Redirection vers la page des amis
-			response.sendRedirect("friends");
-		} catch (AppException e) {
-			e.redirigerPageErreur("friends");
+				//Suppression de la demande d'ami
+				manager.refuserDemandeAmi(idUtilisateur, idAmi);
+				
+				//Redirection vers la page des amis
+				response.sendRedirect("friends");
+			} catch (AppException e) {
+				e.redirigerPageErreur("friends");
+			}
+		} else {
+			response.sendRedirect("home");
 		}
 	}
 

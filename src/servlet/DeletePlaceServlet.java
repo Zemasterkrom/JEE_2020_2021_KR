@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import bean.Utilisateur;
 import exception.AppException;
 import sql.ManagerLieu;
 
@@ -38,22 +39,26 @@ public class DeletePlaceServlet extends HttpServlet {
 	 * Post : on supprime le lieu
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			//Création du manager des lieux
-			ManagerLieu manager = new ManagerLieu(request, response);
-			//Récupération de l'id du lieu
-			int id = Integer.parseInt(request.getParameter("idLieu"));
-		
-			//Vérifie si on peut supprimer le lieu
-			if (manager.verifierLieuPeutEtreSupprimer(id)) {
-				//Suppression du lieu
-				manager.supprimerLieu(id);
-			}
+		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {
+			try {
+				//Création du manager des lieux
+				ManagerLieu manager = new ManagerLieu(request, response);
+				//Récupération de l'id du lieu
+				int id = Integer.parseInt(request.getParameter("idLieu"));
 			
-			//Redirection vers la page d'administration des activités
-			response.sendRedirect("places");
-		} catch (AppException e) {
-			e.redirigerPageErreur("places");
+				//Vérifie si on peut supprimer le lieu
+				if (manager.verifierLieuPeutEtreSupprimer(id)) {
+					//Suppression du lieu
+					manager.supprimerLieu(id);
+				}
+				
+				//Redirection vers la page d'administration des activités
+				response.sendRedirect("places");
+			} catch (AppException e) {
+				e.redirigerPageErreur("places");
+			}
+		} else {
+			response.sendRedirect("home");
 		}
 	}
 

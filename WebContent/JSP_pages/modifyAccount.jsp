@@ -9,7 +9,7 @@
     	<jsp:include page="head.jsp" />
 	</head>
 	<body>
-		<div class="col-md-12" style="padding-left:0;">
+		<div class="col-md-12 pl-0">
 			<jsp:include page="navbar.jsp"/>
 			<br>
 			<div class="container">
@@ -17,7 +17,7 @@
 					out.print("<div class='alert alert-warning'>"+request.getParameter("error")+"</div>"); %>
 		     	<div class="row">
 					<div class="form-signin" class="col-md-6">
-					  <form method="post" action="modifyAccount" enctype="multipart/form-data" style="text-align:center;">Modifiez vos informations					    
+					  <form method="post" action="modifyAccount" enctype="multipart/form-data text-center">Modifiez vos informations					    
 					    <jsp:include page="input_informations.jsp" />
 					    
 					    <button type="submit" class="w-100 btn btn-lg btn-primary">Modifier les informations</button>

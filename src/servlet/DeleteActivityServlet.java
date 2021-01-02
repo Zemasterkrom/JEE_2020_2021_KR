@@ -39,20 +39,22 @@ public class DeleteActivityServlet extends HttpServlet {
 	 * Post : on supprime l'activité
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			//Création du manager des activité
-			ManagerActivite manager = new ManagerActivite(request, response);
+		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {	
+			try {
+				//Création du manager des activité
+				ManagerActivite manager = new ManagerActivite(request, response);
+				
+				//Récupération de l'id de l'activité
+				int idActivite = Integer.parseInt(request.getParameter("idActivite"));
 			
-			//Récupération de l'id de l'activité
-			int idActivite = Integer.parseInt(request.getParameter("idActivite"));
-		
-			//Suppression de l'activité
-			manager.supprimerActivite(idActivite);
-			
-			//Redirection vers la page d'administration des activités
-			response.sendRedirect("activities");
-		} catch (AppException e) {
-			e.redirigerPageErreur("activities");
+				//Suppression de l'activité
+				manager.supprimerActivite(idActivite);
+				
+				//Redirection vers la page d'administration des activités
+				response.sendRedirect("activities");
+			} catch (AppException e) {
+				e.redirigerPageErreur("activities");
+			}
 		}
 	}
 

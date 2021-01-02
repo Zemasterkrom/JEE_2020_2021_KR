@@ -3,6 +3,7 @@ package sql;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -141,6 +142,43 @@ public class ManagerActivite extends Manager {
 			
 		} catch (SQLException e) {
 			throw new FormAppException(e, this.request, this.response);
+		}
+	}
+	
+	/**
+	 * Méthode qui permet d'ajouter une activité
+	 * @author Raphaël Kimm
+	 * @param dateDebut Date de début de l'activité
+	 * @param heureDebut Heure de début de l'activité
+	 * @param dateFin Date de fin de l'activité
+	 * @param heureFin Heure de fin de l'activité
+	 * @param idLieu Id du lieu de l'activité
+	 * @throws AppException 
+	 */
+	public void ajouterActivite(String dateDebut, String heureDebut, String dateFin, String heureFin, int idUtilisateur, int idLieu) throws AppException {
+		try {
+			//Requête
+			String req = "INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(?,?,?,?)";
+			
+			// Conversion des chaînes en Timestamp pour les dates de début et de fin
+			Timestamp db = Timestamp.valueOf(dateDebut + " " + heureDebut + ":00");
+			Timestamp df = Timestamp.valueOf(dateFin + " " + heureFin + ":00");
+			
+			//Préparation de la requête
+			PreparedStatement stmt = this.doRequest(req);
+
+			//Ajout des paramètres à la requête
+			stmt.setTimestamp(1, db);
+			stmt.setTimestamp(2, df);
+			stmt.setInt(3, idUtilisateur);
+			stmt.setInt(4, idLieu);
+			
+			//Exécution  de la requête
+			stmt.execute();	
+		} catch (SQLException e) {
+			throw new FormAppException(e, this.request, this.response);
+		} catch (IllegalArgumentException e) {
+			throw new FormAppException("Le format des dates est incorrect", this.request, this.response);
 		}
 	}
 }

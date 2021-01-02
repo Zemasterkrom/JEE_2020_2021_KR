@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ page import="bean.Utilisateur" %>
 <%@ page import="sql.ManagerNotification" %>
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
 	  	  <a class="navbar-brand" href="home">Tous AntiLaCovid <img src="front/img/logo.png" id="logo" alt="Tous AntiLaCovid" /></a>
 		  
 		  <div class="collapse navbar-collapse" id="navbarSupportedContent">

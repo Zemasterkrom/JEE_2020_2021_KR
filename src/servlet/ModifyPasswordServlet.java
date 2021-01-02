@@ -59,64 +59,68 @@ public class ModifyPasswordServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			//Création du manager des utilisateurs
-			ManagerUtilisateur manager = new ManagerUtilisateur(request, response);
-			//Création du controleur de vérifications
-			VerificationsInformations verif = new VerificationsInformations();
-			//Liste des erreurs à afficher
-			List<String> erreurs = new ArrayList<String>();
-			//UTF-8
-			request.setCharacterEncoding("UTF-8");
-			//Récupération de la session
-			HttpSession session = request.getSession();
-			//Récupération de l'utilisateur
-			Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
-			
-			//Ancien mot de passe de l'utilisateur
-			String ancienmdp = request.getParameter("ancienmdp");
-			//On vérifie que l'ancien mot de passe correspond au mot de passe courant
-			if (!BCrypt.checkpw(ancienmdp, utilisateur.getMotDePasse())) {
-				erreurs.add("AncienMDPIncorrect");
-			}
-			
-			//Mot de passe de l'utilisateur
-			String mdp = request.getParameter("mdp");		
-			//Confirmation du mot de passe de l'utilisateur
-			String mdpVerif = request.getParameter("mdpVerif");
-			//On vérifie que le mot de passe fait plus de 6 caractères et moins de 64 caractères
-			if (mdp.length() >= 6 && mdp.length() <= 64) {
+		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {
+			try {
+				//Création du manager des utilisateurs
+				ManagerUtilisateur manager = new ManagerUtilisateur(request, response);
+				//Création du controleur de vérifications
+				VerificationsInformations verif = new VerificationsInformations();
+				//Liste des erreurs à afficher
+				List<String> erreurs = new ArrayList<String>();
+				//UTF-8
+				request.setCharacterEncoding("UTF-8");
+				//Récupération de la session
+				HttpSession session = request.getSession();
+				//Récupération de l'utilisateur
+				Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
 				
-				//On vérifie que le mot de passe est égal à sa confirmation
-				if (!mdp.equals(mdpVerif)) {
-					erreurs.add("MDPPasEgal");
+				//Ancien mot de passe de l'utilisateur
+				String ancienmdp = request.getParameter("ancienmdp");
+				//On vérifie que l'ancien mot de passe correspond au mot de passe courant
+				if (!BCrypt.checkpw(ancienmdp, utilisateur.getMotDePasse())) {
+					erreurs.add("AncienMDPIncorrect");
 				}
 				
-			} else {
-				erreurs.add("TailleMDP");
+				//Mot de passe de l'utilisateur
+				String mdp = request.getParameter("mdp");		
+				//Confirmation du mot de passe de l'utilisateur
+				String mdpVerif = request.getParameter("mdpVerif");
+				//On vérifie que le mot de passe fait plus de 6 caractères et moins de 64 caractères
+				if (mdp.length() >= 6 && mdp.length() <= 64) {
+					
+					//On vérifie que le mot de passe est égal à sa confirmation
+					if (!mdp.equals(mdpVerif)) {
+						erreurs.add("MDPPasEgal");
+					}
+					
+				} else {
+					erreurs.add("TailleMDP");
+				}
+				
+				//Si on a des erreurs, on renvoie sur le formulaire
+				if (erreurs.size() > 0) {
+					request.setAttribute("Erreurs", erreurs);
+					doGet(request, response);
+					
+					//Sinon on modifie le mot de passe de l'utilisateur dans la BDD
+				} else {
+					//Modification du mot de passe de l'utilisateur
+					manager.modifierMDPUtilisateur(utilisateur.getId(), mdp);
+					
+					//Récupération de l'utilisateur modifier
+					utilisateur = manager.getUtilisateur(utilisateur.getLogin());
+					//Ajout de l'utilisateur à la session
+					session.setAttribute("Utilisateur_courant", utilisateur);
+					request.setAttribute("Utilisateur_courant", utilisateur);
+					
+					//Redirection
+					response.sendRedirect("account");
+				}
+			} catch (AppException e) {
+				e.redirigerPageErreur();
 			}
-			
-			//Si on a des erreurs, on renvoie sur le formulaire
-			if (erreurs.size() > 0) {
-				request.setAttribute("Erreurs", erreurs);
-				doGet(request, response);
-				
-				//Sinon on modifie le mot de passe de l'utilisateur dans la BDD
-			} else {
-				//Modification du mot de passe de l'utilisateur
-				manager.modifierMDPUtilisateur(utilisateur.getId(), mdp);
-				
-				//Récupération de l'utilisateur modifier
-				utilisateur = manager.getUtilisateur(utilisateur.getLogin());
-				//Ajout de l'utilisateur à la session
-				session.setAttribute("Utilisateur_courant", utilisateur);
-				request.setAttribute("Utilisateur_courant", utilisateur);
-				
-				//Redirection
-				response.sendRedirect("account");
-			}
-		} catch (AppException e) {
-			e.redirigerPageErreur();
+		} else {
+			response.sendRedirect("home");
 		}
 	}
 

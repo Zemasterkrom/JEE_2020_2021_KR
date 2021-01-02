@@ -26,7 +26,7 @@
 	<jsp:include page="navbar.jsp" />
 
     <main role="main">
-      <div class="jumbotron">
+      <div class="jumbotron rounded-1">
         <div class="container">
         	<h1 class="display-3">Accueil</h1>
         	<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bienvenue <% out.print(utilisateur.getPrenom()); %>.</p>
@@ -55,14 +55,33 @@
 				          	</div>
 			            </div>
 			        </div>
-			 	<% } else { %>
-			 		<div class="alert alert-info">
-			 			<% out.print(tempsRestant); %>		
-			 		</div>
 			 	<% } %>
+			 	<div class="row">
+			    	<div class="box">
+			        	<div class="our-services settings d-flex align-items-center flex-column align-self-center justify-content-center">
+				        	<a href="addActivity" class="container-fluid text-decoration-none"><span class="actionTitle container-fluid text-decoration-none text-dark">Ajouter une activité</span></a>
+				            <a href="addActivity" class="container-fluid text-decoration-none"><span class="actionDescription container-fluid text-decoration-none text-dark">Pour avertir les personnes à risque, je la déclare</span></a>
+			        	</div>
+			   		</div>
+			   	</div>
+			   	<div class="row">
+			    	<div class="box">
+			        	<div class="our-services settings d-flex align-items-center flex-column align-self-center justify-content-center">
+				        	<a href="addPlace" class="container-fluid text-decoration-none"><span class="actionTitle container-fluid text-decoration-none text-dark">Ajouter un lieu</span></a>
+				            <a href="addPlace" class="container-fluid text-decoration-none"><span class="actionDescription container-fluid text-decoration-none text-dark">J'ai visité un lieu, je le déclare</span></a>
+			        	</div>
+			   		</div>
+			   	</div>
 		    </div>  
           </div>
 		</div>
+		<% if (e.isPositif()) { %>
+			<div class="col-md-8 mx-auto">
+				<div class="alert alert-info text-center">
+					<% out.print(tempsRestant); %>		
+				</div>
+			</div>
+		<% } %>
     </main>
   </body>
 </html>

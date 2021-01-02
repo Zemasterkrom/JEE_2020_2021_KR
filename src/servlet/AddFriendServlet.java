@@ -39,23 +39,27 @@ public class AddFriendServlet extends HttpServlet {
 	 * Post : ajout et envoi d'une requête d'ami
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			//Création du manager des amis
-			ManagerAmi manager = new ManagerAmi(request, response);
-			
-			//Récupération de l'id de l'utilisateur
-			int idUtilisateur = ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant")).getId();
-			
-			//Récupération de l'id de l'ami
-			int idAmi = Integer.parseInt(request.getParameter("idAmi"));
-			
-			//Création de la demande d'ami
-			manager.ajouterAmi(idUtilisateur, idAmi);
-			
-			//Redirection vers la page des amis
-			response.sendRedirect("moreFriends");
-		} catch (AppException e) {
-			e.redirigerPageErreur("moreFriends");
+		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {	
+			try {
+				//Création du manager des amis
+				ManagerAmi manager = new ManagerAmi(request, response);
+				
+				//Récupération de l'id de l'utilisateur
+				int idUtilisateur = ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant")).getId();
+				
+				//Récupération de l'id de l'ami
+				int idAmi = Integer.parseInt(request.getParameter("idAmi"));
+				
+				//Création de la demande d'ami
+				manager.ajouterAmi(idUtilisateur, idAmi);
+				
+				//Redirection vers la page des amis
+				response.sendRedirect("moreFriends");
+			} catch (AppException e) {
+				e.redirigerPageErreur("moreFriends");
+			}
+		} else {
+			response.sendRedirect("home");
 		}
 	}
 

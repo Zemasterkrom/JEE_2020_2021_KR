@@ -39,23 +39,27 @@ public class DeleteFriendNotificationServlet extends HttpServlet {
 	 * Post : suppression de la notification
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			//Création du manager des notifications
-			ManagerNotificationAmi manager = new ManagerNotificationAmi(request, response);
+		if ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant") != null) {
+			try {
+				//Création du manager des notifications
+				ManagerNotificationAmi manager = new ManagerNotificationAmi(request, response);
+				
+				//Récupération de l'id de l'utilisateur
+				int idUtilisateur = ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant")).getId();
+				
+				//Récupération de l'id de la notification
+				int idNotification = Integer.parseInt(request.getParameter("idNotification"));
 			
-			//Récupération de l'id de l'utilisateur
-			int idUtilisateur = ((Utilisateur)request.getSession().getAttribute("Utilisateur_courant")).getId();
-			
-			//Récupération de l'id de la notification
-			int idNotification = Integer.parseInt(request.getParameter("idNotification"));
-		
-			//Suppression de la notification
-			manager.supprimerNotification(idUtilisateur, idNotification);
-			
-			//Redirection vers la page des notifications
-			response.sendRedirect("friendNotifications");
-		} catch (AppException e) {
-			e.redirigerPageErreur("friendNotifications");
+				//Suppression de la notification
+				manager.supprimerNotification(idUtilisateur, idNotification);
+				
+				//Redirection vers la page des notifications
+				response.sendRedirect("friendNotifications");
+			} catch (AppException e) {
+				e.redirigerPageErreur("friendNotifications");
+			}
+		} else {
+			response.sendRedirect("home");
 		}
 	}
 

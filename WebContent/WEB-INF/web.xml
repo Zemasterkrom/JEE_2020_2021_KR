@@ -250,4 +250,24 @@
   	<servlet-name>PositiveDeclarationServlet</servlet-name>
   	<servlet-class>servlet.PositiveDeclarationServlet</servlet-class>
   </servlet>
+  
+  
+  <servlet-mapping>
+  	<servlet-name>AddActivityServlet</servlet-name>
+  	<url-pattern>/addActivity</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>AddActivityServlet</servlet-name>
+  	<servlet-class>servlet.AddActivityServlet</servlet-class>
+  </servlet>
+  
+  
+  <servlet-mapping>
+  	<servlet-name>AddPlaceServlet</servlet-name>
+  	<url-pattern>/addPlace</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>AddPlaceServlet</servlet-name>
+  	<servlet-class>servlet.AddPlaceServlet</servlet-class>
+  </servlet>
 </web-app>

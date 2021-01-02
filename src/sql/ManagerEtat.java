@@ -13,7 +13,7 @@ import exception.SevereAppException;
 
 /**
  * 
- * @author Théo Roton, Raphaël Kimm
+ * @author Raphaël Kimm
  * Classe ManagerEtat
  */
 public class ManagerEtat extends Manager {
@@ -32,7 +32,7 @@ public class ManagerEtat extends Manager {
 	 * Méthode qui permet d'obtenir le dernier état d'un utilisateur
 	 * @param id de l'utilisateur
 	 * @return true si positif, false sinon
-	 * @throws SevereAppException 
+	 * @throws AppException 
 	 */
 	public Etat obtenirDernierEtat(int idUtilisateur) throws AppException {
 		Etat e = new Etat();
@@ -66,7 +66,7 @@ public class ManagerEtat extends Manager {
 	/**
 	 * Méthode qui permet d'obtenir le nombre de jours restant avant de nouveau pouvoir déclarer un état positif
 	 * @param id de l'utilisateur
-	 * @throws SevereAppException 
+	 * @throws AppException 
 	 */
 	public int obtenirNbJoursRestant(int idUtilisateur) throws AppException {
 		int nbJours = 0;
@@ -98,7 +98,7 @@ public class ManagerEtat extends Manager {
 	/**
 	 * Méthode qui permet de mettre à jour l'état d'un utilisateur en positif
 	 * @param id de l'utilisateur Id de l'utilisateur dont l'état doit être modifié
-	 * @throws SevereAppException 
+	 * @throws AppException 
 	 */
 	public int majEtatPositif(int idUtilisateur) throws AppException {
 		int nbJours = 0;

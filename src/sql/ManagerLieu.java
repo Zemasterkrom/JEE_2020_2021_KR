@@ -169,4 +169,30 @@ public class ManagerLieu extends Manager {
 		
 		return res;
 	}
+	
+	/**
+	 * Méthode qui permet d'ajouter un lieu
+	 * @author Raphaël Kimm
+	 * @param nom Nom du lieu
+	 * @param adresse Adresse du lieu
+	 * @throws AppException 
+	 */
+	public void ajouterLieu(String nom, String adresse) throws AppException {
+		try {
+			//Requête
+			String req = "INSERT INTO Lieu(nom, adresse) VALUES(?,?)";
+			
+			//Préparation de la requête
+			PreparedStatement stmt = this.doRequest(req);
+
+			//Ajout des paramètres à la requête
+			stmt.setString(1, nom);
+			stmt.setString(2, adresse);
+			
+			//Exécution de la requête
+			stmt.execute();	
+		} catch (SQLException e) {
+			throw new FormAppException(e, this.request, this.response);
+		}
+	}
 }
