@@ -1,84 +1,35 @@
+--
+-- Version MySQL utilisée : MariaDB version 10.4.17 (mariadb.org binary distribution)
+-- Version XAMPP incluant MySQL : 8.0.0 (https://www.apachefriends.org/fr/download.html)
+-- Connecteur JAR MariaDB à inclure dans WebContent/WEB-INF/lib : (https://downloads.mariadb.com/Connectors/java/connector-java-2.7.1/mariadb-java-client-2.7.1.jar)
+--
+
+-- --------------------------------------------------------
+
+--
+-- Paramétrage de la base de données
+--
 DROP DATABASE IF EXISTS COVID_KR_TR;
 CREATE DATABASE COVID_KR_TR;
 USE COVID_KR_TR;
 
 SET GLOBAL event_scheduler = ON;
+SET time_zone="+00:00";
+
+-- --------------------------------------------------------
 
 --
 -- Création des tables
 --
-CREATE TABLE Activite (
-  idActivite INT NOT NULL,
-  dateDebut TIMESTAMP NOT NULL,
-  dateFin TIMESTAMP NOT NULL,
-  idUtilisateur INT NOT NULL,
-  idLieu INT NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
--- --------------------------------------------------------
-
---
--- Structure de la table ami
---
-
-CREATE TABLE Ami (
-  idUtilisateur INT NOT NULL,
-  idAmi INT NOT NULL,
-  accepte BIT(1) NOT NULL DEFAULT b'0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Structure de la table etat
---
-
-CREATE TABLE Etat (
-  idEtat INT NOT NULL,
-  dateEtat TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  positif BIT(1) NOT NULL DEFAULT b'1',
-  idUtilisateur INT NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
 
 --
 -- Structure de la table lieu
 --
 
 CREATE TABLE Lieu (
-  idLieu INT NOT NULL,
+  idLieu INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   nom VARCHAR(64) NOT NULL CHECK (LENGTH(TRIM(nom)) > 0),
   adresse VARCHAR(255) NOT NULL CHECK (LENGTH(TRIM(adresse)) > 0)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Structure de la table NotificationAmi
---
-
-CREATE TABLE NotificationAmi (
-  idNotification INT NOT NULL,
-  message VARCHAR(512) NOT NULL CHECK (LENGTH(TRIM(message)) > 0),
-  vue BIT(1) NOT NULL DEFAULT b'0',
-  idUtilisateur INT NOT NULL,
-  idAmi INT NOT NULL,
-  idConcerne INT NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Structure de la table NotificationContamination
---
-
-CREATE TABLE NotificationContamination (
-  idNotification INT NOT NULL,
-  message VARCHAR(512) NOT NULL CHECK (LENGTH(TRIM(message)) > 0),
-  vue BIT(1) NOT NULL DEFAULT b'0',
-  idUtilisateur INT NOT NULL,
-  idContamine INT NOT NULL,
-  idEtat INT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -88,140 +39,99 @@ CREATE TABLE NotificationContamination (
 --
 
 CREATE TABLE Utilisateur (
-  idUtilisateur INT NOT NULL,
+  idUtilisateur INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   nom VARCHAR(64) NOT NULL CHECK (LENGTH(TRIM(nom)) > 0),
   prenom VARCHAR(64) NOT NULL CHECK (LENGTH(TRIM(prenom)) > 0),
   dateNaiss DATE NOT NULL,
   login VARCHAR(64) NOT NULL CHECK (LENGTH(TRIM(login)) > 0 AND LENGTH(login) >= 3),
-  motDePasse BINARY(60) NOT NULL CHECK (CONVERT(motDePasse, CHAR(60)) != ''),
+  motDePasse BINARY(60) NOT NULL CHECK (CONVERT(motDePasse, CHAR(60)) != '' AND CONV(HEX(motDePasse), 16, 10) != 0),
   rang SET('normal','admin') NOT NULL CHECK (LENGTH(TRIM(rang)) > 0),
   image VARCHAR(255) DEFAULT NULL CHECK(LENGTH(TRIM(image)) > 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Index pour la table activite
---
-ALTER TABLE Activite
-  ADD PRIMARY KEY (idActivite),
-  ADD KEY idUtilisateur (idUtilisateur),
-  ADD KEY idLieu (idLieu);
+-- --------------------------------------------------------
 
 --
--- Index pour la table ami
+-- Structure de la table activite
 --
-ALTER TABLE Ami
-  ADD PRIMARY KEY (idUtilisateur,idAmi),
-  ADD KEY idAmi (idAmi);
+
+CREATE TABLE Activite (
+  idActivite INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  dateDebut DATETIME NOT NULL,
+  dateFin DATETIME NOT NULL,
+  idUtilisateur INT NOT NULL,
+  idLieu INT NOT NULL,
+  CONSTRAINT FOREIGN KEY (idUtilisateur) REFERENCES Utilisateur (idUtilisateur),
+  CONSTRAINT FOREIGN KEY (idLieu) REFERENCES Lieu (idLieu)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- --------------------------------------------------------
 
 --
--- Index pour la table etat
+-- Structure de la table ami
 --
-ALTER TABLE Etat
-  ADD PRIMARY KEY (idEtat),
-  ADD KEY idUtilisateur (idUtilisateur);
+
+CREATE TABLE Ami (
+  idUtilisateur INT NOT NULL AUTO_INCREMENT,
+  idAmi INT NOT NULL,
+  accepte BIT(1) NOT NULL DEFAULT b'0',
+  PRIMARY KEY (idUtilisateur, idAmi),
+  FOREIGN KEY (idUtilisateur) REFERENCES Utilisateur (idUtilisateur),
+  FOREIGN KEY (idAmi) REFERENCES Utilisateur (idUtilisateur)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
 
 --
--- Index pour la table lieu
+-- Structure de la table etat
 --
-ALTER TABLE Lieu
-  ADD PRIMARY KEY (idLieu);
+
+CREATE TABLE Etat (
+  idEtat INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  dateEtat DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  positif BIT(1) NOT NULL DEFAULT b'1',
+  idUtilisateur INT NOT NULL,
+  FOREIGN KEY (idUtilisateur) REFERENCES Utilisateur (idUtilisateur)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
 
 --
--- Index pour la table NotificationAmi
+-- Structure de la table NotificationAmi
 --
-ALTER TABLE NotificationAmi
-  ADD PRIMARY KEY (idNotification),
-  ADD KEY idUtilisateur (idUtilisateur),
-  ADD KEY idAmi (idAmi),
-  ADD KEY idConcerne (idConcerne);
 
-  --
-  -- Index pour la table NotificationContamination
-  --
-  ALTER TABLE NotificationContamination
-    ADD PRIMARY KEY (idNotification),
-    ADD KEY idContamine (idContamine),
-    ADD KEY idUtilisateur (idUtilisateur),
-    ADD KEY idEtat (idEtat);
+CREATE TABLE NotificationAmi (
+  idNotification INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  message VARCHAR(512) NOT NULL CHECK (LENGTH(TRIM(message)) > 0),
+  vue BIT(1) NOT NULL DEFAULT b'0',
+  idUtilisateur INT NOT NULL,
+  idAmi INT NOT NULL,
+  idConcerne INT NOT NULL,
+  INDEX (idUtilisateur, idAmi, idConcerne),
+  FOREIGN KEY (idUtilisateur) REFERENCES Utilisateur (idUtilisateur),
+  FOREIGN KEY (idAmi) REFERENCES Utilisateur (idUtilisateur),
+  FOREIGN KEY (idConcerne) REFERENCES Utilisateur(idUtilisateur)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Index pour la table utilisateur
---
-ALTER TABLE Utilisateur
-  ADD PRIMARY KEY (idUtilisateur);
+-- --------------------------------------------------------
 
 --
--- AUTO_INCREMENT pour la table activite
+-- Structure de la table NotificationContamination
 --
-ALTER TABLE Activite
-  MODIFY idActivite INT NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT pour la table etat
---
-ALTER TABLE Etat
-  MODIFY idEtat INT NOT NULL AUTO_INCREMENT;
+CREATE TABLE NotificationContamination (
+  idNotification INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  message VARCHAR(512) NOT NULL CHECK (LENGTH(TRIM(message)) > 0),
+  vue BIT(1) NOT NULL DEFAULT b'0',
+  idUtilisateur INT NOT NULL,
+  idContamine INT NOT NULL,
+  idEtat INT NOT NULL,
+  INDEX (idUtilisateur, idContamine, idEtat),
+  FOREIGN KEY (idUtilisateur) REFERENCES Utilisateur (idUtilisateur),
+  FOREIGN KEY (idContamine) REFERENCES Utilisateur (idUtilisateur),
+  FOREIGN KEY (idEtat) REFERENCES Etat(idEtat)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- AUTO_INCREMENT pour la table lieu
---
-ALTER TABLE Lieu
-  MODIFY idLieu INT NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table NotificationAmi
---
-ALTER TABLE NotificationAmi
-  MODIFY idNotification INT NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table NotificationAmi
---
-ALTER TABLE NotificationContamination
-  MODIFY idNotification INT NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table utilisateur
---
-ALTER TABLE Utilisateur
-  MODIFY idUtilisateur INT NOT NULL AUTO_INCREMENT;
-
---
--- Contraintes pour la table activite
---
-ALTER TABLE Activite
-  ADD CONSTRAINT activite_ibfk_1 FOREIGN KEY (idUtilisateur) REFERENCES Utilisateur (idUtilisateur),
-  ADD CONSTRAINT activite_ibfk_2 FOREIGN KEY (idLieu) REFERENCES Lieu (idLieu);
-
---
--- Contraintes pour la table ami
---
-ALTER TABLE Ami
-  ADD CONSTRAINT ami_ibfk_1 FOREIGN KEY (idUtilisateur) REFERENCES Utilisateur (idUtilisateur),
-  ADD CONSTRAINT ami_ibfk_2 FOREIGN KEY (idAmi) REFERENCES Utilisateur (idUtilisateur);
-
---
--- Contraintes pour la table etat
---
-ALTER TABLE Etat
-  ADD CONSTRAINT etat_ibfk_1 FOREIGN KEY (idUtilisateur) REFERENCES Utilisateur (idUtilisateur);
-
---
--- Contraintes pour la table NotificationAmi
---
-ALTER TABLE NotificationAmi
-  ADD CONSTRAINT idUtilisateurNA FOREIGN KEY (idUtilisateur) REFERENCES Utilisateur (idUtilisateur),
-  ADD CONSTRAINT idAmiNA FOREIGN KEY (idAmi) REFERENCES Utilisateur (idUtilisateur),
-  ADD CONSTRAINT idConcerneNA FOREIGN KEY (idConcerne) REFERENCES Utilisateur(idUtilisateur);
-
---
--- Contraintes pour la table NotificationContamination
---
-ALTER TABLE NotificationContamination
-  ADD CONSTRAINT idUtilisateurNC FOREIGN KEY (idUtilisateur) REFERENCES Utilisateur (idUtilisateur),
-  ADD CONSTRAINT idContamineNC FOREIGN KEY (idContamine) REFERENCES Utilisateur (idUtilisateur),
-  ADD CONSTRAINT idEtatNC FOREIGN KEY (idEtat) REFERENCES Etat(idEtat);
-
+-- --------------------------------------------------------
 
 --
 -- Création des procédures
@@ -248,6 +158,8 @@ BEGIN
 END;
 $$;
 DELIMITER $;
+
+-- --------------------------------------------------------
 
 --
 -- Procédure permettant de supprimer un ami (ou refuser sa demande) et d'envoyer une notification de suppression (ou refus) d'ami à un des deux utilisateurs qui étaient auparavant amis
@@ -282,6 +194,8 @@ END;
 $$;
 DELIMITER ;
 
+-- --------------------------------------------------------
+
 --
 -- Procédure commune à l'ajout et la mise à jour des activités : vérifier que les données sont cohérentes
 --
@@ -296,6 +210,10 @@ BEGIN
   DECLARE date_dernier_etat TIMESTAMP;
   DECLARE etat_incoherent INT;
   DECLARE message VARCHAR(512);
+  
+  IF (date_debut_activite = NULL OR date_fin_activite = NULL) THEN
+	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Format des dates incorrect.";
+END IF;
 
   SELECT COUNT(idUtilisateur), dateNaiss INTO utilisateur_existe, date_naiss FROM Utilisateur
   WHERE idUtilisateur = id_utilisateur;
@@ -342,6 +260,8 @@ BEGIN
 END;
 $$;
 DELIMITER ;
+
+-- --------------------------------------------------------
 
 --
 -- Procédure pour envoyer une notification aux utilisateurs à risque lorsqu'un utilisateur est positif
@@ -411,6 +331,8 @@ END;
 $$;
 DELIMITER ;
 
+-- --------------------------------------------------------
+
 --
 -- Création des triggers
 --
@@ -432,6 +354,8 @@ END;
 $$;
 DELIMITER ;
 
+-- --------------------------------------------------------
+
 --
 -- Trigger pour vérifier qu'un compte peut être créé (login inexistant dans la BDD ou déjà égal à l'utilisateur actuel)
 --
@@ -449,8 +373,10 @@ END;
 $$;
 DELIMITER ;
 
+-- --------------------------------------------------------
+
 --
--- Trigger pour supprimer totalement un utilisateur après sa suppression (suppression des amis le possédant ou des amis associés à cet utilisateur)
+-- Trigger pour supprimer totalement un utilisateur après sa suppression (suppression des amis le possédant ou des amis associés à cet utilisateur, des activités et de ses notifications, ses états)
 --
 DELIMITER $$;
 CREATE TRIGGER suppression_totale_utilisateur BEFORE DELETE ON Utilisateur FOR EACH ROW
@@ -471,6 +397,8 @@ BEGIN
 END;
 $$;
 DELIMITER ;
+
+-- --------------------------------------------------------
 
 --
 -- Trigger pour vérifier si une demande d’ami peut être effectuée (utilisateur existant, requête pas encore effectuée, pas encore ami)
@@ -515,6 +443,8 @@ END;
 $$;
 DELIMITER ;
 
+-- --------------------------------------------------------
+
 --
 -- Trigger pour vérifier que la demande mise à jour d'une demande d'ami est cohérente
 --
@@ -544,6 +474,8 @@ END;
 $$;
 DELIMITER ;
 
+-- --------------------------------------------------------
+
 --
 -- Trigger pour vérifier qu’une demande de suppression d’ami peut être effectué (si l'utilisateur existe et qu'il est possédé en tant qu'ami par une des deux relations)
 --
@@ -568,6 +500,8 @@ END;
 $$;
 DELIMITER ;
 
+-- --------------------------------------------------------
+
 --
 -- Trigger pour vérifier qu'une activité peut être ajoutée (qu'elle est cohérente vis-à-vis du lieu et des heures)
 --
@@ -579,6 +513,8 @@ END;
 $$;
 DELIMITER ;
 
+-- --------------------------------------------------------
+
 --
 -- Trigger pour vérifier qu'une activité peut être mise à jour (qu'elle est cohérente vis-à-vis du lieu et des heures)
 --
@@ -589,6 +525,8 @@ BEGIN
 END;
 $$;
 DELIMITER ;
+
+-- --------------------------------------------------------
 
 --
 -- Trigger pour vérifier qu'une activité peut bien être supprimée si elle existe
@@ -607,6 +545,8 @@ END;
 $$;
 DELIMITER ;
 
+-- --------------------------------------------------------
+
 --
 -- Trigger pour vérifier qu'un lieu peut être ajouté (le nom du lieu ne doit pas déjà exister)
 --
@@ -624,6 +564,8 @@ END;
 $$;
 DELIMITER ;
 
+-- --------------------------------------------------------
+
 --
 -- Trigger pour vérifier qu'un lieu peut être mis à jour (le lieu ne doit pas correspondre au nom d'un autre lieu)
 --
@@ -640,6 +582,8 @@ BEGIN
 END;
 $$;
 DELIMITER ;
+
+-- --------------------------------------------------------
 
 --
 -- Trigger pour vérifier qu'un lieu peut bien être supprimé s'il existe et qu'il n'est associé à aucune activité
@@ -665,6 +609,8 @@ END;
 $$;
 DELIMITER ;
 
+-- --------------------------------------------------------
+
 --
 -- Trigger pour vérifier que l'ajout d'un état est cohérent pour un utilisateur (état différent du précédent, date supérieure à celle de l'état précédent)
 --
@@ -685,9 +631,9 @@ BEGIN
 
   IF (NEW.dateEtat < date_naissance_utilisateur_positif) THEN
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date du nouvel état ne peut être inférieure à votre date de naissance.";
-  ELSEIF (NEW.dateEtat < STR_TO_DATE('17-11-2019 00:00:00','%d-%m-%Y %T')) THEN
+  ELSEIF (NEW.dateEtat < STR_TO_DATE('17-11-2019','%d-%m-%Y')) THEN
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date du nouvel état ne peut être inférieure à la date de début de l'épidémie du COVID-19 (17/11/2019).";
-  ELSEIF (NEW.dateEtat > CURRENT_TIMESTAMP()) THEN
+  ELSEIF (NEW.dateEtat > CURRENT_TIMESTAMP()) THEN 
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "La date du nouvel état ne peut être supérieure à la date actuelle.";
   ELSEIF (derniere_date_etat IS NOT NULL) THEN
     IF (NEW.dateEtat <= derniere_date_etat) THEN
@@ -714,6 +660,8 @@ END;
 $$;
 DELIMITER ;
 
+-- --------------------------------------------------------
+
 --
 -- Trigger pour empêcher la mise à jour de la table des états (un nouvel état = une nouvelle ligne)
 --
@@ -724,6 +672,8 @@ BEGIN
 END;
 $$;
 DELIMITER ;
+
+-- --------------------------------------------------------
 
 --
 -- Trigger pour envoyer une notification aux utilisateurs à risque lorsqu'un utilisateur se déclare positif
@@ -743,6 +693,8 @@ END;
 $$;
 DELIMITER ;
 
+-- --------------------------------------------------------
+
 --
 -- Trigger permettant de déclencher l'envoi des notifications de contaminations lors de la création d'une activité par un utilisateur
 --
@@ -761,33 +713,33 @@ BEGIN
     CALL envoyer_notification_contamination_positif(NEW.idUtilisateur, id_max_etat);
   ELSE
     INSERT INTO NotificationContamination(message, idUtilisateur, idContamine, idEtat)
-      SELECT DISTINCT CONCAT("Vous avez probablement été en contact avec ", nom, " ", prenom, " au cours de ces 10 derniers jours. Cet individu s'est déclaré positif."), NEW.idUtilisateur, infectes.idUtilisateur, idEtat FROM Activite AM INNER JOIN (
-        SELECT DISTINCT idLieu, A.idUtilisateur, nom, prenom, dateDebut, dateFin, idEtat, dateEtat FROM Activite A INNER JOIN Etat E NATURAL JOIN Utilisateur
-          ON A.idUtilisateur = E.idUtilisateur
-          WHERE E.positif = b'1'
-          AND idLieu = NEW.idLieu
-          AND E.idEtat = (SELECT MAX(idEtat) FROM Etat WHERE idUtilisateur = E.idUtilisateur)
-          AND ((DATE(A.dateDebut) BETWEEN DATE(E.dateEtat - INTERVAL 10 DAY) AND DATE(E.dateEtat)) OR (DATE(A.dateFin) BETWEEN DATE(E.dateEtat - INTERVAL 10 DAY) AND DATE(E.dateEtat)))
-          ORDER BY dateDebut, dateFin
-      ) infectes
-      WHERE NEW.idUtilisateur IN (
-        SELECT idUtilisateur FROM Activite AC
-        WHERE idUtilisateur != infectes.idUtilisateur
-        AND idLieu = infectes.idLieu
-        AND (DATE(AC.dateDebut) >= DATE(infectes.dateEtat - INTERVAL 10 DAY) OR DATE(AC.dateFin) >= DATE(infectes.dateEtat - INTERVAL 10 DAY))
-        AND (((AC.dateDebut BETWEEN infectes.dateDebut AND infectes.dateFin) OR (AC.dateFin BETWEEN infectes.dateDebut AND infectes.dateFin))
-        OR ((AC.dateDebut < infectes.dateDebut) AND (AC.dateFin > infectes.dateFin)))
-      )
-      AND NOT EXISTS ( -- S'il n'existe pas déjà de notification concernant l'utilisateur potentiellement positif sur sa période positive
-        SELECT idNotification FROM NotificationContamination
-        WHERE idEtat = infectes.idEtat
-        AND idContamine = infectes.idUtilisateur
-        AND idUtilisateur = NEW.idUtilisateur
-      );
+      SELECT DISTINCT CONCAT("Vous avez probablement été en contact avec ", nom, " ", prenom, " au cours de ces 10 derniers jours. Cet individu s'est déclaré positif."), NEW.idUtilisateur, A.idUtilisateur, idEtat FROM Activite A INNER JOIN Etat E NATURAL JOIN Utilisateur
+		ON A.idUtilisateur = E.idUtilisateur
+		WHERE E.positif = b'1'
+        AND idLieu = 5
+        AND E.idEtat = (SELECT MAX(idEtat) FROM Etat WHERE idUtilisateur = E.idUtilisateur)
+        AND ((DATE(A.dateDebut) BETWEEN DATE(E.dateEtat - INTERVAL 10 DAY) AND DATE(E.dateEtat)) OR (DATE(A.dateFin) BETWEEN DATE(E.dateEtat - INTERVAL 10 DAY) AND DATE(E.dateEtat)))
+		AND NEW.idUtilisateur IN (
+			SELECT AC.idUtilisateur FROM Activite AC
+            WHERE AC.idUtilisateur != A.idUtilisateur
+			AND AC.idLieu = A.idLieu
+			AND (DATE(AC.dateDebut) >= DATE(E.dateEtat - INTERVAL 10 DAY) OR DATE(AC.dateFin) >= DATE(E.dateEtat - INTERVAL 10 DAY))
+			AND (((AC.dateDebut BETWEEN A.dateDebut AND A.dateFin) OR (AC.dateFin BETWEEN A.dateDebut AND A.dateFin))
+			OR ((AC.dateDebut < A.dateDebut) AND (AC.dateFin > A.dateFin)))
+		)
+        AND NOT EXISTS ( -- S'il n'existe pas déjà de notification concernant l'utilisateur potentiellement positif sur sa période positive
+			SELECT idNotification FROM NotificationContamination N
+			WHERE N.idEtat = E.idEtat
+			AND N.idContamine = E.idUtilisateur
+			AND N.idUtilisateur = NEW.idUtilisateur
+		)
+        ORDER BY dateDebut, dateFin;
   END IF;
 END;
 $$;
 DELIMITER ;
+
+-- --------------------------------------------------------
 
 --
 -- Trigger permettant d'envoyer une notification de contamination potentielle à un demandeur d'ami si sa requête est acceptée
@@ -810,7 +762,7 @@ BEGIN
       AND idUtilisateur IN (NEW.idUtilisateur, NEW.idAmi)
     ) notif
     WHERE NOT EXISTS (
-      SELECT idNotification FROM NotificationContamination
+      SELECT idNotification FROM NotificationContamination N
       WHERE idEtat = notif.idEtat
       AND idContamine = notif.idUtilisateur
       AND idUtilisateur = notif.idConcerne
@@ -819,6 +771,7 @@ END;
 $$;
 DELIMITER ;
 
+-- --------------------------------------------------------
 
 --
 -- Trigger permettant l'envoi d'une notification d'acceptation lorsqu'un utilisateur accepte une demande d'ami
@@ -838,6 +791,11 @@ END;
 $$;
 DELIMITER ;
 
+-- --------------------------------------------------------
+
+--
+-- Création du job MySQL permettant de réinitialiser l'état en tant que non-positif tous les 10 jours pour chaque utilisateur actuellement positif
+--
 DELIMITER $$;
 CREATE EVENT maj_etat_automatique ON SCHEDULE EVERY 1 DAY
 DO BEGIN

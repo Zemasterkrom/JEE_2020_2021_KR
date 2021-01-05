@@ -1,7 +1,7 @@
 --
--- Note : ce test a été réalisé sur MySQL Workbench qui donne la possibilité de continuer l'exécution du script malgré les erreurs, notamment pour vérifier le fonctionnement des triggers.
--- Note : à exécuter après la création des tables de la base de données.
--- Option utilisée : Toggle whether execution of SQL script should continue after failed statements.
+-- Note : ce test a été réalisé sur MySQL Workbench qui donne la possibilité de continuer l'exécution du script malgré les erreurs, notamment pour vérifier le fonctionnement des triggers
+-- Note : test à exécuter après la création des tables et des triggers
+-- Option utilisée : Toggle whether execution of SQL script should continue after failed statements
 --
 
 --
@@ -165,7 +165,7 @@ SELECT * FROM NotificationContamination;
 
 -- Fails : états incohérents
 INSERT INTO Etat(dateEtat, positif, idUtilisateur) VALUES(NULL, b'1', 1);
-INSERT INTO Etat(dateEtat, positif, idUtilisateur) VALUES(STR_TO_DATE('01-01-2077 00:00:00','%d-%m-%Y %T'), b'0', 1); -- Fail : la date de l'état ne doit pas être supérieure à la date actuelle
+INSERT INTO Etat(dateEtat, positif, idUtilisateur) VALUES(STR_TO_DATE('01-01-2035 00:00:00', '%d-%m-%Y %T'), b'0', 1); -- Fail : la date de l'état ne doit pas être supérieure à la date actuelle
 INSERT INTO Etat(dateEtat, positif, idUtilisateur) VALUES(STR_TO_DATE('02-01-2020 00:00:00','%d-%m-%Y %T'), b'0', 1); -- Fail : la date de l'état doit être supérieure à la dernière
 INSERT INTO Etat(dateEtat, positif, idUtilisateur) VALUES(STR_TO_DATE('21-01-2020 00:00:01','%d-%m-%Y %T'), b'0', 1); -- Fail : la date de l'état doit être supérieure à la dernière
 INSERT INTO Etat(dateEtat, positif, idUtilisateur) VALUES(STR_TO_DATE('12-01-2020 00:00:01','%d-%m-%Y %T'), b'1', 1); -- Fail : un état positif existe déjà
@@ -361,5 +361,3 @@ INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DA
 SELECT * FROM NotificationContamination; -- 39 notifications
 
 INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestAdminNom', 'TestAdminPrenom', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestAdmin', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'admin');
-
-SET SQL_SAFE_UPDATES = 1;
