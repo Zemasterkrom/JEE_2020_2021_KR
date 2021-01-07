@@ -1,4 +1,4 @@
-package servlet;
+package servlet.account;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -9,32 +9,33 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Théo Roton, Raphaël Kimm
- * Servlet qui gère l'affichage de l'interface admin
+ * Servlet qui gère l'affichage du profil de l'utilisateur
  */
-@WebServlet("/AdminServlet")
-public class AdminServlet extends HttpServlet {
+@WebServlet("/SeeAccountServlet")
+public class SeeAccountServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AdminServlet() {
+    public SeeAccountServlet() {
         super();
     }
 
 	/**
-	 * Get : affichage de l'interface admin
+	 * Get : on affiche le profil de l'utilisateur
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Affichage de l'interface administrateur
-		request.getRequestDispatcher("/JSP_pages/admin/admin.jsp").forward(request, response);
+		//Affichage du profil de l'utilisateur
+		request.getRequestDispatcher("/JSP_pages/account/account.jsp").forward(request, response);
 	}
 
 	/**
-	 * Post : redirige vers le Get
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

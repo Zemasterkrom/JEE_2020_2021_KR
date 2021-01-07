@@ -6,7 +6,11 @@
       <page-encoding>UTF-8</page-encoding>
     </jsp-property-group>
   </jsp-config>
+  
+  
   <display-name>JEE_2020_2021_KR</display-name>
+  
+  
   <filter>
     <filter-name>JspFilter</filter-name>
     <filter-class>filter.JspFilter</filter-class>
@@ -15,10 +19,14 @@
     <filter-name>JspFilter</filter-name>
     <url-pattern>*</url-pattern>
   </filter-mapping>
+  
+  
   <error-page>
   	<error-code>404</error-code>
   	<location>/JSP_pages/notFound.jsp</location>
   </error-page>
+  
+  
   <servlet>
     <servlet-name>ErrorServlet</servlet-name>
     <servlet-class>servlet.ErrorServlet</servlet-class>
@@ -27,22 +35,38 @@
     <servlet-name>ErrorServlet</servlet-name>
     <url-pattern>/error</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>RegisterServlet</servlet-name>
-    <servlet-class>servlet.RegisterServlet</servlet-class>
+    <servlet-class>servlet.account.RegisterServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>RegisterServlet</servlet-name>
-    <url-pattern>/register</url-pattern>
+    <url-pattern>/account/register</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>LoginServlet</servlet-name>
-    <servlet-class>servlet.LoginServlet</servlet-class>
+    <servlet-class>servlet.account.LoginServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
-    <url-pattern>/login</url-pattern>
+    <url-pattern>/account/login</url-pattern>
   </servlet-mapping>
+  
+  
+  <servlet>
+    <servlet-name>SignOutServlet</servlet-name>
+    <servlet-class>servlet.account.SignOutServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SignOutServlet</servlet-name>
+    <url-pattern>/account/signout</url-pattern>
+  </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>IndexServlet</servlet-name>
     <servlet-class>servlet.IndexServlet</servlet-class>
@@ -51,38 +75,38 @@
     <servlet-name>IndexServlet</servlet-name>
     <url-pattern>/home</url-pattern>
   </servlet-mapping>
-  <servlet>
-    <servlet-name>SignOutServlet</servlet-name>
-    <servlet-class>servlet.SignOutServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>SignOutServlet</servlet-name>
-    <url-pattern>/signout</url-pattern>
-  </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>SeeAccountServlet</servlet-name>
-    <servlet-class>servlet.SeeAccountServlet</servlet-class>
+    <servlet-class>servlet.account.SeeAccountServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>SeeAccountServlet</servlet-name>
     <url-pattern>/account</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>ModifyAccountServlet</servlet-name>
-    <servlet-class>servlet.ModifyAccountServlet</servlet-class>
+    <servlet-class>servlet.account.ModifyAccountServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>ModifyAccountServlet</servlet-name>
-    <url-pattern>/modifyAccount</url-pattern>
+    <url-pattern>/account/modifyAccount</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>ModifyPasswordServlet</servlet-name>
-    <servlet-class>servlet.ModifyPasswordServlet</servlet-class>
+    <servlet-class>servlet.account.ModifyPasswordServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>ModifyPasswordServlet</servlet-name>
-    <url-pattern>/modifyPassword</url-pattern>
+    <url-pattern>/account/modifyPassword</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>AdminServlet</servlet-name>
     <servlet-class>servlet.AdminServlet</servlet-class>
@@ -91,153 +115,181 @@
     <servlet-name>AdminServlet</servlet-name>
     <url-pattern>/admin</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>UsersServlet</servlet-name>
-    <servlet-class>servlet.UsersServlet</servlet-class>
+    <servlet-class>servlet.user.UsersServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>UsersServlet</servlet-name>
-    <url-pattern>/users</url-pattern>
+    <url-pattern>/admin/users</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>ModifyUserRankServlet</servlet-name>
-    <servlet-class>servlet.ModifyUserRankServlet</servlet-class>
+    <servlet-class>servlet.account.ModifyUserRankServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>ModifyUserRankServlet</servlet-name>
-    <url-pattern>/modifyUserRank</url-pattern>
+    <url-pattern>/admin/users/modifyUserRank</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>DeleteUserServlet</servlet-name>
-    <servlet-class>servlet.DeleteUserServlet</servlet-class>
+    <servlet-class>servlet.user.DeleteUserServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>DeleteUserServlet</servlet-name>
-    <url-pattern>/deleteUser</url-pattern>
+    <url-pattern>/admin/users/deleteUser</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>ActivitiesServlet</servlet-name>
-    <servlet-class>servlet.ActivitiesServlet</servlet-class>
+    <servlet-class>servlet.activity.ActivitiesServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>ActivitiesServlet</servlet-name>
-    <url-pattern>/activities</url-pattern>
+    <url-pattern>/admin/activities</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>DeleteActivityServlet</servlet-name>
-    <servlet-class>servlet.DeleteActivityServlet</servlet-class>
+    <servlet-class>servlet.activity.DeleteActivityServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>DeleteActivityServlet</servlet-name>
-    <url-pattern>/deleteActivity</url-pattern>
+    <url-pattern>/admin/activities/deleteActivity</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>PlacesServlet</servlet-name>
-    <servlet-class>servlet.PlacesServlet</servlet-class>
+    <servlet-class>servlet.place.PlacesServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>PlacesServlet</servlet-name>
-    <url-pattern>/places</url-pattern>
+    <url-pattern>/admin/places</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>DeletePlaceServlet</servlet-name>
-    <servlet-class>servlet.DeletePlaceServlet</servlet-class>
+    <servlet-class>servlet.place.DeletePlaceServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>DeletePlaceServlet</servlet-name>
-    <url-pattern>/deletePlace</url-pattern>
+    <url-pattern>/admin/places/deletePlace</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>FriendsServlet</servlet-name>
-    <servlet-class>servlet.FriendsServlet</servlet-class>
+    <servlet-class>servlet.friend.FriendsServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>FriendsServlet</servlet-name>
     <url-pattern>/friends</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>AcceptFriendRequestServlet</servlet-name>
-    <servlet-class>servlet.AcceptFriendRequestServlet</servlet-class>
+    <servlet-class>servlet.friend.AcceptFriendRequestServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>AcceptFriendRequestServlet</servlet-name>
-    <url-pattern>/acceptFriendRequest</url-pattern>
+    <url-pattern>/friends/acceptFriendRequest</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>RejectFriendRequestServlet</servlet-name>
-    <servlet-class>servlet.RejectFriendRequestServlet</servlet-class>
+    <servlet-class>servlet.friend.RejectFriendRequestServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>RejectFriendRequestServlet</servlet-name>
-    <url-pattern>/rejectFriendRequest</url-pattern>
+    <url-pattern>/friends/rejectFriendRequest</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>CancelFriendRequestServlet</servlet-name>
-    <servlet-class>servlet.CancelFriendRequestServlet</servlet-class>
+    <servlet-class>servlet.friend.CancelFriendRequestServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>CancelFriendRequestServlet</servlet-name>
-    <url-pattern>/cancelFriendRequest</url-pattern>
+    <url-pattern>/friends/cancelFriendRequest</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>DeleteFriendServlet</servlet-name>
-    <servlet-class>servlet.DeleteFriendServlet</servlet-class>
+    <servlet-class>servlet.friend.DeleteFriendServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>DeleteFriendServlet</servlet-name>
-    <url-pattern>/deleteFriend</url-pattern>
+    <url-pattern>/friends/deleteFriend</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>MoreFriendsServlet</servlet-name>
-    <servlet-class>servlet.MoreFriendsServlet</servlet-class>
+    <servlet-class>servlet.friend.MoreFriendsServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>MoreFriendsServlet</servlet-name>
-    <url-pattern>/moreFriends</url-pattern>
+    <url-pattern>/friends/moreFriends</url-pattern>
   </servlet-mapping>
+  
+  
   <servlet>
     <servlet-name>AddFriendServlet</servlet-name>
-    <servlet-class>servlet.AddFriendServlet</servlet-class>
+    <servlet-class>servlet.friend.AddFriendServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>AddFriendServlet</servlet-name>
-    <url-pattern>/addFriend</url-pattern>
+    <url-pattern>/friends/addFriend</url-pattern>
   </servlet-mapping>
   
   
   <servlet-mapping>
   	<servlet-name>ContaminationNotificationsServlet</servlet-name>
-  	<url-pattern>/contaminationNotifications</url-pattern>
+  	<url-pattern>/notifications/contaminationNotifications</url-pattern>
   </servlet-mapping>
   <servlet>
   	<servlet-name>ContaminationNotificationsServlet</servlet-name>
-  	<servlet-class>servlet.ContaminationNotificationsServlet</servlet-class>
+  	<servlet-class>servlet.notification.ContaminationNotificationsServlet</servlet-class>
   </servlet>
   <servlet-mapping>
   	<servlet-name>DeleteContaminationNotificationServlet</servlet-name>
-  	<url-pattern>/deleteContaminationNotification</url-pattern>
+  	<url-pattern>/notifications/deleteContaminationNotification</url-pattern>
   </servlet-mapping>
   <servlet>
   	<servlet-name>DeleteContaminationNotificationServlet</servlet-name>
-  	<servlet-class>servlet.DeleteContaminationNotificationServlet</servlet-class>
+  	<servlet-class>servlet.notification.DeleteContaminationNotificationServlet</servlet-class>
   </servlet>
   
   
   <servlet-mapping>
   	<servlet-name>FriendNotificationsServlet</servlet-name>
-  	<url-pattern>/friendNotifications</url-pattern>
+  	<url-pattern>/notifications/friendNotifications</url-pattern>
   </servlet-mapping>
   <servlet>
   	<servlet-name>FriendNotificationsServlet</servlet-name>
-  	<servlet-class>servlet.FriendNotificationsServlet</servlet-class>
+  	<servlet-class>servlet.notification.FriendNotificationsServlet</servlet-class>
   </servlet>
   <servlet-mapping>
   	<servlet-name>DeleteFriendNotificationServlet</servlet-name>
-  	<url-pattern>/deleteFriendNotification</url-pattern>
+  	<url-pattern>/notifications/deleteFriendNotification</url-pattern>
   </servlet-mapping>
   <servlet>
   	<servlet-name>DeleteFriendNotificationServlet</servlet-name>
-  	<servlet-class>servlet.DeleteFriendNotificationServlet</servlet-class>
+  	<servlet-class>servlet.notification.DeleteFriendNotificationServlet</servlet-class>
   </servlet>
   
   
@@ -253,30 +305,30 @@
   
   <servlet-mapping>
   	<servlet-name>AddActivityServlet</servlet-name>
-  	<url-pattern>/addActivity</url-pattern>
+  	<url-pattern>/activities/addActivity</url-pattern>
   </servlet-mapping>
   <servlet>
   	<servlet-name>AddActivityServlet</servlet-name>
-  	<servlet-class>servlet.AddActivityServlet</servlet-class>
+  	<servlet-class>servlet.activity.AddActivityServlet</servlet-class>
   </servlet>
   
   
   <servlet-mapping>
   	<servlet-name>AddPlaceServlet</servlet-name>
-  	<url-pattern>/addPlace</url-pattern>
+  	<url-pattern>/places/addPlace</url-pattern>
   </servlet-mapping>
   <servlet>
   	<servlet-name>AddPlaceServlet</servlet-name>
-  	<servlet-class>servlet.AddPlaceServlet</servlet-class>
+  	<servlet-class>servlet.place.AddPlaceServlet</servlet-class>
   </servlet>
   
   
   <servlet-mapping>
   	<servlet-name>ModifyPlaceServlet</servlet-name>
-  	<url-pattern>/modifyPlace</url-pattern>
+  	<url-pattern>/admin/places/modifyPlace</url-pattern>
   </servlet-mapping>
   <servlet>
   	<servlet-name>ModifyPlaceServlet</servlet-name>
-  	<servlet-class>servlet.ModifyPlaceServlet</servlet-class>
+  	<servlet-class>servlet.place.ModifyPlaceServlet</servlet-class>
   </servlet>
 </web-app>

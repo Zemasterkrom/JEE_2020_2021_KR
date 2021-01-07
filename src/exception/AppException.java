@@ -18,7 +18,7 @@ public abstract class AppException extends Exception {
 	/**
 	 * Pages génériques de redirection
 	 */
-	protected static final String HOME = "/", ERROR = "error";
+	protected static final String HOME = "/", ERROR = "/error";
 	
 	/**
 	 * Requête HTTP actuelle
@@ -34,6 +34,16 @@ public abstract class AppException extends Exception {
 	 * Message de l'erreur, URL et paramètres supplémentaires
 	 */
 	protected String message, url, params;
+	
+	/**
+	 * Messages d'erreurs génériques en cas de tentative de corruption des données
+	 */
+	public static final String ALTERED_DATA_ERROR = "Les données ont été altérées. ",
+			FORBIDDEN_ADDITION_ERROR = "Ajout non autorisé. ",
+			FORBIDDEN_DELETION_ERROR = "Suppression non autorisée. ",
+			FORBIDDEN_MODIFICATION_ERROR = "Modification non autorisée. ",
+			FORBIDDEN_CONNECTION_ERROR = "Connexion non autorisée. ",
+			FORBIDDEN_REGISTRATION_ERROR = "Connexion non autorisée. ";
 
 	/**
 	 * Constructeur d'une exception de l'application
@@ -49,7 +59,7 @@ public abstract class AppException extends Exception {
 		this.message = t.getMessage() != null ? t.getMessage() : "Erreur";
 		this.params = "";
 		try {
-			this.url = url != null ? url + "?error=" + URLEncoder.encode(this.message, "UTF-8") : "/error?error=" + URLEncoder.encode(this.message, "UTF-8");
+			this.url = url != null ? url + "?error=" + URLEncoder.encode(this.message, "UTF-8") : request.getContextPath() + "/error?error=" + URLEncoder.encode(this.message, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -67,7 +77,7 @@ public abstract class AppException extends Exception {
 		this.message = s != null ? s : "Erreur";
 		this.params = "";
 		try {
-			this.url = url != null ? url + "?error=" + URLEncoder.encode(this.message, "UTF-8") : "/error?error=" + URLEncoder.encode(this.message, "UTF-8");
+			this.url = url != null ? url + "?error=" + URLEncoder.encode(this.message, "UTF-8") : request.getContextPath() + "/error?error=" + URLEncoder.encode(this.message, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -112,7 +122,7 @@ public abstract class AppException extends Exception {
 	 */
 	public void redirigerPageErreur(String url) {
 		try {
-			this.url = url != null ? url + "?error=" + URLEncoder.encode(this.message, "UTF-8") + this.params : "/error?error=" + URLEncoder.encode(this.message, "UTF-8") + this.params;
+			this.url = url != null ? request.getContextPath() + url + "?error=" + URLEncoder.encode(this.message, "UTF-8") + this.params : request.getContextPath() + "/error?error=" + URLEncoder.encode(this.message, "UTF-8") + this.params;
 			this.redirigerPageErreur();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -126,6 +136,4 @@ public abstract class AppException extends Exception {
 	public String getMessage() {
 		return this.message;
 	}
-	
-	public String getUrl() {return url;}
 }

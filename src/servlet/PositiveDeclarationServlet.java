@@ -32,7 +32,7 @@ public class PositiveDeclarationServlet extends HttpServlet {
 	 * Get : rediriger vers la page d'accueil
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.sendRedirect("home");
+		response.sendRedirect(request.getContextPath() + "/home");
 	}
 
 	/**
@@ -50,9 +50,9 @@ public class PositiveDeclarationServlet extends HttpServlet {
 				manager.majEtatPositif(idUtilisateur);
 				
 				//Redirection vers la page des notifications
-				response.sendRedirect("home");
+				response.sendRedirect(request.getContextPath() + "/home");
 			} catch (AppException e) {
-				e.redirigerPageErreur("home");
+				e.redirigerPageErreur("/home");
 			}
 	}
 

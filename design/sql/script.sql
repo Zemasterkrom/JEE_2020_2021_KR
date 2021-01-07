@@ -391,8 +391,8 @@ BEGIN
 
   DELETE FROM Ami WHERE idUtilisateur = OLD.idUtilisateur OR idAmi = OLD.idUtilisateur;
   DELETE FROM Activite WHERE idUtilisateur = OLD.idUtilisateur;
-  DELETE FROM NotificationContamination WHERE idUtilisateur = OLD.idUtilisateur;
-  DELETE FROM NotificationAmi WHERE idConcerne = OLD.idUtilisateur;
+  DELETE FROM NotificationContamination WHERE idUtilisateur = OLD.idUtilisateur OR idContamine = OLD.idUtilisateur;
+  DELETE FROM NotificationAmi WHERE idConcerne = OLD.idUtilisateur OR idAmi = OLD.idUtilisateur OR idUtilisateur = OLD.idUtilisateur;
   DELETE FROM Etat WHERE idUtilisateur = OLD.idUtilisateur;
 END;
 $$;
@@ -719,7 +719,7 @@ BEGIN
         AND idLieu = 5
         AND E.idEtat = (SELECT MAX(idEtat) FROM Etat WHERE idUtilisateur = E.idUtilisateur)
         AND ((DATE(A.dateDebut) BETWEEN DATE(E.dateEtat - INTERVAL 10 DAY) AND DATE(E.dateEtat)) OR (DATE(A.dateFin) BETWEEN DATE(E.dateEtat - INTERVAL 10 DAY) AND DATE(E.dateEtat)))
-		AND NEW.idUtilisateur IN (
+		AND NEW.idUtilisateur IN ( -- Si l'utilisateur a fréquenté un des lieux de l'utilisateur infecté sur les 10 jours
 			SELECT AC.idUtilisateur FROM Activite AC
             WHERE AC.idUtilisateur != A.idUtilisateur
 			AND AC.idLieu = A.idLieu

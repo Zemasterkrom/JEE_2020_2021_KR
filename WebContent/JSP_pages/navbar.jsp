@@ -37,7 +37,7 @@
 			      </li>
 			      
 			      <li class="nav-item">
-			      	<a class="nav-link" href="contaminationNotifications"><i class="fas fa-bell fa-lg"></i> Notifications <% out.print(nbNotificationsNonVues); %></a>
+			      	<a class="nav-link" href="notifications/contaminationNotifications"><i class="fas fa-bell fa-lg"></i> Notifications <% out.print(nbNotificationsNonVues); %></a>
 			      </li>
 			      
 			      <% if (utilisateur.getRang().equals("admin")) { %>
@@ -49,7 +49,7 @@
 			      <% } %>
 			      
 			 	  <li class="nav-item">
-			        <a class="nav-link text-danger" href="signout"><i class="fas fa-sign-out-alt fa-lg"></i> Se déconnecter</a>		        
+			        <a class="nav-link text-danger" href="account/signout"><i class="fas fa-sign-out-alt fa-lg"></i> Se déconnecter</a>		        
 			      </li>
 			 
 			 <% } %>	  

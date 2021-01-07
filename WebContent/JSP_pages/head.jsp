@@ -2,7 +2,6 @@
     pageEncoding="UTF-8"%>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<base href="${pageContext.request.contextPath}/" />
 <script src="front/jquery/jquery-3.5.1.js"></script>
 <link rel="stylesheet" href="front/css/style.css" />
 <link rel="stylesheet" href="front/font/fontawesome/css/all.min.css" />

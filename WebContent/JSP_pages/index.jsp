@@ -4,7 +4,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<jsp:include page="head.jsp" />
+   		<jsp:include page="/JSP_pages/basePath.jsp" />
+		<jsp:include page="/JSP_pages/head.jsp" />
 	</head>
 
 	<body>

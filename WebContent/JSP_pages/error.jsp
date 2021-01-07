@@ -5,11 +5,11 @@
 <html lang="en">
   <head>
     <title>Tous AntiLaCovid</title>
-    <jsp:include page="head.jsp" />
+    <jsp:include page="/JSP_pages/head.jsp" />
   </head>
 
   <body>
-	<jsp:include page="navbar.jsp" />
+	<jsp:include page="/JSP_pages/navbar.jsp" />
 	
     <main role="main">
       <div class="jumbotron">

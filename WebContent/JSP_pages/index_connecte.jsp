@@ -9,20 +9,20 @@
   <head>
     <title>Tous AntiLaCovid</title>
     
-    
+    <jsp:include page="/JSP_pages/basePath.jsp" />
     <!-- https://bbbootstrap.com/snippets/bootstrap-our-services-section-hover-effect-38722692 -->
 	<link href="front/bootstrap/css/admin.css" rel="stylesheet">
-    <jsp:include page="head.jsp" />
+    <jsp:include page="/JSP_pages/head.jsp" />
 	
 	<script>
 			//Dirige vers la page d'ajout d'une activité
 			function ajouterActivite() {
-				  document.location.href = 'addActivity';
+				  document.location.href = 'activities/addActivity';
 			}
 			
 			//Dirige vers la page d'ajout d'un lieu
 			function ajouterLieu() {
-				  document.location.href = 'addPlace';
+				  document.location.href = 'places/addPlace';
 			}
 			
 			//Permet d'effectuer un auto-signalement en tant que positif
@@ -42,7 +42,7 @@
 	   String tempsRestant = "Vous êtes actuellement en isolement. Temps restant : " + manager.obtenirNbJoursRestant(utilisateur.getId()) + " jours.";
 	%>
 	
-    <jsp:include page="navbar.jsp" />
+    <jsp:include page="/JSP_pages/navbar.jsp" />
 
     <main role="main">
       <div class="jumbotron rounded">
@@ -77,16 +77,16 @@
 			 	<div class="row">
 			    	<div class="box">
 			        	<div class="our-services settings d-flex align-items-center flex-column align-self-center justify-content-center" onclick="ajouterActivite()">
-				        	<a href="addActivity" class="container-fluid text-decoration-none"><span class="actionTitle container-fluid text-decoration-none text-dark">Ajouter une activité</span></a>
-				            <a href="addActivity" class="container-fluid text-decoration-none"><span class="actionDescription container-fluid text-decoration-none text-dark">J'ai quitté mon domicile pour faire une activité, je la déclare</span></a>
+				        	<a href="activities/addActivity" class="container-fluid text-decoration-none"><span class="actionTitle container-fluid text-decoration-none text-dark">Ajouter une activité</span></a>
+				            <a href="activities/addActivity" class="container-fluid text-decoration-none"><span class="actionDescription container-fluid text-decoration-none text-dark">J'ai quitté mon domicile pour faire une activité, je la déclare</span></a>
 			        	</div>
 			   		</div>
 			   	</div>
 			   	<div class="row">
 			    	<div class="box">
 			        	<div class="our-services settings d-flex align-items-center flex-column align-self-center justify-content-center" onclick="ajouterLieu()">
-				        	<a href="addPlace" class="container-fluid text-decoration-none"><span class="actionTitle container-fluid text-decoration-none text-dark">Ajouter un lieu</span></a>
-				            <a href="addPlace" class="container-fluid text-decoration-none"><span class="actionDescription container-fluid text-decoration-none text-dark">J'ai visité un lieu, je le déclare</span></a>
+				        	<a href="places/addPlace" class="container-fluid text-decoration-none"><span class="actionTitle container-fluid text-decoration-none text-dark">Ajouter un lieu</span></a>
+				            <a href="places/addPlace" class="container-fluid text-decoration-none"><span class="actionDescription container-fluid text-decoration-none text-dark">J'ai visité un lieu, je le déclare</span></a>
 			        	</div>
 			   		</div>
 			   	</div>
