@@ -16,7 +16,7 @@
 	   	<script>
 			//Dirige vers la page d'ajout d'un lieu
 			function ajouterLieu() {
-				  document.location.href = 'addPlace';
+				document.location.href = 'places/addPlace';
 			}
 	   	</script> 
 	</head>
@@ -78,8 +78,8 @@
 								<div class="row">
 							    	<div class="box">
 							        	<div class="our-services settings d-flex align-items-center flex-column align-self-center justify-content-center" onclick="ajouterLieu()">
-								        	<a href="addPlace" class="container-fluid text-decoration-none"><span class="actionTitle container-fluid text-decoration-none text-dark">Ajouter un lieu</span></a>
-								            <a href="addPlace" class="container-fluid text-decoration-none"><span class="actionDescription container-fluid text-decoration-none text-dark">Créer un lieu afin de l'associer à une activité</span></a>
+								        	<a class="container-fluid text-decoration-none"><span class="actionTitle container-fluid text-decoration-none text-dark">Ajouter un lieu</span></a>
+								            <a class="container-fluid text-decoration-none"><span class="actionDescription container-fluid text-decoration-none text-dark">Créer un lieu afin de l'associer à une activité</span></a>
 							        	</div>
 							   		</div>
 					   			</div>

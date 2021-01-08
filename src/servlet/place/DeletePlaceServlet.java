@@ -53,7 +53,7 @@ public class DeletePlaceServlet extends HttpServlet {
 				}
 				
 				//Redirection vers la page d'administration des activités
-				response.sendRedirect(request.getContextPath() + "admin/places");
+				response.sendRedirect(request.getContextPath() + "/admin/places");
 			} catch (AppException e) {
 				e.redirigerPageErreur("/admin/places");
 			} catch (IllegalArgumentException | NullPointerException e) {

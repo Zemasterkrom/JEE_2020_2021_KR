@@ -15,11 +15,11 @@
 		      if (utilisateur == null) { %>
 		      
 		      <li class="nav-item">
-		        <a class="nav-link" href="login"><i class="fas fa-sign-in-alt fa-lg"></i> Se connecter</a>		        
+		        <a class="nav-link" href="account/login"><i class="fas fa-sign-in-alt fa-lg"></i> Se connecter</a>		        
 		      </li>
 		      
 		       <li class="nav-item">
-		        <a class="nav-link" href="register"><i class="fas fa-plus-square fa-lg"></i> S'inscrire</a>		        
+		        <a class="nav-link" href="account/register"><i class="fas fa-plus-square fa-lg"></i> S'inscrire</a>		        
 		      </li>
 		 
 		 <% } else { 
