@@ -98,7 +98,7 @@
 									      							<input type="hidden" name="idAmi" value="<% out.print(u.getId()); %>" />
 															  		<button type="submit" class="btn btn-primary rounded">Accepter</button>
 															  	</form>			                           		
-								                           		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalRefuser<% out.print(u.getId()); %>" style="border-radius:15px;">Refuser</button> 		                           										   										  											    
+								                           		<button type="button" class="btn btn-primary rounded-15" data-toggle="modal" data-target="#modalRefuser<% out.print(u.getId()); %>">Refuser</button> 		                           										   										  											    
 															</div>
 														 </div>
 														 

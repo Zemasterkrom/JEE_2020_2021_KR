@@ -279,8 +279,8 @@ BEGIN
   IF (id_max_etat IS NOT NULL) THEN
     SELECT nom, prenom INTO nom_utilisateur_positif, prenom_utilisateur_positif FROM Utilisateur WHERE idUtilisateur = id_utilisateur_positif;
 
-    SELECT CONCAT("Vous avez probablement été en contact avec ", nom_utilisateur_positif, " ", nom_utilisateur_positif, " au cours de ces 10 derniers jours. Cet individu s'est déclaré positif.") INTO notification_utilisateur_externe FROM DUAL;
-    SELECT CONCAT("Votre ami ", nom_utilisateur_positif, " ", nom_utilisateur_positif, " s'est déclaré positif.") INTO notification_ami FROM DUAL;
+    SELECT CONCAT("Vous avez probablement été en contact avec ", nom_utilisateur_positif, " ", prenom_utilisateur_positif, " au cours de ces 10 derniers jours. Cet individu s'est déclaré positif.") INTO notification_utilisateur_externe FROM DUAL;
+    SELECT CONCAT("Votre ami ", nom_utilisateur_positif, " ", prenom_utilisateur_positif, " s'est déclaré positif.") INTO notification_ami FROM DUAL;
 
     -- Pour chaque ami de l'utilisateur positif , on émet une notification
     INSERT INTO NotificationContamination(message, idUtilisateur, idContamine, idEtat)
