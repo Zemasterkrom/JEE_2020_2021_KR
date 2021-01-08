@@ -800,7 +800,7 @@ DELIMITER $$;
 CREATE EVENT maj_etat_automatique ON SCHEDULE EVERY 1 DAY
 DO BEGIN
   INSERT INTO Etat(dateEtat, positif, idUtilisateur)
-    SELECT TIMESTAMP(CURRENT_DATE()), b'0', E.dateEtat, E.idUtilisateur FROM Etat E INNER JOIN(
+    SELECT TIMESTAMP(CURRENT_DATE()), b'0', E.idUtilisateur FROM Etat E INNER JOIN(
       SELECT dateEtat, MAX(idEtat) AS idEtat FROM Etat GROUP BY idUtilisateur
     ) EM
     ON E.idEtat = EM.idEtat

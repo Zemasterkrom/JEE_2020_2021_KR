@@ -39,11 +39,7 @@ public class RejectFriendRequestServlet extends HttpServlet {
 	/**
 	 * Post : rejet de la demande d'ami
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-			//Récupération de la redirection
-			String[] split = request.getHeader("referer").split("/");
-			String redirect = split[split.length-1];
-			
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 			try {
 				//Création du manager des amis
 				ManagerAmi manager = new ManagerAmi(request, response);
@@ -56,11 +52,11 @@ public class RejectFriendRequestServlet extends HttpServlet {
 				manager.refuserDemandeAmi(idRefuseur, idAmi);
 				
 				//Redirection
-				response.sendRedirect(request.getContextPath() + "/" + redirect);
+				response.sendRedirect(request.getHeader("referer"));
 			} catch (AppException e) {
-				e.redirigerPageErreur("/" + redirect);
+				e.redirigerPageErreur("/friends");
 			} catch (IllegalArgumentException e) {
-				new FormAppException(AppException.ALTERED_DATA_ERROR + AppException.FORBIDDEN_DELETION_ERROR, request, response).redirigerPageErreur("/" + redirect);
+				new FormAppException(AppException.ALTERED_DATA_ERROR + AppException.FORBIDDEN_DELETION_ERROR, request, response).redirigerPageErreur("/friends");
 			}
 	}
 

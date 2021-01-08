@@ -1,6 +1,7 @@
 --
 -- Note : ce test a été réalisé sur MySQL Workbench qui donne la possibilité de continuer l'exécution du script malgré les erreurs, notamment pour vérifier le fonctionnement des triggers
 -- Note : test à exécuter après la création des tables et des triggers
+-- Note : ce test est destiné à tester les triggers à déclenchement immédiat, l'événement MySQL s'exécutant tous les jours ne peut donc pas être testé avec ce script
 -- Option utilisée : Toggle whether execution of SQL script should continue after failed statements
 --
 
@@ -29,34 +30,34 @@ DELETE FROM Utilisateur;
 SET FOREIGN_KEY_CHECKS = 1;
 
 --
--- Création des utilisateurs
+-- Création des utilisateurs. Mot de passe : test
 --
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestNom1', 'TestPrenom1', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin1', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal');
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestNom2', 'TestPrenom2', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin2', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal');
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestNom3', 'TestPrenom3', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin3', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal');
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestNom4', 'TestPrenom4', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin4', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal');
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestNom5', 'TestPrenom5', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin5', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal');
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestNom6', 'TestPrenom6', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin6', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestNom1', 'TestPrenom1', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin1', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestNom2', 'TestPrenom2', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin2', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestNom3', 'TestPrenom3', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin3', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestNom4', 'TestPrenom4', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin4', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestNom5', 'TestPrenom5', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin5', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestNom6', 'TestPrenom6', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin6', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal');
 
 -- Fails : données incohérentes (champs vides, données NULL, valeurs incorrectes)
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestNom4', 'TestPrenom4', 'DateIncorrecte', 'TestLogin4', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal');
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'Te', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal'); -- Taille du login < 3 caractères
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal');
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES (NULL, 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal');
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', '', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal');
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', NULL, STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal');
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('', '', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal');
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES (NULL, NULL, STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal');
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', NULL, 'TestLogin', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal');
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), '', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal');
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), NULL, '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestNom4', 'TestPrenom4', 'DateIncorrecte', 'TestLogin4', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'Te', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal'); -- Taille du login < 3 caractères
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES (NULL, 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', '', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', NULL, STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('', '', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES (NULL, NULL, STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', NULL, 'TestLogin', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), '', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), NULL, '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal');
 INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '', 'normal');
 INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', NULL, 'normal');
 INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), '', '', 'normal');
 INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), NULL, NULL, 'normal');
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', '');
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', NULL);
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'inconnu');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', '');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', NULL);
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestOK', 'TestOK', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'inconnu');
 
 --
 -- Mise à jour des utilisateurs
@@ -289,7 +290,7 @@ SELECT * FROM NotificationContamination; -- 20 notifications
 INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DATE('25-01-2020 20:00', '%d-%m-%Y %T'), STR_TO_DATE('26-01-2020 04:00', '%d-%m-%Y %T'), 6, 3); -- L'utilisateur 5 est informé car il a possiblement fréquenté l'utilisateur 6 sur cette période
 SELECT * FROM NotificationContamination; -- 21 notifications
 
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES('TestNom7', 'TestPrenom7', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin7', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal');
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES('TestNom7', 'TestPrenom7', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin7', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal');
 INSERT INTO Ami(idUtilisateur, idAmi) VALUES(7, 6);
 CALL accepter_ami(6, 7); -- L'utilisateur 7 va être informé de la contamination de l'utilisateur 6
 SELECT * FROM NotificationContamination; -- 22 notifications
@@ -313,10 +314,10 @@ SELECT * FROM NotificationContamination; -- 27 notifications
 INSERT INTO Etat(dateEtat,  idUtilisateur) VALUES(STR_TO_DATE('23-02-2020 07:00','%d-%m-%Y %T'), 5); -- Les amis de l'utilisateur 5 (7, 4, 2) sont prévenus. L'utilisateur 1 est également prévenu car il a possiblement fréquenté l'utilisateur 5 sur la même période
 SELECT * FROM NotificationContamination; -- 31 notifications
 
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES('TestNom8', 'TestPrenom8', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin8', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal'); -- Utilisateur 8
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES('TestNom9', 'TestPrenom9', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin9', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal'); -- Utilisateur 9
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES('TestNom10', 'TestPrenom10', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin10', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal'); -- Utilisateur 10
-INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES('TestNom11', 'TestPrenom10', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin11', '$2a$10$NH8PBAHX9VqThLW8.CAQRujJMDgLb8g5N3xpy9d37aUH5cIdNJSgq', 'normal'); -- Utilisateur 11
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES('TestNom8', 'TestPrenom8', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin8', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal'); -- Utilisateur 8
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES('TestNom9', 'TestPrenom9', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin9', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal'); -- Utilisateur 9
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES('TestNom10', 'TestPrenom10', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin10', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal'); -- Utilisateur 10
+INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES('TestNom11', 'TestPrenom10', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestLogin11', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'normal'); -- Utilisateur 11
 
 INSERT INTO Lieu(nom, adresse) VALUES('TestContamineNV', 'Test');
 

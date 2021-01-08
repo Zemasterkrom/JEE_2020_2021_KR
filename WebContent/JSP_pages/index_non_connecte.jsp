@@ -18,10 +18,8 @@
       <div class="jumbotron rounded">
         <div class="container">
         	<h1 class="display-3">Accueil</h1>
-        	<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bienvenue sur l'application Tous AntiLaCovid.</p>
-        	
-        	<jsp:include page="/JSP_pages/index.jsp" />
-        
+        	<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bienvenue sur l'application Tous AntiLaCovid.</p>        	
+        	<p>&nbsp;&nbsp;&nbsp;Pour lutter contre la propagation du virus, cette application a été créée pour vous permettre d'indiquer si vous avez été touché par le virus ou si vous avez été en contact d'une personne que vous avez pu côtoyer lors de vos activités et qui a été atteinte par le virus.</p>
          	<p>&nbsp;&nbsp;&nbsp;Pour profiter des fonctionnalités du site, veuillez vous connecter, ou vous inscrire si vous ne possédez pas de compte.</p>
         </div>
       </div>

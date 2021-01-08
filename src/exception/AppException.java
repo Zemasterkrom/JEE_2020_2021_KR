@@ -77,7 +77,7 @@ public abstract class AppException extends Exception {
 		this.message = s != null ? s : "Erreur";
 		this.params = "";
 		try {
-			this.url = url != null ? url + "?error=" + URLEncoder.encode(this.message, "UTF-8") : request.getContextPath() + "/error?error=" + URLEncoder.encode(this.message, "UTF-8");
+			this.url = url != null ? request.getContextPath() + url + "?error=" + URLEncoder.encode(this.message, "UTF-8") : request.getContextPath() + "/error?error=" + URLEncoder.encode(this.message, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

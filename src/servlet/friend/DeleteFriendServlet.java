@@ -33,7 +33,7 @@ public class DeleteFriendServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Redirection vers la page des amis
-		response.sendRedirect(request.getContextPath() + "friends");
+		response.sendRedirect(request.getContextPath() + "/friends");
 	}
 
 	/**
@@ -54,11 +54,11 @@ public class DeleteFriendServlet extends HttpServlet {
 				manager.refuserDemandeAmi(idUtilisateur, idAmi);
 				
 				//Redirection vers la page des amis
-				response.sendRedirect(request.getContextPath() + "/friends");
+				response.sendRedirect(request.getHeader("referer"));
 			} catch (AppException e) {
-				e.redirigerPageErreur("/admin/friends");
+				e.redirigerPageErreur("/friends");
 			} catch (IllegalArgumentException | NullPointerException e) {
-				new FormAppException(AppException.ALTERED_DATA_ERROR + AppException.FORBIDDEN_DELETION_ERROR, request, response).redirigerPageErreur("/admin/friends");
+				new FormAppException(AppException.ALTERED_DATA_ERROR + AppException.FORBIDDEN_DELETION_ERROR, request, response).redirigerPageErreur("/friends");
 			}
 	}
 
