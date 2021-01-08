@@ -53,12 +53,13 @@ INSERT INTO Ami(idUtilisateur, idAmi) VALUES(2, 4);
 INSERT INTO Ami(idUtilisateur, idAmi) VALUES(3, 1);
 INSERT INTO Ami(idUtilisateur, idAmi) VALUES(4, 3);
 
+
 --
 -- Création des activités
 --
-INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DATE('18-12-2020 00:00', '%d-%m-%Y %T'), STR_TO_DATE('18-12-2020 01:00', '%d-%m-%Y %T'), 1, 1);
-INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DATE('10-12-2020 00:00', '%d-%m-%Y %T'), STR_TO_DATE('18-12-2020 15:00', '%d-%m-%Y %T'), 2, 1);
-INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DATE('27-12-2020 15:00', '%d-%m-%Y %T'), STR_TO_DATE('28-12-2020 15:30', '%d-%m-%Y %T'), 3, 2);
+INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DATE('07-01-2021 00:00', '%d-%m-%Y %T'), STR_TO_DATE('07-01-2021 01:00', '%d-%m-%Y %T'), 1, 1);
+INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DATE('05-01-2021 00:00', '%d-%m-%Y %T'), STR_TO_DATE('07-01-2021 15:00', '%d-%m-%Y %T'), 2, 1);
+INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DATE('08-01-2020 15:00', '%d-%m-%Y %T'), STR_TO_DATE('08-01-2021 15:30', '%d-%m-%Y %T'), 3, 2);
 INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DATE('19-12-2020 12:00', '%d-%m-%Y %T'), STR_TO_DATE('19-12-2020 13:30', '%d-%m-%Y %T'), 4, 2);
-INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DATE('19-12-2020 12:10', '%d-%m-%Y %T'), STR_TO_DATE('19-12-2020 12:20', '%d-%m-%Y %T'), 2, 2);
-INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DATE('01-01-2021 10:00', '%d-%m-%Y %T'), STR_TO_DATE('03-01-2021 20:00', '%d-%m-%Y %T'), 2, 3);
+INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DATE('02-01-2020 12:10', '%d-%m-%Y %T'), STR_TO_DATE('03-01-2021 12:20', '%d-%m-%Y %T'), 2, 2);
+INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DATE('04-01-2021 10:00', '%d-%m-%Y %T'), STR_TO_DATE('04-01-2021 20:00', '%d-%m-%Y %T'), 2, 3);
