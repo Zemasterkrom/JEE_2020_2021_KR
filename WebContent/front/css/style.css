@@ -17,3 +17,7 @@
 .actionDescription {
 	font-size: large;
 }
+
+.rounded-15 {
+	border-radius: 15px !important;
+}

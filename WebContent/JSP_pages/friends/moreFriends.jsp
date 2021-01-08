@@ -58,7 +58,7 @@
 						                            	<div class="flex d-flex flex-column flex-wrap">
 						                            		<div class="item-except text-muted text-sm text-right h-1x">Vous avez déjà envoyé une demande d'ami à cet utilisateur</div>
 						                            		<div class="d-flex justify-content-sm-end">					                                                 		
-							                           			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAnnuler<% out.print(u.getId()); %>" style="border-radius:15px;">Annuler la demande</button>
+							                           			<button type="button" class="btn btn-primary rounded-15" data-toggle="modal" data-target="#modalAnnuler<% out.print(u.getId()); %>">Annuler la demande</button>
 							                           		</div>
 							                        	</div>
 							                        	
@@ -96,7 +96,7 @@
 							                        	 	<div class="d-flex justify-content-sm-end">
 																<form action="friends/acceptFriendRequest" method="post" class="mr-1">
 									      							<input type="hidden" name="idAmi" value="<% out.print(u.getId()); %>" />
-															  		<button type="submit" class="btn btn-primary" style="border-radius:15px;">Accepter</button>
+															  		<button type="submit" class="btn btn-primary rounded">Accepter</button>
 															  	</form>			                           		
 								                           		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalRefuser<% out.print(u.getId()); %>" style="border-radius:15px;">Refuser</button> 		                           										   										  											    
 															</div>
@@ -150,10 +150,10 @@
 						                            <div> 					                            	
 				                            			<div class="item-except text-muted text-sm h-1x"><% out.print(u.getLogin()); %></div>											   										  											    
 						                            </div>
-						                            <div class="flex">       	
+						                            <div class="flex pr-4">       	
 						                           		<form action="friends/addFriend" method="post" class="float-right">
 							      							<input type="hidden" name="idAmi" value="<% out.print(u.getId()); %>" />
-										  					<button type="submit" class="btn btn-primary rounded">Ajouter en ami</button>
+										  					<button type="submit" class="btn btn-primary rounded-15">Ajouter en ami</button>
 										  				</form> 				                           										   										  											    
 						                           	</div>
 					                        </div>

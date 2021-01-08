@@ -10,6 +10,7 @@
 		<title>Lieux</title>
    		<jsp:include page="/JSP_pages/basePath.jsp" />
 		<link href="front/bootstrap/css/list.css" rel="stylesheet">
+		<script src="front/popper/popper.min.js"></script>
 		<jsp:include page="/JSP_pages/head.jsp" />
 	</head>
 	
@@ -37,16 +38,16 @@
 						                            </div>
 						                            
 					                            	<div class="ml-auto">
-									                    <div class="dropdown float-right">
-													  		<button onclick="dropList<% out.print(drop); %>()" class="dropbtn rounded">Actions</button>
+									                    <div class="dropdown float-right p-4">
+													  		<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Actions</button>
 													  		
-														  	<div id="myDropdown<% out.print(drop); %>" class="dropdown-content">
-														  		<a href="admin/places/modifyPlace?idLieu=<% out.print(l.getId()); %>" class="text-decoration-none">Modifier le lieu</a>
+													  		<div class="dropdown-menu">
+																<a href="admin/places/modifyPlace?idLieu=<% out.print(l.getId()); %>" class="dropdown-item">Modifier le lieu</a>
 														  		
 														  		<% if (l.getActivites().size() == 0) { %>
-														  			<a data-toggle="modal" data-target="#modalSupprimer<% out.print(drop); %>">Supprimer le lieu</a>											  		
-														  		<% } %>
-														  	</div>
+														  			<a href="#" data-toggle="modal" data-target="#modalSupprimer<% out.print(drop); %>" class="dropdown-item">Supprimer le lieu</a>											  		
+														  		<% } %>										  		
+													  		</div>
 														</div>
 													</div>
 													<% if (l.getActivites().size() == 0) { %>
@@ -91,50 +92,5 @@
 		        </div>
 		    </div>
 		</div>
-	
-	
-		<script>
-		
-			<%  drop = 1;
-			for (Lieu l : lieux) { %>
-			
-			//Fonction dropList pour chaque utilisateur
-			function dropList<% out.print(drop); %>() {	
-				var dropdown = document.getElementById("myDropdown<% out.print(drop); %>");
-				fermerDropList(dropdown);
-				
-				if (!dropdown.classList.contains("show")) {
-			 		dropdown.classList.add("show");
-			 		
-				} else {
-					dropdown.classList.remove("show");
-				}
-			}
-		
-			<% drop++; } %>
-				
-			// Fonction qui permet de fermer les dropList
-			function fermerDropList(dropdownCourant) {
-			    var dropdowns = document.getElementsByClassName("dropdown-content");
-			    
-			    for (var i = 0; i < dropdowns.length; i++) {
-			        var openDropDown = dropdowns[i];
-			        
-			        if (!(openDropDown == dropdownCourant )) {
-				      	if (openDropDown.classList.contains('show')) {
-				    	 	openDropDown.classList.remove('show');
-				      	}
-			        }
-			      
-			    }
-			}
-			
-			//Si on clique sur la page, on ferme les dropList
-			window.onclick = function(event) { 
-				if (!event.target.matches('.dropbtn')) {
-					fermerDropList();
-				}
-			}
-		</script>
 	</body>
 </html>

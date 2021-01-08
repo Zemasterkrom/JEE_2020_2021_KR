@@ -11,9 +11,10 @@
 		<title>Utilisateurs</title>
    		<jsp:include page="/JSP_pages/basePath.jsp" />
 		<link href="front/bootstrap/css/list.css" rel="stylesheet">
+		<script src="front/popper/popper.min.js"></script>
 		<jsp:include page="/JSP_pages/head.jsp" />
-	    
 	</head>
+	
 	<body>
 	
 		<% List<Utilisateur> utilisateurs = (List<Utilisateur>) request.getAttribute("Utilisateurs"); int drop = 1; %>
@@ -32,12 +33,12 @@
 			                    		<div class="utilisateur">
 					                        <div class="list-item row h-100">
 					                            	<div>
-					                            	<img src="<% if (u.getImage() == null) {
-															 		out.print("front/img/user.png");
-													 			 } else {
-																	out.print("uploads/" + u.getImage()); 
-													 			 }	%>" class="img-radius" alt="User-Profile-Image" />
-													 </div>
+						                            	<img src="<% if (u.getImage() == null) {
+																 		out.print("front/img/user.png");
+														 			 } else {
+																		out.print("uploads/" + u.getImage()); 
+														 			 }	%>" class="img-radius" alt="User-Profile-Image" />
+													</div>
 						                            <div class="col-sm"> 
 						                            	<% out.print(u.getPrenom() + " " + u.getNom()); %>  
 						                            		 
@@ -46,19 +47,18 @@
 													</div>	
 						                            <div class="col-sm"> 					                            	
 				                            			<div class="item-except text-muted text-sm h-1x">Login : <% out.print(u.getLogin()); %></div>
-				                            			<div class="item-date text-muted text-sm d-none d-md-block">Rang : <% out.print(u.getRang()); %></div>												   										  											    
+				                            			<div class="item-date text-muted text-sm h-1x">Rang : <% out.print(u.getRang()); %></div>												   										  											    
 						                            </div>              
 					                            <% if (u.getRang().equals("normal")) { %>
 					                            
 					                            	<div class="col-sm">
-									                    <div class="dropdown float-right">
-													  		<button onclick="dropList<% out.print(drop); %>()" class="dropbtn rounded">Actions</button>
+					                            		<div class="dropdown float-right p-4">
+													  		<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Actions</button>
 													  		
-														  	<div id="myDropdown<% out.print(drop); %>" class="dropdown-content">										  	
-														  		<a data-toggle="modal" data-target="#modalRang<% out.print(drop); %>">Passer administrateur</a>
-														  		
-														  		<a data-toggle="modal" data-target="#modalSupprimer<% out.print(drop); %>">Supprimer l'utilisateur</a>
-														  	</div>
+													  		<div class="dropdown-menu">			  	
+														  		<a href="#" data-toggle="modal" data-target="#modalRang<% out.print(drop); %>" class="dropdown-item">Passer administrateur</a>
+														  		<a href="#" data-toggle="modal" data-target="#modalSupprimer<% out.print(drop); %>" class="dropdown-item">Supprimer l'utilisateur</a>									  		
+													  		</div>
 														</div>
 													</div>
 													<!-- Modal modifier rang -->
@@ -132,52 +132,6 @@
 		                </div>
 		            </div>
 		        </div>
-		    </div>
-	
-		<script>
-	
-			<%  drop = 1;
-				for (Utilisateur u : utilisateurs) { %>
-				
-				//Fonction dropList pour chaque lieu
-				function dropList<% out.print(drop); %>() {	
-					var dropdown = document.getElementById("myDropdown<% out.print(drop); %>");
-					fermerDropList(dropdown);
-					
-					if (!dropdown.classList.contains("show")) {
-				 		dropdown.classList.add("show");
-				 		
-					} else {
-						dropdown.classList.remove("show");
-					}
-				}
-			
-			<% drop++; } %>
-				
-			// Fonction qui permet de fermer les dropList
-			function fermerDropList(dropdownCourant) {
-			    var dropdowns = document.getElementsByClassName("dropdown-content");
-			    
-			    for (var i = 0; i < dropdowns.length; i++) {
-			        var openDropDown = dropdowns[i];
-			        
-			        if (!(openDropDown == dropdownCourant )) {
-				      	if (openDropDown.classList.contains('show')) {
-				    	 	openDropDown.classList.remove('show');
-				      	}
-			        }
-			      
-			    }
-			}
-			
-			//Si on clique sur la page, on ferme les dropList
-			window.onclick = function(event) { 
-				if (!event.target.matches('.dropbtn')) {
-					fermerDropList();
-				}
-			}
-			
-		</script>
-		
+		    </div>		
 	</body>
 </html>
