@@ -96,7 +96,7 @@
 							                        	 	<div class="d-flex justify-content-sm-end">
 																<form action="friends/acceptFriendRequest" method="post" class="mr-1">
 									      							<input type="hidden" name="idAmi" value="<% out.print(u.getId()); %>" />
-															  		<button type="submit" class="btn btn-primary rounded">Accepter</button>
+															  		<button type="submit" class="btn btn-primary" style="border-radius:15px;">Accepter</button>
 															  	</form>			                           		
 								                           		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalRefuser<% out.print(u.getId()); %>" style="border-radius:15px;">Refuser</button> 		                           										   										  											    
 															</div>

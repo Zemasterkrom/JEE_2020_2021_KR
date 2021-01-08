@@ -54,7 +54,7 @@ public class DeleteFriendServlet extends HttpServlet {
 				manager.refuserDemandeAmi(idUtilisateur, idAmi);
 				
 				//Redirection vers la page des amis
-				response.sendRedirect(request.getContextPath() + "/admin/friends");
+				response.sendRedirect(request.getContextPath() + "/friends");
 			} catch (AppException e) {
 				e.redirigerPageErreur("/admin/friends");
 			} catch (IllegalArgumentException | NullPointerException e) {
