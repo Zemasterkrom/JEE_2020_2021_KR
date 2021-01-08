@@ -11,21 +11,21 @@
 SET FOREIGN_KEY_CHECKS = 0;
 SET SQL_SAFE_UPDATES = 0;
 
-TRUNCATE TABLE Activite;
-TRUNCATE TABLE Ami;
-TRUNCATE TABLE Etat;
-TRUNCATE TABLE Lieu;
-TRUNCATE TABLE NotificationAmi;
-TRUNCATE TABLE NotificationContamination;
-TRUNCATE TABLE Utilisateur;
-
+DELETE FROM Utilisateur;
+DELETE FROM Lieu;
 DELETE FROM Activite;
 DELETE FROM Ami;
 DELETE FROM Etat;
-DELETE FROM Lieu;
 DELETE FROM NotificationAmi;
 DELETE FROM NotificationContamination;
-DELETE FROM Utilisateur;
+
+ALTER TABLE Utilisateur AUTO_INCREMENT = 1;
+ALTER TABLE Lieu AUTO_INCREMENT = 1;
+ALTER TABLE Activite AUTO_INCREMENT = 1;
+ALTER TABLE Ami AUTO_INCREMENT = 1;
+ALTER TABLE Etat AUTO_INCREMENT = 1;
+ALTER TABLE NotificationAmi AUTO_INCREMENT = 1;
+ALTER TABLE NotificationContamination AUTO_INCREMENT = 1;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -363,4 +363,4 @@ SELECT * FROM NotificationContamination; -- 39 notifications
 
 INSERT INTO Utilisateur(nom, prenom, dateNaiss, login, motDePasse, rang) VALUES ('TestAdminNom', 'TestAdminPrenom', STR_TO_DATE('18-02-1998','%d-%m-%Y'), 'TestAdmin', '$2a$10$N7fxw09Q62FXdBw3rcGqOOisf0m0A0oiaTdO3vDp6ElQmZivEkXtu', 'admin');
 
-COMMIT;
+SET SQL_SAFE_UPDATES = 1;

@@ -9,21 +9,21 @@
 SET FOREIGN_KEY_CHECKS = 0;
 SET SQL_SAFE_UPDATES = 0;
 
-TRUNCATE TABLE Activite;
-TRUNCATE TABLE Ami;
-TRUNCATE TABLE Etat;
-TRUNCATE TABLE Lieu;
-TRUNCATE TABLE NotificationAmi;
-TRUNCATE TABLE NotificationContamination;
-TRUNCATE TABLE Utilisateur;
-
+DELETE FROM Utilisateur;
+DELETE FROM Lieu;
 DELETE FROM Activite;
 DELETE FROM Ami;
 DELETE FROM Etat;
-DELETE FROM Lieu;
 DELETE FROM NotificationAmi;
 DELETE FROM NotificationContamination;
-DELETE FROM Utilisateur;
+
+ALTER TABLE Utilisateur AUTO_INCREMENT = 1;
+ALTER TABLE Lieu AUTO_INCREMENT = 1;
+ALTER TABLE Activite AUTO_INCREMENT = 1;
+ALTER TABLE Ami AUTO_INCREMENT = 1;
+ALTER TABLE Etat AUTO_INCREMENT = 1;
+ALTER TABLE NotificationAmi AUTO_INCREMENT = 1;
+ALTER TABLE NotificationContamination AUTO_INCREMENT = 1;
 
 SET FOREIGN_KEY_CHECKS = 1;
 SET SQL_SAFE_UPDATES = 1;
@@ -62,5 +62,3 @@ INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DA
 INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DATE('19-12-2020 12:00', '%d-%m-%Y %T'), STR_TO_DATE('19-12-2020 13:30', '%d-%m-%Y %T'), 4, 2);
 INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DATE('19-12-2020 12:10', '%d-%m-%Y %T'), STR_TO_DATE('19-12-2020 12:20', '%d-%m-%Y %T'), 2, 2);
 INSERT INTO Activite(dateDebut, dateFin, idUtilisateur, idLieu) VALUES(STR_TO_DATE('01-01-2021 10:00', '%d-%m-%Y %T'), STR_TO_DATE('03-01-2021 20:00', '%d-%m-%Y %T'), 2, 3);
-
-COMMIT;
