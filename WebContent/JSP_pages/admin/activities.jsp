@@ -24,7 +24,7 @@
 	<body>
 	
 		<% List<Utilisateur> utilisateurs = (List<Utilisateur>) request.getAttribute("Utilisateurs"); int util = 1; 
-		   SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); format.setTimeZone(TimeZone.getTimeZone("UTC"));
+		   SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		   ManagerLieu manager = new ManagerLieu(request, response); Lieu l; int activites = 0;
 		   for (Utilisateur u : utilisateurs) {
 			   activites += u.getActivites().size();
@@ -52,7 +52,7 @@
 			                    			
 			                    				<div class="card m-0">
 			                    				
-							                        <div class="list-item row h-100" onclick="ouvrirActivites<% out.print(util); %>()">
+							                        <div class="list-item row h-100" onclick="ouvrirActivites<% out.print(util); %>()" style="cursor:pointer;">
 						                            	<div>				                            	
 						                            	<img src="<% if (u.getImage() == null) {
 															 		 	out.print("front/img/user.png");
