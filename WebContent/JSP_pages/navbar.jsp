@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ page import="bean.Utilisateur" %>
 <%@ page import="sql.ManagerNotification" %>
+<%@ page import="exception.AppException" %>
 		<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
 		  <a class="navbar-brand" href="home">Tous AntiLaCovid <img src="front/img/logo.png" id="logo" alt="Tous AntiLaCovid" /></a>
 		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,10 +24,15 @@
 		      </li>
 		 
 		 <% } else { 
-	      	 	 ManagerNotification manager = new ManagerNotification(request, response);
-		         int nbNotifications = manager.getNbNotificationsNonVues(utilisateur.getId());
-		         String nbNotificationsNonVues = nbNotifications != 0 ? String.valueOf("("+nbNotifications+")") : "";
-		         
+			 	 int nbNotifications = 0;
+			 	 String nbNotificationsNonVues = "";
+			 	 try {
+		      	 	 ManagerNotification manager = new ManagerNotification(request, response);
+			         nbNotifications = manager.getNbNotificationsNonVues(utilisateur.getId());
+			         nbNotificationsNonVues = nbNotifications != 0 ? String.valueOf("("+nbNotifications+")") : "";
+			 	 } catch (AppException ex) {
+			 		 ex.redirigerPageErreur();
+			 	 }
 		         %>	
 			 	  <li class="nav-item">
 			        <a class="nav-link" href="account"><i class="fas fa-address-card fa-lg"></i> Voir le profil</a>		        

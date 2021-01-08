@@ -3,6 +3,7 @@
 <%@ page import="bean.Utilisateur" %>
 <%@ page import="bean.Etat" %>
 <%@ page import="sql.ManagerEtat" %>
+<%@ page import="exception.AppException" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -36,10 +37,20 @@
   <body>
 
 	<% 
-	   Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant"); 
-	   ManagerEtat manager = new ManagerEtat(request, response); 
-	   Etat e = manager.obtenirDernierEtat(utilisateur.getId());
-	   String tempsRestant = "Vous êtes actuellement en isolement. Temps restant : " + manager.obtenirNbJoursRestant(utilisateur.getId()) + " jours.";
+		Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant"); 
+		Etat e = new Etat();
+		ManagerEtat manager;
+		String tempsRestant = "";
+		
+		try {
+		   manager = new ManagerEtat(request, response); 
+		   e = manager.obtenirDernierEtat(utilisateur.getId());
+		   int nbJoursRestant = manager.obtenirNbJoursRestant(utilisateur.getId());
+		   nbJoursRestant = nbJoursRestant >= 0 ? nbJoursRestant : 0;
+		   tempsRestant = "Vous êtes actuellement en isolement. Temps restant : " + nbJoursRestant + " jours.";
+		} catch (AppException ex) {
+			ex.redirigerPageErreur();
+		}
 	%>
 	
     <jsp:include page="/JSP_pages/navbar.jsp" />

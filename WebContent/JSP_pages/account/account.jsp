@@ -20,7 +20,7 @@
 		<jsp:include page="/JSP_pages/navbar.jsp" />
 	    <div align="center">
 	        <div class="row container d-flex justify-content-center">
-	            <div class="col-xl-10 col-md-4">
+	            <div class="col-xl-10 col-md-8">
 	            
 	                <div class="card user-card-full">
 	                    <div class="row m-l-0 m-r-0">
@@ -32,7 +32,7 @@
 														 	out.print("front/img/user.png");
 												 } else {
 													out.print("uploads/" + utilisateur.getImage()); 
-												 }	%>" class="img-radius" alt="User-Profile-Image" />
+												 }	%>" class="img-radius rounded-circle w-100 h-100" alt="User-Profile-Image" />
 									</div>
 	                                													 
 	                                <h6 class="f-w-600"><% out.println(utilisateur.getPrenom() + " " + utilisateur.getNom()); %></h6>

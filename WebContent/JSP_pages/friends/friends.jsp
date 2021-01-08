@@ -3,6 +3,7 @@
 <%@page import="bean.Utilisateur"%>
 <%@page import="bean.Ami"%>
 <%@page import="sql.ManagerUtilisateur" %>
+<%@page import="exception.AppException" %>
 
 <!DOCTYPE html>
 <html>
@@ -16,7 +17,8 @@
 	<body>
 	
 		<% Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
-		   ManagerUtilisateur manager = new ManagerUtilisateur(request, response); Utilisateur u; %>
+		   ManagerUtilisateur manager = new ManagerUtilisateur(request, response); 
+		   Utilisateur u = new Utilisateur(); %>
 		
 		<jsp:include page="/JSP_pages/navbar.jsp" />
 		
@@ -35,11 +37,15 @@
 	                		                                  	                  	
 		                    	<% for (Ami a : utilisateur.getAmis()) { %>
 		                    	
-		                    		<% if (utilisateur.getId() == a.getIdUtilisateur()) {
-		                    		   		u = manager.getUtilisateurAmi(a.getIdAmi()); 
-		                    		   } else {
-		                    		   		u = manager.getUtilisateurAmi(a.getIdUtilisateur());
-	                    		   	   } %>
+		                    		<% try {
+			                    			if (utilisateur.getId() == a.getIdUtilisateur()) {
+			                    		   		u = manager.getUtilisateurAmi(a.getIdAmi()); 
+			                    		   } else {
+			                    		   		u = manager.getUtilisateurAmi(a.getIdUtilisateur());
+		                    		   	   }
+			                    		} catch (AppException ex) {
+			                    			ex.redirigerPageErreur();
+			                    		} %>
 		                    	
 		                    		<div class="utilisateur">
 		                    		

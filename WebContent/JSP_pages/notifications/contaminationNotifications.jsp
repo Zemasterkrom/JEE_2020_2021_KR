@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %> 
+<%@ page import="java.util.ArrayList" %> 
 <%@page import="bean.Utilisateur"%>
 <%@page import="bean.NotificationContamination"%>
 <%@page import="sql.ManagerNotificationContamination" %>
 <%@page import="sql.ManagerNotificationAmi" %>
+<%@page import="exception.AppException" %>
 
 <!DOCTYPE html>
 <html>
@@ -16,22 +18,27 @@
 	</head>
 	<body>
 	
-		<% int nb = 0, nbNotificationsContaminations, nbNotificationsAmis;
-		   String nbNotificationsNonVuesContaminations, nbNotificationsNonVuesAmis;
+		<% int nb = 0, nbNotificationsContaminations = 0, nbNotificationsAmis = 0;
+		   String nbNotificationsNonVuesContaminations = "", nbNotificationsNonVuesAmis = "";
 		   Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
+		   List<NotificationContamination> notifications = new ArrayList<NotificationContamination>();
 		   
-		   ManagerNotificationContamination contaminationManager = new ManagerNotificationContamination(request, response);
-		   contaminationManager.setVueNotifications(utilisateur.getId()); 
-		   
-		   ManagerNotificationAmi friendManager = new ManagerNotificationAmi(request, response); 
-		   
-		   List<NotificationContamination> notifications = contaminationManager.obtenirNotifications(utilisateur.getId());
-		   
-		   nbNotificationsContaminations = contaminationManager.getNbNotificationsNonVues(utilisateur.getId());
-		   nbNotificationsNonVuesContaminations = nbNotificationsContaminations != 0 ? String.valueOf("("+nbNotificationsContaminations+")") : "";
-		   
-		   nbNotificationsAmis = friendManager.getNbNotificationsNonVues(utilisateur.getId());
-		   nbNotificationsNonVuesAmis = nbNotificationsAmis != 0 ? String.valueOf("("+nbNotificationsAmis+")") : "";
+		   try {
+			   ManagerNotificationContamination contaminationManager = new ManagerNotificationContamination(request, response);
+			   contaminationManager.setVueNotifications(utilisateur.getId()); 
+			   
+			   ManagerNotificationAmi friendManager = new ManagerNotificationAmi(request, response); 
+			   
+			   notifications = contaminationManager.obtenirNotifications(utilisateur.getId());
+			   
+			   nbNotificationsContaminations = contaminationManager.getNbNotificationsNonVues(utilisateur.getId());
+			   nbNotificationsNonVuesContaminations = nbNotificationsContaminations != 0 ? String.valueOf("("+nbNotificationsContaminations+")") : "";
+			   
+			   nbNotificationsAmis = friendManager.getNbNotificationsNonVues(utilisateur.getId());
+			   nbNotificationsNonVuesAmis = nbNotificationsAmis != 0 ? String.valueOf("("+nbNotificationsAmis+")") : "";
+		   } catch (AppException ex) {
+			   ex.redirigerPageErreur();
+		   }
 		%>
 		
 		<jsp:include page="/JSP_pages/navbar.jsp" />

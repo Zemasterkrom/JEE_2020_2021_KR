@@ -50,7 +50,7 @@ body {
 .img-radius {
     max-width: 198px;
 	max-height: 198px;
-	border-radius: 50%;
+	object-fit: scale-down;
 }
 
 h6 {

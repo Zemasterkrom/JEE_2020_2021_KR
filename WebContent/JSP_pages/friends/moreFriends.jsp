@@ -4,6 +4,7 @@
 <%@page import="bean.Utilisateur"%>
 <%@page import="bean.Ami"%>
 <%@page import="sql.ManagerAmi" %>
+<%@page import="exception.AppException" %>
 <%! @SuppressWarnings("unchecked") %>
 
 <!DOCTYPE html>
@@ -19,7 +20,8 @@
 		<% boolean allAccepted = true;
 		   Utilisateur utilisateur = (Utilisateur) session.getAttribute("Utilisateur_courant");
 		   List<Utilisateur> utilisateurs = (List<Utilisateur>) request.getAttribute("Utilisateurs");
-		   ManagerAmi manager = new ManagerAmi(request, response); Ami a; %>
+		   ManagerAmi manager = new ManagerAmi(request, response); 
+		   Ami a = new Ami(); %>
 		
 		<jsp:include page="/JSP_pages/navbar.jsp" />
 		
@@ -33,13 +35,13 @@
 	                	<div class="list list-row card w-75">
 	                		<% if (utilisateurs.size() > 0) { %>              	                  	
 		                    	<% for (Utilisateur u : utilisateurs) { %>
-		                    		<% a = manager.getAmi(utilisateur.getId(), u.getId()); %>
+		                    		<% try {a = manager.getAmi(utilisateur.getId(), u.getId());} catch (AppException ex) {ex.redirigerPageErreur();} %>
 		                    		<% if (a != null) { %>
 		                    			<% if (!a.isAccepte()) { 
 		                    				allAccepted = false;
 		                    			%>
 				                    		<div class="utilisateur">
-						                        <div class="list-item">
+						                        <div class="list-item row h-100">
 					                            	<div>
 					                            	<img src="<% if (u.getImage() == null) {
 															 		out.print("front/img/user.png");
@@ -55,8 +57,8 @@
 						                            </div>
 						                            		                            
 						                            <% if (a.getIdUtilisateur() == utilisateur.getId()) { %>
-						                            	<div class="flex d-flex flex-column flex-wrap">
-						                            		<div class="item-except text-muted text-sm text-right h-1x">Vous avez déjà envoyé une demande d'ami à cet utilisateur</div>
+						                            	<div class="flex d-flex flex-column flex-wrap pr-4">
+						                            		<div class="item-except text-muted text-sm text-right">Vous avez déjà envoyé une demande d'ami à cet utilisateur</div>
 						                            		<div class="d-flex justify-content-sm-end">					                                                 		
 							                           			<button type="button" class="btn btn-primary rounded-15" data-toggle="modal" data-target="#modalAnnuler<% out.print(u.getId()); %>">Annuler la demande</button>
 							                           		</div>
@@ -91,12 +93,12 @@
 							                        	    	
 							                        <% } else { %>
 							                        
-							                        	 <div class="flex d-flex flex-column flex-wrap">
-							                        	 	<div class="item-except text-muted text-sm text-right h-1x">Vous avez reçu une demande d'ami de cet utilisateur</div>
-							                        	 	<div class="d-flex justify-content-sm-end">
+							                        	 <div class="flex d-flex flex-column flex-wrap pr-4">
+							                        	 	<div class="item-except text-muted text-sm text-right">Vous avez reçu une demande d'ami de cet utilisateur</div>
+							                        	 	<div class="d-flex justify-content-sm-end ml-auto">
 																<form action="friends/acceptFriendRequest" method="post" class="mr-1">
 									      							<input type="hidden" name="idAmi" value="<% out.print(u.getId()); %>" />
-															  		<button type="submit" class="btn btn-primary rounded">Accepter</button>
+															  		<button type="submit" class="btn btn-primary rounded-15">Accepter</button>
 															  	</form>			                           		
 								                           		<button type="button" class="btn btn-primary rounded-15" data-toggle="modal" data-target="#modalRefuser<% out.print(u.getId()); %>">Refuser</button> 		                           										   										  											    
 															</div>

@@ -7,6 +7,7 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.TimeZone" %>
 <%@ page import="sql.ManagerLieu" %>
+<%@ page import="exception.AppException" %>
 <%! @SuppressWarnings("unchecked") %>
 
 <!DOCTYPE html>
@@ -23,12 +24,18 @@
 	
 	<body>
 	
-		<% List<Utilisateur> utilisateurs = (List<Utilisateur>) request.getAttribute("Utilisateurs"); int util = 1; 
-		   SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		   ManagerLieu manager = new ManagerLieu(request, response); Lieu l; int activites = 0;
-		   for (Utilisateur u : utilisateurs) {
-			   activites += u.getActivites().size();
-		   } %>
+		<% 
+			Lieu l = new Lieu();
+		   	int activites = 0;
+		   	int util = 1;
+		   	List<Utilisateur> utilisateurs = (List<Utilisateur>) request.getAttribute("Utilisateurs"); 
+		 	ManagerLieu manager = new ManagerLieu(request, response);
+		 	SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		   	
+			for (Utilisateur u : utilisateurs) {
+				activites += u.getActivites().size();
+			}
+			%>
 		   
 		<jsp:include page="/JSP_pages/navbar.jsp" />
 			
@@ -78,7 +85,7 @@
 										            
 										            	 <% for (Activite a : u.getActivites()) { %>
 										            	 
-										            	 	<% l = manager.getLieuSansActivites(a.getIdLieu()); %>
+										            	 	<% try {l = manager.getLieuSansActivites(a.getIdLieu());} catch (AppException ex) {ex.redirigerPageErreur();} %>
 										            	 
 															<div class="list-item row card w-75 h-100 mx-auto m-0">   
 									                            
